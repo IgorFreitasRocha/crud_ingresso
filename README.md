@@ -3,7 +3,12 @@
 O projeto tem o objetivo em desenvolver um C.R.U.D. O tema é um site de venda de ingressos.
 
 ## 👨‍💻 Linguagens
-PHP, MySQL, HTML e CSS
+HTML, CSS, PHP, MySQL e JavaScript
+
+## 🖌️ Paleta de Cores
+
+[Cores](https://paletadecores.com/paleta/edeccf/f1c694/dc6378/207178/101652/)
+
 
 ## 📚 Referência
  - [Ingresso.com](https://www.ingresso.com/)

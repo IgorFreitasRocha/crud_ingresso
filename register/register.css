@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;600&family=Poppins:wght@200;500&display=swap');
+
+body{
+
+    background: #f1c694;
+    font-family: noto sans;
+    font-weight: 300;
+}  
+
+.card-img-top{
+    width:55% ;
+}
+
+.form-check .form-check-input {
+    float:none;
+    margin-left: -1.9em;
+}
