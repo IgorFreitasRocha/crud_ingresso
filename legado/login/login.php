@@ -9,13 +9,7 @@
         <title>Ingressos</title>
     </head>
     <body>
-        
-<<<<<<< Updated upstream:login/login.php
-        <!-- Card com campos de e-mail, senha e botão de submit -->
-=======
-        
         <!-- Card com E-mail e Senha -->
->>>>>>> Stashed changes:login.html
         <div class="card card border-warning mb-3 card text-center position-absolute top-50 start-50 translate-middle" style="width: 18rem;">
             <div class="card-body">
                 <img src="../assets/img/logo/logo (7).jpg" class="card-img-top" alt="...">
