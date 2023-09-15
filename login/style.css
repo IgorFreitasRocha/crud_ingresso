@@ -1,0 +1,75 @@
+/* Página de Login de usuário administrador */
+
+/* ajustar fonte */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;600&family=Poppins:wght@200;500&display=swap');
+
+body{
+    font-family: noto sans;
+    font-weight: 300;
+    background-color: #fbd781;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10%;
+    margin-left: 35%;
+    margin-right: 35%;
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid lightgrey;
+    border-radius: 3px;
+    width: 400px;
+}
+
+
+h1{
+    color: rgb(135, 134, 134);
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    width: 30%;
+    opacity: 0.9;
+    font-size: 20px;
+    font-weight: 300;
+    font-family: noto sans;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-left: 35%;
+    margin-right: 35%;
+    margin-bottom: 10px;
+}
+
+button:hover {
+    opacity: 2;
+}
+
+
+input[type=email], input[type=password] {
+    width: 90%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+
+/* ajustar imagem */
+.imagem{
+    width: 40%;
+    height: 40%;
+    margin-left: 30%;
+    margin-right: 30%;
+
+}
+
+
+
