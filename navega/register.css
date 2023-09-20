@@ -7,6 +7,28 @@
 html,body{
     height: 100%;
 }
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #000000 #ffffff;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #000000;
+    border-radius: 3px;
+    border: 1px none #ffffff;
+  }
+  
 
 header{
     background-color: #7fffd4;
@@ -32,6 +54,7 @@ header{
     padding: 10px;
     width: 4%;
     align-items: center;
+    cursor: pointer;
 }
 
 header img{
