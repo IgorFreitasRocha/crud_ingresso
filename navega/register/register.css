@@ -47,11 +47,11 @@ header{
 
 .logo{
     height: 100%;
-    width: 5%;
+    width: 6%;
 }
 .user{
     display: flex;
-    padding: 10px;
+    padding: 5px;
     width: 4%;
     align-items: center;
     cursor: pointer;
@@ -78,29 +78,32 @@ header img{
     color: #333;
     font-size: 20px;
 }
+
 .sidebar a{
     display: block;
     text-decoration: none;
-    margin: 6px 7px ;
+    color: #777;
+    margin: 20px 7px ;
     padding: 5px;
     border-left: 2px solid ;
 }
+
 .sidebar a:hover{
-    display: block;
-    text-decoration: none;
-    margin: 6px 7px ;
-    padding: 5px;
-    border-left: 2px solid ;
     background-color: rgb(214, 211, 211);
     border-radius: 6px;
     color: #333;
 }
 
+.sidebar a:visited{
+    text-decoration: none;
+}
+
 .active{
     background-color: rgb(214, 211, 211);
     border-radius: 6px;
-    color: #333;
-    
+}
+.active i{
+    color: #111;
 }
 i{
     margin: 5px 13px ;
