@@ -25,6 +25,6 @@
         //direcione (header) o usuario para painel_admin.php
         header('Location: painel_admin.php');
     }else {
-        header('Location: login.php?erro'); //Se não retorne para a pagina de login 
+        header('Location: ../index.php?erro'); //Se não retorne para a pagina de login 
     }
 ?>
