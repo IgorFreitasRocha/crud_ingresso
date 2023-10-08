@@ -1,7 +1,7 @@
 <?php
 
     session_start();
-    require_once('../CRUD/conexao.php');
+    require_once('conexao.php');
 
     if(!isset($_SESSION['admin_logado'])){
         header("Location:login.php");
@@ -22,7 +22,7 @@
         $target_file = $target_dir . basename($imagem);
 
         //Gerar a URL da imagem
-        $base_url = "http://localhost/CRUD/";
+        $base_url = "http://localhost/CRUD/CRUD/";
         $url_imagem = $base_url . "upload/" . basename($imagem);
 
         //Mover o arquivo de imagem carregado para o diretorio de distino
