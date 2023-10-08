@@ -111,6 +111,10 @@ header h2 {
     background-color: rgb(214, 211, 211);
     color: #333;
 }
+.sidebar button:hover {
+    background-color: rgb(214, 211, 211);
+    color: #333;
+}
 
 .active {
     background-color: rgb(214, 211, 211);
@@ -130,10 +134,24 @@ i {
     display: none;
 
 }
+
 .product:hover > .dropdown{
     display: block;
-    transition: 1s;
+    margin: 0px 20px;
 }
+
+a:hover > button{
+    background-color: rgb(214, 211, 211);
+    color: #333;
+    
+}
+
+button{
+    margin: 5px 20px;
+    border: none;
+    color: #777;
+}
+
 .content {
     width: 75%;
     background-color: rgb(214, 211, 211);

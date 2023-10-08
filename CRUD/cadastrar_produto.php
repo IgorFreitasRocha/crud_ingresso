@@ -1,7 +1,7 @@
 <?php
 
     session_start();
-    require_once('../mauproject/conexao.php');
+    require_once('../CRUD/conexao.php');
 
     if(!isset($_SESSION['admin_logado'])){
         header("Location:login.php");
@@ -22,7 +22,7 @@
         $target_file = $target_dir . basename($imagem);
 
         //Gerar a URL da imagem
-        $base_url = "http://localhost/mauproject/";
+        $base_url = "http://localhost/CRUD/";
         $url_imagem = $base_url . "upload/" . basename($imagem);
 
         //Mover o arquivo de imagem carregado para o diretorio de distino
@@ -69,7 +69,7 @@
 <header>
         <div class="topo">
             <div class="logo">
-                <a href="dash.html"><img src="img/logobravo.jpg" alt="Logo empresa bravo"></a>
+                <a href="painel_admin.php"><img src="img/logobravo.jpg" alt="Logo empresa bravo"></a>
             </div>
             <div class="user">
                 <img src="img/74472.png" alt="">

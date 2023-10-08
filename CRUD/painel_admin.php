@@ -48,14 +48,14 @@ if (!isset($_SESSION['admin_logado'])) {
                         <li class="product">
                             <div class="produtos">
                                 <a href="cadastrar_produto.php">
-                                    <button class="bt_produtos">Cadastra produto</button> </a>
+                                    <button>Cadastra produto</button> </a>
                             </div>
                         </li>
 
                         <li>
                             <div>
                                 <a href="listar_produto.php">
-                                    <button class="bt_produtos">Listar produto</button> </a>
+                                    <button>Listar produto</button> </a>
                             </div>
                         </li>
                     </ul>
