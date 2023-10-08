@@ -4,112 +4,137 @@
     padding: 0px;
     font-family: Arial, Helvetica, sans-serif;
 }
-html,body{
+
+html,
+body {
     height: 100%;
 }
-/* ===== Scrollbar CSS ===== */
-  /* Firefox */
-  * {
+
+/* Scrollbar */
+* {
     scrollbar-width: auto;
     scrollbar-color: #000000 #ffffff;
-  }
+}
 
-  /* Chrome, Edge, and Safari */
-  *::-webkit-scrollbar {
+*::-webkit-scrollbar {
     width: 8px;
-  }
+}
 
-  *::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
     background: #ffffff;
-  }
+}
 
-  *::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
     background-color: #000000;
     border-radius: 3px;
     border: 1px none #ffffff;
-  }
-  
+}
 
-header{
+/*End Scroll bar*/
+
+header {
     background-color: #7fffd4;
     display: flex;
+    width: 100%;
+    height: 6%;
     border-radius: 2px;
     box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 }
 
-.topo{
+header h2 {
+    margin-top: 7px;
+}
+
+.topo {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    height: 2%;
 }
 
-
-.logo{
+.logo img {
     height: 100%;
-    width: 6%;
 }
-.user{
-    display: flex;
-    padding: 5px;
-    width: 4%;
-    align-items: center;
+
+.user {
+    width: 8%;
+    height: 100%;
+    padding: 2px;
     cursor: pointer;
+    display: flex;
+    flex-direction: row-reverse;
 }
 
-header img{
-    width: 100%;
+.user img {
+    width: 50%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid #b4b8b9;
 }
 
-.main{
+.main {
     height: 100%;
     display: flex;
     flex-wrap: wrap;
 }
 
-.sidebar{
+.sidebar {
     width: 25%;
     height: 100%;
     background-color: rgb(245, 245, 245);
-    padding: 10px
+    padding: 10px;
 }
 
-.sidebar h3{
-    color: #333;
+.sidebar h3 {
+    color: #111;
     font-size: 20px;
 }
 
-.sidebar a{
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar a {
     display: block;
     text-decoration: none;
     color: #777;
-    margin: 20px 7px ;
+    margin: 20px 7px;
     padding: 5px;
-    border-left: 2px solid ;
-}
-
-.sidebar a:hover{
-    background-color: rgb(214, 211, 211);
     border-radius: 6px;
-    color: #333;
+    border-left: 2px solid;
 }
 
-.sidebar a:visited{
+.sidebar a:visited {
     text-decoration: none;
 }
 
-.active{
+.sidebar a:hover {
     background-color: rgb(214, 211, 211);
-    border-radius: 6px;
-}
-.active i{
-    color: #111;
-}
-i{
-    margin: 5px 13px ;
+    color: #333;
 }
 
-.content{
+.active {
+    background-color: rgb(214, 211, 211);
+    color: #111;
+
+}
+
+.active i {
+    color: #111;
+}
+
+i {
+    margin: 5px 13px;
+}
+
+.dropdown{
+    display: none;
+
+}
+.product:hover > .dropdown{
+    display: block;
+    transition: 1s;
+}
+.content {
     width: 75%;
     background-color: rgb(214, 211, 211);
 }
