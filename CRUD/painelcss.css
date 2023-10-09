@@ -132,7 +132,6 @@ i {
 
 .dropdown{
     display: none;
-
 }
 
 .product:hover > .dropdown{
@@ -143,13 +142,13 @@ i {
 a:hover > button{
     background-color: rgb(214, 211, 211);
     color: #333;
-    
 }
 
 button{
     margin: 5px 20px;
     border: none;
     color: #777;
+    cursor: pointer;
 }
 
 .content {
