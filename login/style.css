@@ -17,13 +17,13 @@ body{
     background-color: #ffffff;
     padding: 20px;
     border: 1px solid lightgrey;
-    border-radius: 3px;
+    border-radius: 5%;
     width: 400px;
 }
 
 
 h1{
-    color: #011425;
+    color: #33383d;
 }
 
 p{
