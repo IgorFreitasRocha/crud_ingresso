@@ -1,0 +1,157 @@
+* {
+    margin: 0px;
+    box-sizing: border-box;
+    padding: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+/* Scrollbar */
+* {
+    scrollbar-width: auto;
+    scrollbar-color: #000000 #ffffff;
+}
+
+*::-webkit-scrollbar {
+    width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #000000;
+    border-radius: 3px;
+    border: 1px none #ffffff;
+}
+
+/*End Scroll bar*/
+
+header {
+    background-color: #7fffd4;
+    display: flex;
+    width: 100%;
+    height: 6%;
+    border-radius: 2px;
+    box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+}
+
+header h2 {
+    margin-top: 7px;
+}
+
+.topo {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.logo img {
+    height: 100%;
+}
+
+.user {
+    width: 8%;
+    height: 100%;
+    padding: 2px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.user img {
+    width: 50%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid #b4b8b9;
+}
+
+.main {
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.sidebar {
+    width: 25%;
+    height: 100%;
+    background-color: rgb(245, 245, 245);
+    padding: 10px;
+}
+
+.sidebar h3 {
+    color: #111;
+    font-size: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar a {
+    display: block;
+    text-decoration: none;
+    color: #777;
+    margin: 20px 7px;
+    padding: 5px;
+    border-radius: 6px;
+    border-left: 2px solid;
+}
+
+.sidebar a:visited {
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    background-color: rgb(214, 211, 211);
+    color: #333;
+}
+.sidebar button:hover {
+    background-color: rgb(214, 211, 211);
+    color: #333;
+}
+
+.active {
+    background-color: rgb(214, 211, 211);
+    color: #111;
+
+}
+
+.active i {
+    color: #111;
+}
+
+i {
+    margin: 5px 13px;
+}
+
+.dropdown{
+    display: none;
+}
+
+.product:hover > .dropdown{
+    display: block;
+    margin: 0px 20px;
+}
+
+a:hover > button{
+    background-color: rgb(214, 211, 211);
+    color: #333;
+}
+
+button{
+    margin: 5px 20px;
+    border: none;
+    color: #777;
+    cursor: pointer;
+}
+
+.content {
+    width: 75%;
+    background-color: rgb(214, 211, 211);
+}
