@@ -10,6 +10,10 @@ body {
     height: 100%;
 }
 
+ul {
+    list-style: none;
+}
+
 /* Scrollbar */
 * {
     scrollbar-width: auto;
@@ -89,10 +93,6 @@ header h2 {
     font-size: 20px;
 }
 
-.sidebar ul {
-    list-style: none;
-}
-
 .sidebar a {
     display: block;
     text-decoration: none;
@@ -130,20 +130,6 @@ i {
     margin: 5px 13px;
 }
 
-.dropdown{
-    display: none;
-}
-
-.product:hover > .dropdown{
-    display: block;
-    margin: 0px 20px;
-}
-
-a:hover > button{
-    background-color: rgb(214, 211, 211);
-    color: #333;
-}
-
 button{
     margin: 5px 20px;
     border: none;
@@ -155,3 +141,8 @@ button{
     width: 75%;
     background-color: rgb(214, 211, 211);
 }
+
+.content table, th, td {
+    border: 1px solid;
+    background-color: bisque;
+  }

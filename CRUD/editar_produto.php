@@ -74,6 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <input type="text" name="url_imagem" id="url_imagem" value="<?php echo $produto['url_imagem']; ?>"><br>
     <input type="submit" value="Atualizar Produto">
 </form>
-<a href="listar_produto.php">Voltar à Lista de Produtos</a>
+<a href="painel_admin.php">Voltar à Lista de Produtos</a>
 </body>
 </html>
