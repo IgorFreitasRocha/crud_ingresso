@@ -43,8 +43,7 @@ if (!isset($_SESSION['admin_logado'])) {
             <h3>Home</h3>
             <nav>
                 <ul>
-                    <li class="product"><a class="active nav-prod product" href="painel_admin.php"><i class="fa-solid fa-house "></i>Produtos<a>
-                    </li>
+                    <li><a class="active nav-prod product" href="painel_admin.php"><i class="fa-solid fa-house "></i>Produtos</a></li>
                     <li><a href="../users/user.html"><i class="fa-solid fa-house"></i>Users </a></li>
                     <li><a href="../register/register.html"><i class="fa-solid fa-house"></i>Register</a></li>
                     <li><a href="#"><i class="fa-solid fa-house"></i>Relatorios</a></li>
@@ -59,11 +58,6 @@ if (!isset($_SESSION['admin_logado'])) {
             <div>
                 <?php
 
-                if (!isset($_SESSION['admin_logado'])) {
-                    header('Location:login.php');
-                    exit();
-                }
-
                 require_once('conexao.php');
 
                 try {
@@ -76,7 +70,7 @@ if (!isset($_SESSION['admin_logado'])) {
 
                 ?>
                 <div class="cad_produtos">
-                    <a href="cadastrar_produto.php"> <button>Cadastra produto</button> </a>
+                    <a href="cadastrar_produto.php"> <button class="btn_cad">Cadastra produto</button> </a>
                 </div>
                 <table>
                     <thead>

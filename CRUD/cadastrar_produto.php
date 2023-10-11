@@ -92,22 +92,6 @@
             <nav>
             <ul>
                 <li class="product"><a class="active nav-prod product" href="painel_admin.php"><i class="fa-solid fa-house "></i>Produtos</a>
-                    <ul class="dropdown">
-                        <li class="product">
-                            <div class="produtos">
-                                <a href="cadastrar_produto.php">
-                                    <button id="button">Cadastra produto</button> </a>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div>
-                                <a href="listar_produto.php">
-                                    <button>Listar produto</button> </a>
-                            </div>
-                        </li>
-                    </ul>
-
                 </li>
                 <li><a href="../users/user.html"><i class="fa-solid fa-house"></i>Users </a></li>
                 <li><a href="../register/register.html"><i class="fa-solid fa-house"></i>Register</a></li>
