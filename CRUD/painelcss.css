@@ -40,6 +40,8 @@ ul {
 
 /*End Scroll bar*/
 
+
+/*CABEÇALHO*/
 header {
     background-color: #7fffd4;
     display: flex;
@@ -57,6 +59,12 @@ header h2 {
     display: flex;
     justify-content: space-between;
     width: 100%;
+}
+
+.drop{
+    position: absolute;
+    right: 10px;
+    top: 20px;
 }
 
 .logo img {
@@ -78,6 +86,22 @@ header h2 {
     border-radius: 50%;
     border: 3px solid #b4b8b9;
 }
+
+.logout{
+    text-align: center;
+    background-color: whitesmoke;
+    width: 3%;
+    height: 4%;
+    position: absolute;
+    right: 1%;
+    top: 9%;
+    border: 1px solid rgb(0, 0, 0) ;
+    border-radius: 5px;
+    
+}
+
+/*FIM CABEÇALHO*/
+
 
 .main {
     height: 100%;
@@ -110,15 +134,17 @@ header h2 {
     background-color: rgb(214, 211, 211);
     color: #333;
 }
+
 .sidebar button:hover {
     background-color: rgb(214, 211, 211);
     color: #333;
 }
 
+
+/*PAINEL ADMIN*/
 .active {
     background-color: rgb(214, 211, 211);
     color: #111;
-
 }
 
 .active i {
@@ -132,20 +158,33 @@ i {
 .content {
     display: flex;
     width: 75%;
-    background-color: rgb(214, 211, 211);
+    background-image: url(img/textura.jpg);
+    box-shadow: 10px 10px 58px -11px rgba(0,0,0,0.82) inset;
+-webkit-box-shadow: 10px 10px 58px -11px rgba(0,0,0,0.82) inset;
+-moz-box-shadow: 10px 10px 58px -11px rgba(0,0,0,0.82) inset;
+    justify-content: space-around;
 }
 
-.content table, th, td {
-    border: 1px solid;
-    background-color: bisque;
+.content table, .cadas_produto {
+    background-color: #ffffff;
+    box-shadow: 5px 5px 0px 0px rgba(51, 51, 51, 1);
+    border: 3px solid #333333;
+    border-radius: 5px;
+    padding: 5px;
 }
 
-.cad_produtos{
+.content th,
+td {
+    padding: 15px;
+    text-align: center;
+}
+
+.cad_produtos {
     display: flex;
     justify-content: flex-end;
 }
 
-.btn_cad {
+.btn_cad, .return_cad {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -160,10 +199,76 @@ i {
     transition: 0.3s;
     box-shadow: 5px 5px 0px 0px rgba(51, 51, 51, 1);
     background-color: #ffffff;
-  }
-  
-  .btn_cad:hover {
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.btn_cad:hover, .return_cad:hover {
     box-shadow: 0 0 #333;
     color: #fff;
-    background-color: #333;
-  }
+    background-color: #000000;
+}
+
+.btn_edit,
+.btn_exc {
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 7px;
+    transition-duration: 0.3s;
+    color: black;
+}
+
+.btn_edit:hover {
+    background-color: #000000;
+    color: white;
+}
+
+.btn_exc:hover {
+    background-color: #000000;
+    color: white;
+}
+
+/* FIM PAINEL ADMIN */
+
+
+
+/*INICIO CADASTRAR PRODUTOS */
+
+.container_cad_produto{
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    width: 36%;
+}
+
+.return_cad a{
+    width: 100%;
+    height: 100%;
+    color: #000000;
+    text-align: center;
+    padding: 5px;
+}
+
+.return_cad a:hover{
+    color: #ffffff;
+}
+
+.cadas_produto {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 36%;
+}
+
+.cadas_produto h2{
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: stretch;
+}
+

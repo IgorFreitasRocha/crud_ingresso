@@ -3,7 +3,7 @@
 session_start();
 
 if (!isset($_SESSION['admin_logado'])) {
-    header('Location: login.php');
+    header('Location: logout.php');
     exit();
 }
 
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bindParam(':url_imagem', $url_imagem, PDO::PARAM_STR);
         $stmt->execute();
 
-        header('Location: listar_produto.php');
+        header('Location: painel_admin.php');
         exit();
     } catch (PDOException $erro) {
         echo "Erro: " . $erro->getMessage();
@@ -75,5 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <input type="submit" value="Atualizar Produto">
 </form>
 <a href="painel_admin.php">Voltar à Lista de Produtos</a>
+
+
+
+<script src="js/javinha.js"></script>
 </body>
 </html>

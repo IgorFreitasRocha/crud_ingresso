@@ -3,7 +3,7 @@ session_start();
 
 
 if(!isset($_SESSION['admin_logado'])){
-    header("Location:login.php");
+    header("Location:logout.php");
     exit();
 
 
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])){
 <body>
     <h2>Excluir produto</h2>    
     <p><?php echo $mensagem ?></p>
-    <a href="listar_produto.php">Voltar a lista de produtos</a>
+    <a href="painel_admin.php">Voltar a lista de produtos</a>
 
 </body>
 </html>

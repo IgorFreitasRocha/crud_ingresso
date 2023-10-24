@@ -1,11 +1,25 @@
 <?php
 session_start();
 
-
+//Varificação se o usuario está logado
 if (!isset($_SESSION['admin_logado'])) {
-    header("Location:login.php");
+    header("Location:logout.php");
     exit();
 }
+
+
+//Banco de dados
+
+require_once('conexao.php');
+
+try {
+    $stmt = $pdo->prepare("SELECT * FROM produtos");
+    $stmt->execute();
+    $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $erro) {
+    echo "Erro " . $erro->getMessage();
+}
+
 ?>
 
 
@@ -33,7 +47,13 @@ if (!isset($_SESSION['admin_logado'])) {
             <div class="user">
                 <img src="img/eu.jpg" alt="">
             </div>
+
+            <i class="drop fa-solid fa-caret-up"></i>
+            <div class="logout">
+                <a href="logout.php">Sair</a>
+            </div>
         </div>
+
 
     </header>
 
@@ -55,22 +75,9 @@ if (!isset($_SESSION['admin_logado'])) {
         </div> <!--Fim sidebar-->
 
         <div class="content">
-            <div>
-                <?php
-
-                require_once('conexao.php');
-
-                try {
-                    $stmt = $pdo->prepare("SELECT * FROM produtos");
-                    $stmt->execute();
-                    $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                } catch (PDOException $erro) {
-                    echo "Erro " . $erro->getMessage();
-                }
-
-                ?>
+            <div class="container_center">
                 <div class="cad_produtos">
-                    <a href="cadastrar_produto.php"> <button class="btn_cad">Cadastra produto</button> </a>
+                    <a href="cadastrar_produto.php"> <button class="btn_cad">Cadastrar produto</button> </a>
                 </div>
                 <table>
                     <thead>
@@ -79,8 +86,8 @@ if (!isset($_SESSION['admin_logado'])) {
                             <th>Nome</th>
                             <th>Descrição</th>
                             <th>Preço</th>
-                            <th>Imagem</th>
                             <th>URL_imagem</th>
+                            <th>Imagem</th>
                             <th>Ações</th> <!-- Adicionando uma coluna para as ações -->
                         </tr>
                     </thead>
@@ -93,10 +100,10 @@ if (!isset($_SESSION['admin_logado'])) {
                                 <td><?php echo $produto['descricao']; ?></td>
                                 <td><?php echo $produto['preco']; ?></td>
                                 <td><?php echo $produto['imagem']; ?></td>
-                                <td><img src="<?php echo $produto['url_imagem']; ?>" alt="Imagem do produto" width="50"></td>
+                                <td><img src="<?php echo $produto['url_imagem']; ?>" alt="Imagem do produto" width="75"></td>
                                 <td>
-                                    <a href="editar_produto.php?id=<?php echo $produto['id']; ?>">Editar</a>
-                                    <a href="excluir_produto.php?id=<?php echo $produto['id']; ?>">Excluir</a>
+                                    <a class="btn_edit" href="editar_produto.php?id=<?php echo $produto['id']; ?>">Editar</a>
+                                    <a class="btn_exc" href="excluir_produto.php?id=<?php echo $produto['id']; ?>">Excluir</a>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -111,7 +118,7 @@ if (!isset($_SESSION['admin_logado'])) {
 
 
     <script src="https://kit.fontawesome.com/482af9f33c.js" crossorigin="anonymous"></script>
-    <script src="javinha.js"></script>
+    <script src="js/javinha.js"></script>
 </body>
 
 </html>

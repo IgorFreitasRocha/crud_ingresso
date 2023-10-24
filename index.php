@@ -15,6 +15,7 @@
     <br>
     <label for="senha">Senha : </label>
     <input type="text" name="senha" id="senha" required>
+    <i class="fa-solid fa-eye"></i>
     <br>
     <input type="submit" value="entrar">
      <?php
@@ -27,6 +28,6 @@
   </form>
 
 
-
+  <script src="https://kit.fontawesome.com/482af9f33c.js" crossorigin="anonymous"></script>
 </body>
 </html>

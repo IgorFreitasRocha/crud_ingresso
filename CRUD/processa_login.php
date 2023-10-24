@@ -25,6 +25,19 @@
         //direcione (header) o usuario para painel_admin.php
         header('Location: painel_admin.php');
     }else {
-        header('Location: ../index.php?erro'); //Se não retorne para a pagina de login 
+        header('Location: ../logout.php'); //Se não retorne para a pagina de login 
     }
+
+
+
+    //Função para deslogar 
+
+    function logout(){
+        session_start();
+        session_unset();
+        session_destroy();
+        header("location: ../index.php");
+    }   
+
+
 ?>
