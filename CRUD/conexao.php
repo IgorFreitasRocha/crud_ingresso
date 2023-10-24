@@ -17,5 +17,4 @@ try{
 }catch(PDOException $erro){
         echo "Erro ao tentar conectar com o banco de dados <p> .$erro";
     };
-    echo "Conexão funcionando";
 ?>

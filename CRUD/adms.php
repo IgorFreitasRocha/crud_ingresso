@@ -13,9 +13,9 @@ if (!isset($_SESSION['admin_logado'])) {
 require_once('conexao.php');
 
 try {
-    $stmt = $pdo->prepare("SELECT * FROM produtos");
+    $stmt = $pdo->prepare("SELECT * FROM administrador");
     $stmt->execute();
-    $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $administrador = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $erro) {
     echo "Erro " . $erro->getMessage();
 }
@@ -63,8 +63,8 @@ try {
             <h3>Home</h3>
             <nav>
                 <ul>
-                    <li><a class="active nav-prod product" href="painel_admin.php"><i class="fa-solid fa-house "></i>Produtos</a></li>
-                    <li><a href="adms.php"><i class="fa-solid fa-house"></i>Users </a></li>
+                    <li><a class="nav-prod product" href="painel_admin.php"><i class="fa-solid fa-house "></i>Produtos</a></li>
+                    <li><a class="active" href="adms.php"><i class="fa-solid fa-house"></i>Users </a></li>
                     <li><a href="../register/register.html"><i class="fa-solid fa-house"></i>Register</a></li>
                     <li><a href="#"><i class="fa-solid fa-house"></i>Relatorios</a></li>
                     <hr>
@@ -84,26 +84,22 @@ try {
                         <tr>
                             <th>ID</th>
                             <th>Nome</th>
-                            <th>Descrição</th>
-                            <th>Preço</th>
-                            <th>URL_imagem</th>
-                            <th>Imagem</th>
-                            <th>Ações</th>  <!-- Adicionando uma coluna para as ações editar/excluir -->
+                            <th>Senha</th>
+                            <th>ADM Ativo</th>
+                            <th>Ações</th> <!-- Adicionando uma coluna para as ações -->
                         </tr>
                     </thead>
 
                     <tbody>
-                        <?php foreach ($produtos as $produto) { ?>
+                        <?php foreach ($administrador as $adms) { ?>
                             <tr>
-                                <td><?php echo $produto['id']; ?></td>
-                                <td><?php echo $produto['nome']; ?></td>
-                                <td><?php echo $produto['descricao']; ?></td>
-                                <td><?php echo $produto['preco']; ?></td>
-                                <td><?php echo $produto['imagem']; ?></td>
-                                <td><img src="<?php echo $produto['url_imagem']; ?>" alt="Imagem do produto" width="75"></td>
+                                <td><?php echo $adms['id']; ?></td>
+                                <td><?php echo $adms['ADM_NOME']; ?></td>
+                                <td><?php echo $adms['ADM_SENHA']; ?></td>
+                                <td><?php echo $adms['ADM_ATIVO']; ?></td>
                                 <td>
-                                    <a class="btn_edit" href="editar_produto.php?id=<?php echo $produto['id']; ?>">Editar</a>
-                                    <a class="btn_exc" href="excluir_produto.php?id=<?php echo $produto['id']; ?>">Excluir</a>
+                                    <a class="btn_edit" href="editar_produto.php?id=<?php echo $adms['id']; ?>">Editar</a>
+                                    <a class="btn_exc" href="excluir_produto.php?id=<?php echo $adms['id']; ?>">Excluir</a>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -119,6 +115,3 @@ try {
 
     <script src="https://kit.fontawesome.com/482af9f33c.js" crossorigin="anonymous"></script>
     <script src="js/javinha.js"></script>
-</body>
-
-</html>
