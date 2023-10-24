@@ -65,8 +65,6 @@ try {
                 <ul>
                     <li><a class="nav-prod product" href="painel_admin.php"><i class="fa-solid fa-house "></i>Produtos</a></li>
                     <li><a class="active" href="adms.php"><i class="fa-solid fa-house"></i>Users </a></li>
-                    <li><a href="../register/register.html"><i class="fa-solid fa-house"></i>Register</a></li>
-                    <li><a href="#"><i class="fa-solid fa-house"></i>Relatorios</a></li>
                     <hr>
                 </ul>
             </nav>
@@ -77,7 +75,7 @@ try {
         <div class="content">
             <div class="container_center">
                 <div class="cad_produtos">
-                    <a href="cadastrar_produto.php"> <button class="btn_cad">Cadastrar produto</button> </a>
+                    <a href="cadastrar_adms.php"> <button class="btn_cad">Cadastrar administrador</button> </a>
                 </div>
                 <table>
                     <thead>
@@ -98,8 +96,8 @@ try {
                                 <td><?php echo $adms['ADM_SENHA']; ?></td>
                                 <td><?php echo $adms['ADM_ATIVO']; ?></td>
                                 <td>
-                                    <a class="btn_edit" href="editar_produto.php?id=<?php echo $adms['id']; ?>">Editar</a>
-                                    <a class="btn_exc" href="excluir_produto.php?id=<?php echo $adms['id']; ?>">Excluir</a>
+                                    <a class="btn_edit" href="editar_adms.php?id=<?php echo $adms['id']; ?>">Editar</a>
+                                    <a class="btn_exc" href="excluir_adms.php?id=<?php echo $adms['id']; ?>">Excluir</a>
                                 </td>
                             </tr>
                         <?php } ?>

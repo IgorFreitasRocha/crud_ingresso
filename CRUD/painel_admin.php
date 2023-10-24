@@ -65,8 +65,6 @@ try {
                 <ul>
                     <li><a class="active nav-prod product" href="painel_admin.php"><i class="fa-solid fa-house "></i>Produtos</a></li>
                     <li><a href="adms.php"><i class="fa-solid fa-house"></i>Users </a></li>
-                    <li><a href="../register/register.html"><i class="fa-solid fa-house"></i>Register</a></li>
-                    <li><a href="#"><i class="fa-solid fa-house"></i>Relatorios</a></li>
                     <hr>
                 </ul>
             </nav>
