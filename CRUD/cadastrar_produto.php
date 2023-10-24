@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <div class="saudacao">
-                <h2>Bem vindo, Administrador</h2>
+                <h2>Cadastro de Produtos</h2>
             </div>
 
             <div class="user">
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <ul>
                     <li class="product"><a class="active nav-prod product" href="painel_admin.php"><i class="fa-solid fa-house "></i>Produtos</a>
                     </li>
-                    <li><a href="../users/user.html"><i class="fa-solid fa-house"></i>Users </a></li>
+                    <li><a href="adms.php"><i class="fa-solid fa-house"></i>Users </a></li>
                     <hr>
                 </ul>
             </nav>

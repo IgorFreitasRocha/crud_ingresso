@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <div class="saudacao">
-                <h2>Bem vindo, Administrador</h2>
+                <h2>Cadastro de administradores</h2>
             </div>
 
             <div class="user">
@@ -68,9 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <h3>Home</h3>
             <nav>
                 <ul>
-                    <li class="product"><a class="active nav-prod product" href="painel_admin.php"><i class="fa-solid fa-house "></i>Produtos</a>
+                    <li class="product"><a class=" nav-prod product" href="painel_admin.php"><i class="fa-solid fa-house "></i>Produtos</a>
                     </li>
-                    <li><a href="../users/user.html"><i class="fa-solid fa-house"></i>Users </a></li>
+                    <li><a class="active" href="../users/user.html"><i class="fa-solid fa-house"></i>Users </a></li>
                     <hr>
                 </ul>
             </nav>
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <p></p>
 
                         <label for="ADM_SENHA">Senha do administrador</label>
-                        <input type="text" name="ADM_SENHA" id="ADM_SENHA" required></input>
+                        <input type="text" name="ADM_SENHA" id="ADM_SENHA" required>
                         <p></p>
 
                         <label for="ADM_ATIVO">Administrador ativo</label>
