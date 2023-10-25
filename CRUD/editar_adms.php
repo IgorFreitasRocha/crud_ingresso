@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <label for="ADM_NOME">Adiministrador Nome:</label>
     <input type="text" name="ADM_NOME" id="ADM_NOME" value="<?php echo $adms['ADM_NOME']; ?>"><br>
     <label for="ADM_SENHA">Senha do administrador:</label>
-    <input name="ADM_SENHA" id="ADM_SENHA"><?php echo $adms['ADM_SENHA']; ?></input><br>
+    <input name="ADM_SENHA" id="ADM_SENHA" value="<?php echo $adms['ADM_SENHA']; ?>"><br>
     <label for="ADM_ATIVO">Adiministrador Ativo/inativo:</label>
     <input type="text" name="ADM_ATIVO" id="ADM_ATIVO" value="<?php echo $adms['ADM_ATIVO']; ?>"><br>
     <input type="submit" value="Atualizar administrador">
