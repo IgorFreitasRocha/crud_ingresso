@@ -175,8 +175,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="example-text-input" class="form-control-label">Status</label>
-                                            <input class="form-control" type="text" name="ADM_ATIVO" id="ADM_ATIVO" required>
+                                            <label for="ADM_ATIVO">Status</label>
+                                            <select class="form-control" name="ADM_ATIVO" id="ADM_ATIVO">
+                                                <option value="1">Ativo</option>
+                                                <option value="0">Inativo</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Cadastrar">

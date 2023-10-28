@@ -129,8 +129,9 @@ if (!isset($_SESSION['admin_logado'])) {
       <div class="row">
         <div class="col-12">
           <div class="card mb-4">
-            <div class="card-header pb-0">
-              <h6>Produtos</h6>
+          <div class="card-body d-flex justify-content-between">
+              <div><h6 class="card-link">Produtos</h6></div>
+              <a href="cadastrar_produto.php" class="card-link btn btn-danger btn-sm ms-auto">Cadastrar Produtos</a>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
               <div class="table-responsive p-0">

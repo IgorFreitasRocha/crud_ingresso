@@ -146,7 +146,13 @@ if (!isset($_SESSION['admin_logado'])) {
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Descrição</label>
-                                        <input class="form-control" type="email" value="">
+                                        <textarea class="form-control" value=""></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="form-control-label">Quantidade</label>
+                                        <input class="form-control" type="number" value="">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
