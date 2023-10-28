@@ -7,7 +7,6 @@ if (!isset($_SESSION['admin_logado'])) {
     exit();
 }
 
-
 //Banco de dados
 
 require_once('conexao.php');
@@ -19,6 +18,7 @@ try {
 } catch (PDOException $erro) {
     echo "Erro " . $erro->getMessage();
 }
+
 
 ?>
 

@@ -2,11 +2,11 @@
 
     //Configurações do banco de dados
 
-    $host = 'localhost';
-    $db = 'crud';
-    $user = 'root';
-    $pass = '';
-    $charset = 'utf8mb4';
+    $host = 'localhost';  //Alterar aqui o servidor do banco de dados
+    $db = 'crud';  // Nome do banco a ser usado 
+    $user = 'root';  //Usuario do banco de dados
+    $pass = '';  //Senha do banco de dados 
+    $charset = 'utf8mb4';  // Conjunto de caracteres
 
     $dsn = "mysql:host=$host;dbname=$db;$charset";
 

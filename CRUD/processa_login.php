@@ -22,10 +22,10 @@
 
     if ($query->rowCount() > 0) {    //rowCount() = quantidade de linhas 
         $_SESSION['admin_logado'] = true;
-        //direcione (header) o usuario para painel_admin.php
-        header('Location: painel_admin.php');
+        //direcione (header) o usuario para ../pages/dashboard.html
+        header('Location: pages/dashboard.php');
     }else {
-        header('Location: ../logout.php'); //Se não retorne para a pagina de login 
+        header('Location: logout.php'); //Se não retorne para a pagina de login 
     }
 
 
@@ -36,7 +36,7 @@
         session_start();
         session_unset();
         session_destroy();
-        header("location: ../index.php");
+        header("location: ../login/index.php");
     }   
 
 

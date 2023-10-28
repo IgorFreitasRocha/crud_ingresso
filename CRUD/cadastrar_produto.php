@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <p></p>
 
                         <label for="url_imagem">URL da imagem</label>
-                        <input type="text" name="url_imagem" id="url_imagem">
+                        <input type="url" name="url_imagem" id="url_imagem">
                         <p></p>
 
                         <input type="submit" value="Cadastrar">
