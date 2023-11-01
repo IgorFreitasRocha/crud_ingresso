@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
         $stmt->bindParam(':ADM_ATIVO', $ADM_ATIVO, PDO::PARAM_STR);
         $stmt->execute(); //execulta os comando á cima
 
-        echo "<p style='color:green;'> Administrador cadastrado com sucesso</p>";
+        echo "<div id='messagee'>Cadastrado com sucesso</div>";
     } catch (PDOException $erro) {
         echo "<p style='color:red;'>Erro ao cadastrar o administrador: </p>" . $erro->getMessage() . "</p>";
     }
@@ -37,7 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-    <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <link rel="icon" type="image/png" href="../assets/img/favicon.png"> 
+    <link href="../assets/css/teste.css" rel="stylesheet">
+    <script src="../js/javinha.js"></script>
     <title>
         Cadastrar Administradores
     </title>
@@ -90,22 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
                         <span class="nav-link-text ms-1">Administradores</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../pages/edit.php">
-                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Editar Administradores</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="../pages/edit.php">
-                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Cadastrar Administradores</span>
-                    </a>
-                </li>
             </ul>
         </div>
     </aside>
@@ -124,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                         <div class="input-group">
                             <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Type here...">
+                            <input type="text" class="form-control" placeholder="Buscar Produto...">
                         </div>
                     </div>
                     <ul class="navbar-nav  justify-content-end">
@@ -158,7 +144,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
                             </div>
                         </div>
                         <div class="card-body">
-                            <p class="text-uppercase text-sm">Cadastrar</p>
                             <div class="row">
                                 <form action="" method="post" enctype="multipart/form-data">
                                     <div class="col-md-6">

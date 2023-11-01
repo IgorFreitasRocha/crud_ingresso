@@ -107,23 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <span class="nav-link-text ms-1">Administradores</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="../pages/edit.php">
-                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Editar produto</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../pages/cadastrar_produto.php">
-                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Cadastrar produto</span>
-                    </a>
-                </li>
-            </ul>
             </ul>
         </div>
     </aside>
@@ -142,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                         <div class="input-group">
                             <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Type here...">
+                            <input type="text" class="form-control" placeholder="Buscar Produto...">
                         </div>
                     </div>
                     <ul class="navbar-nav  justify-content-end">
@@ -161,80 +144,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                             </a>
                         </li>
-                        <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
-                            <li class="mb-2">
-                                <a class="dropdown-item border-radius-md" href="javascript:;">
-                                    <div class="d-flex py-1">
-                                        <div class="my-auto">
-                                            <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
-                                        </div>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="text-sm font-weight-normal mb-1">
-                                                <span class="font-weight-bold">New album</span> by Travis Scott
-                                            </h6>
-                                            <p class="text-xs text-secondary mb-0">
-                                                <i class="fa fa-clock me-1"></i>
-                                                1 day
-                                            </p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item border-radius-md" href="javascript:;">
-                                    <div class="d-flex py-1">
-                                        <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
-                                            <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                <title>credit-card</title>
-                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                    <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
-                                                        <g transform="translate(1716.000000, 291.000000)">
-                                                            <g transform="translate(453.000000, 454.000000)">
-                                                                <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
-                                                                <path class="color-background" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
-                                                            </g>
-                                                        </g>
-                                                    </g>
-                                                </g>
-                                            </svg>
-                                        </div>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="text-sm font-weight-normal mb-1">
-                                                Payment successfully completed
-                                            </h6>
-                                            <p class="text-xs text-secondary mb-0">
-                                                <i class="fa fa-clock me-1"></i>
-                                                2 days
-                                            </p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
         <!-- End Navbar -->
-        <div class="card shadow-lg mx-4 card-profile-bottom">
-            <div class="card-body p-3">
-                <div class="row gx-4">
-                    <div class="col-auto">
-                        <div class="avatar avatar-xl position-relative">
-                            <img src="../assets/img/team-1.jpg" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
-                        </div>
-                    </div>
-                    <div class="col-auto my-auto">
-                        <div class="h-100">
-                            <h5 class="mb-1">
-                                Nome do Administrador
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-md-8">
@@ -246,9 +160,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                         </div>
                         <div class="card-body">
-                            <p class="text-uppercase text-sm">Administrador</p>
-                            <form action="editar_admin.php" method="post">
                                 <div class="row align-items-center">
+                                <form action="editar_admin.php" method="post">
                                     <input type="hidden" name="id" value="<?php echo $adms['id']; ?>">
                                     <!-- Essa linha cria um campo de entrada (input) oculto no formulário. Um campo de entrada oculto é usado quando você quer incluir um dado no formulário que não precisa ser visível ou editável pelo usuário, mas que precisa ser enviado junto com os outros dados quando o formulário é submetido. -->
                                     <div class="col-md-6">
@@ -264,14 +177,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="ADM_ATIVO" class="form-control-label">Status</label>
-                                            <input class="form-control" type="text" name="ADM_ATIVO" id="ADM_ATIVO" value="<?php echo $adms['ADM_ATIVO']; ?>">
-                                        </div>
+                                        <label for="ADM_ATIVO">Status</label>
+                                        <select class="form-control" name="ADM_ATIVO" id="ADM_ATIVO">
+                                            <option value="1">Ativo</option>
+                                            <option value="0">Inativo</option>
+                                        </select>
                                     </div>
                                     <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Atualizar">
+                                    </form>
                                 </div>
-                            </form>
+                           
                             <hr class="horizontal dark">
                         </div>
                     </div>

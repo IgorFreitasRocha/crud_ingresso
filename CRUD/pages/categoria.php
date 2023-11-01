@@ -16,8 +16,8 @@ try {
     $stmt_categoria = $pdo->prepare("SELECT * FROM CATEGORIA");
     $stmt_categoria->execute();
     $categorias = $stmt_categoria->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    echo "<p style='color:red;'>Erro ao buscar categorias: " . $e->getMessage() . "</p>";
+} catch (PDOException $erro) {
+    echo "<p style='color:red;'>Erro ao buscar categorias: " . $erro->getMessage() . "</p>";
 }
 
 // Bloco que será executado quando o formulário for submetido.
@@ -57,14 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         echo "<p style='color:green;'>Produto cadastrado com sucesso!</p>";
-    } catch (PDOException $e) {
-        echo "<p style='color:red;'>Erro ao cadastrar produto: " . $e->getMessage() . "</p>";
+    } catch (PDOException $erro) {
+        echo "<p style='color:red;'>Erro ao cadastrar produto: " . $erro->getMessage() . "</p>";
     }
 }
 ?>
 <!-- Início do código HTML -->
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Cadastro de Produto</title>

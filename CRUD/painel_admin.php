@@ -109,10 +109,10 @@ try {
                 </table>
             </div>
         </div>
-
-
     </section>
 
+    <div class="alerta"></div>
+    <button class="elementoid">Ativar</button>
 
 
     <script src="https://kit.fontawesome.com/482af9f33c.js" crossorigin="anonymous"></script>

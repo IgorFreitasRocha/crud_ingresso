@@ -67,22 +67,6 @@ if (!isset($_SESSION['admin_logado'])) {
                         <span class="nav-link-text ms-1">Administradores</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../pages/edit.php">
-                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Editar produto</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="../pages/edit.php">
-                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Cadastrar produto</span>
-                    </a>
-                </li>
             </ul>
         </div>
     </aside>
@@ -101,7 +85,7 @@ if (!isset($_SESSION['admin_logado'])) {
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                         <div class="input-group">
                             <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Type here...">
+                            <input type="text" class="form-control" placeholder="Buscar Produto...">
                         </div>
                     </div>
                     <ul class="navbar-nav  justify-content-end">
@@ -135,7 +119,6 @@ if (!isset($_SESSION['admin_logado'])) {
                             </div>
                         </div>
                         <div class="card-body">
-                            <p class="text-uppercase text-sm">Cadastrar</p>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
