@@ -3,10 +3,11 @@
   position: fixed;
   top: 20px;
   right: 105px;
-  background-color: chocolate;
+  background-color: rgb(247, 34, 19);
   border-radius: 3px;
   color: #fff;
   animation: slidein 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  z-index: 100;
 }
 
 @keyframes slidein {
@@ -29,6 +30,7 @@
   height: 5px;
   background-color: rgba(0, 0, 0, 0.5);
   animation: time 3s forwards;
+  z-index: 100;
 }
 @keyframes time {
   0% {

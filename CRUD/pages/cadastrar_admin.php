@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
 
         echo "<div id='messagee'>Cadastrado com sucesso</div>";
     } catch (PDOException $erro) {
-        echo "<p style='color:red;'>Erro ao cadastrar o administrador: </p>" . $erro->getMessage() . "</p>";
+        echo "<div id='messagee'>Erro ao realizar o cadastro</div>" . $erro->getMessage() . "</p>";
     }
 }
 
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets/img/favicon.png"> 
-    <link href="../assets/css/teste.css" rel="stylesheet">
+    <link href="../assets/css/mensagem.css" rel="stylesheet">
     <script src="../js/javinha.js"></script>
     <title>
         Cadastrar Administradores

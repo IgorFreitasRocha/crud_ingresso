@@ -6,6 +6,50 @@ if (!isset($_SESSION['admin_logado'])) {
     header("Location:../logout.php");
     exit();
 }
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $nome = $_POST['nome'];
+    $descricao = $_POST['descricao'];
+    $preco = $_POST['preco'];
+    $imagem = $_FILES['imagem']['name'];
+    $url_image = $_POST['url_imagem'];
+
+    //Diretorio onde a imagem será salva
+    $target_dir = "upload/";
+    $target_file = $target_dir . basename($imagem);
+
+    //Gerar a URL da imagem
+    $base_url = "http://localhost/CRUD/crud_ingresso/CRUD/";
+    $url_imagem = $base_url . "upload/" . basename($imagem);
+
+    //Mover o arquivo de imagem carregado para o diretorio de distino
+    if (move_uploaded_file($_FILES['imagem']['tmp_name'], $target_file)) {
+    } else {
+        echo "Falha ao carregar imagem";
+    }
+
+
+    try {
+        $sql = "INSERT INTO produtos (nome, descricao, preco, imagem, url_imagem) VALUES (:nome, :descricao, :preco, :imagem, :url_imagem)";
+        $stmt = $pdo->prepare($sql); // Preparação para não conter injeção de sql
+        $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
+        $stmt->bindParam(':descricao', $descricao, PDO::PARAM_STR);
+        $stmt->bindParam(':preco', $preco, PDO::PARAM_STR);
+        $stmt->bindParam(':imagem', $target_file, PDO::PARAM_STR);
+        $stmt->bindParam(':url_imagem', $url_imagem, PDO::PARAM_STR);
+
+        $stmt->execute(); //execulta os comando á cima
+
+        echo "<p style='color:green;'> Produto cadastrado com sucesso</p>";
+    } catch (PDOException $erro) {
+        echo "<p style='color:red;'>Erro ao cadastrar o produto: </p>" . $erro->getMessage() . "</p>";
+    }
+}
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
