@@ -93,7 +93,7 @@ if (!isset($_SESSION['admin_logado'])) {
             <li class="nav-item d-flex align-items-center">
               <a href="../logout.php" class="nav-link text-white font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Sign in</span>
+                <span class="d-sm-inline d-none">Logout</span>
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">

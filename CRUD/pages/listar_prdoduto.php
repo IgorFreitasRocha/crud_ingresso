@@ -1,14 +1,25 @@
 <?php
 session_start();
+//Requisiçao com banco de dados 
+require_once('../conexao.php');
 
 //Varificação se o usuario está logado
 if (!isset($_SESSION['admin_logado'])) {
   header("Location:../logout.php");
   exit();
 }
+
+try {
+  $stmt = $pdo->prepare("SELECT * FROM produtos");
+  $stmt->execute();
+  $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $erro) {
+  echo "Erro " . $erro->getMessage();
+}
+
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
   <meta charset="utf-8" />
@@ -16,7 +27,7 @@ if (!isset($_SESSION['admin_logado'])) {
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <title>
-    Argon Dashboard 2 by Creative Tim
+    Listar Produtos
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -108,7 +119,7 @@ if (!isset($_SESSION['admin_logado'])) {
             <li class="nav-item d-flex align-items-center">
               <a href="../logout.php" class="nav-link text-white font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Sign in</span>
+                <span class="d-sm-inline d-none">Logout</span>
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -129,8 +140,10 @@ if (!isset($_SESSION['admin_logado'])) {
       <div class="row">
         <div class="col-12">
           <div class="card mb-4">
-          <div class="card-body d-flex justify-content-between">
-              <div><h6 class="card-link">Produtos</h6></div>
+            <div class="card-body d-flex justify-content-between">
+              <div>
+                <h6 class="card-link">Produtos</h6>
+              </div>
               <a href="cadastrar_produto.php" class="card-link btn btn-danger btn-sm ms-auto">Cadastrar Produtos</a>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
@@ -138,56 +151,72 @@ if (!isset($_SESSION['admin_logado'])) {
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Descrição</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Categoria</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Preço</th>
-                      
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Desconto</th>
-                      
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Imagem</th>
+
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Id</th>
+
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Nome</th>
+
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Descrição</th>
+
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Categoria</th>
+
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Preço</th>
+
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Desconto</th>
+
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Imagem</th>
+
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
+
                       <th class="text-secondary opacity-7"></th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Lollapaluza</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">festival de música</p>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">Musical</p>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-success">Online</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">5,00</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">R$2,50</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">Imagem</span>
-                      </td>
-                      <td class="align-middle">
-                        <a href="edit.php" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
-                      </td>
-                      <td class="align-middle">
-                        <a href="edit.php" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Delete
-                        </a>
-                      </td>
-                    </tr>
+                    <?php foreach ($produtos as $produto) {
+                    ?>
+                      <tr>
+                        <td class="align-middle text-center">
+                          <?php echo $produto['id']; ?>
+                        </td>
+                        <td class="align-middle text-center">
+                          <?php echo $produto['nome']; ?>
+                        <td class="align-middle text-center">
+                          <?php echo $produto['descricao']; ?>
+                        </td>
+                        </td>
+                        <td class="align-middle text-center">
+                          <?php echo $produto['CAT_NOME']; ?>
+                        </td>
+                        <td class="align-middle text-center">
+                          <?php echo "R$" . $produto['preco']; ?>
+                        </td>
+                        <td class="align-middle text-center">
+                          <?php echo "R$" . $produto['desconto']; ?>
+                        </td>
+                        <td class="align-middle text-center">
+                          <img src="<?php echo $produto['IMG_URL']; ?>" alt="<?php echo $produto['nome']; ?>" width="50">
+                        </td>
+                        <td class="align-middle text-center">
+                        <?php
+                          if($produto['status'] == 0) {
+                            echo'<span class="statusUser badge badge-sm bg-gradient-secondary">Inativo</span>';
+                          }else{
+                            echo'<span class="statusUser badge badge-sm bg-gradient-success">Ativo</span>';
+                          };
+                          ?>
+                        </td>
+                        <td class="align-middle">
+                          <a href="edit.php" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                            Edit
+                          </a>
+                        </td>
+                        <td class="align-middle">
+                          <a href="edit.php" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                            Delete
+                          </a>
+                        </td>
+                      </tr>
+                    <?php } ?>
                   </tbody>
                 </table>
               </div>

@@ -121,7 +121,7 @@ try {
             <li class="nav-item d-flex align-items-center">
               <a href="../logout.php" class="nav-link text-white font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Sign in</span>
+                <span class="d-sm-inline d-none">Logout</span>
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -149,10 +149,10 @@ try {
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nome</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Senha</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">ID</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Nome</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Senha</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
                       <th class="text-secondary opacity-7"></th>
                     </tr>
                   </thead>
@@ -160,10 +160,10 @@ try {
                   <tbody>
                     <?php foreach ($administrador as $adms) { ?>
                       <tr>
-                        <td>
+                        <td class="align-middle text-center">
                           <?php echo $adms['id']; ?>
                         </td>
-                        <td>
+                        <td class="align-middle text-center">
                           <?php echo $adms['ADM_NOME']; ?>
                         </td>
                         <td class="align-middle text-center text-sm">

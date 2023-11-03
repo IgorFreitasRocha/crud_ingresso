@@ -7,13 +7,13 @@ require_once('../conexao.php');
 
 // Verifica se o administrador está logado.
 if (!isset($_SESSION['admin_logado'])) {
-    header("Location:login.php");
+    header("Location:../logout.php");
     exit();
 }
 
 // Bloco de consulta para buscar categorias.
 try {
-    $stmt_categoria = $pdo->prepare("SELECT * FROM CATEGORIA");
+    $stmt_categoria = $pdo->prepare("SELECT * FROM categoria");
     $stmt_categoria->execute();
     $categorias = $stmt_categoria->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $erro) {
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Inserindo produto no banco.
     try {
-        $sql = "INSERT INTO PRODUTO (PRODUTO_NOME, PRODUTO_DESC, PRODUTO_PRECO, CATEGORIA_ID, PRODUTO_ATIVO, PRODUTO_DESCONTO) VALUES (:nome, :descricao, :preco, :categoria_id, :ativo, :desconto)";
+        $sql = "INSERT INTO produtos (PRODUTO_NOME, PRODUTO_DESC, PRODUTO_PRECO, CATEGORIA_ID, PRODUTO_ATIVO, PRODUTO_DESCONTO) VALUES (:nome, :descricao, :preco, :categoria_id, :ativo, :desconto)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
         $stmt->bindParam(':descricao', $descricao, PDO::PARAM_STR);
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Loop para preencher o dropdown de categorias.
             foreach ($categorias as $categoria): 
         ?>
-            <option value="<?= $categoria['CATEGORIA_ID'] ?>"><?= $categoria['CATEGORIA_NOME'] ?></option>
+            <option value="<?= $categoria['id'] ?>"><?= $categoria['CAT_NOME'] ?></option>
         <?php endforeach; ?>
     </select>
     <p>

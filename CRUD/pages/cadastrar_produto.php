@@ -13,38 +13,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nome = $_POST['nome'];
     $descricao = $_POST['descricao'];
     $preco = $_POST['preco'];
-    $imagem = $_FILES['imagem']['name'];
-    $url_image = $_POST['url_imagem'];
-
-    //Diretorio onde a imagem será salva
-    $target_dir = "upload/";
-    $target_file = $target_dir . basename($imagem);
-
-    //Gerar a URL da imagem
-    $base_url = "http://localhost/CRUD/crud_ingresso/CRUD/";
-    $url_imagem = $base_url . "upload/" . basename($imagem);
-
-    //Mover o arquivo de imagem carregado para o diretorio de distino
-    if (move_uploaded_file($_FILES['imagem']['tmp_name'], $target_file)) {
-    } else {
-        echo "Falha ao carregar imagem";
-    }
+    $CAT_NOME = $_POST['CAT_NOME'];
+    $IMG_URL = $_POST['IMG_URL'];
 
 
     try {
-        $sql = "INSERT INTO produtos (nome, descricao, preco, imagem, url_imagem) VALUES (:nome, :descricao, :preco, :imagem, :url_imagem)";
+        $sql = "INSERT INTO produtos (nome, descricao, preco, CAT_NOME, IMG_URL) VALUES (:nome, :descricao, :preco, :CAT_NOME, :IMG_URL)";
         $stmt = $pdo->prepare($sql); // Preparação para não conter injeção de sql
         $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
         $stmt->bindParam(':descricao', $descricao, PDO::PARAM_STR);
         $stmt->bindParam(':preco', $preco, PDO::PARAM_STR);
-        $stmt->bindParam(':imagem', $target_file, PDO::PARAM_STR);
-        $stmt->bindParam(':url_imagem', $url_imagem, PDO::PARAM_STR);
+        $stmt->bindParam(':CAT_NOME', $CAT_NOME, PDO::PARAM_STR);
+        $stmt->bindParam(':IMG_URL', $IMG_URL, PDO::PARAM_STR);
 
         $stmt->execute(); //execulta os comando á cima
 
-        echo "<p style='color:green;'> Produto cadastrado com sucesso</p>";
+        echo "<div id='messagee'>Cadastrado com sucesso</div>";
     } catch (PDOException $erro) {
-        echo "<p style='color:red;'>Erro ao cadastrar o produto: </p>" . $erro->getMessage() . "</p>";
+        "<div id='messagee'>Erro ao realizar o cadastro</div>" . $erro->getMessage() . "</p>";
     }
 }
 
@@ -59,6 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <link rel="stylesheet" href="../assets/css/mensagem.css">
+    <script src="../js/javinha.js"></script>
     <title>
         Cadastrar Produto
     </title>
@@ -136,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <li class="nav-item d-flex align-items-center">
                             <a href="../logout.php" class="nav-link text-white font-weight-bold px-0">
                                 <i class="fa fa-user me-sm-1"></i>
-                                <span class="d-sm-inline d-none">Sign in</span>
+                                <span class="d-sm-inline d-none">Logout</span>
                             </a>
                         </li>
                         <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -155,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- End Navbar -->
         <div class="container-fluid py-4">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-header pb-0">
                             <div class="d-flex align-items-center">
@@ -163,54 +151,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label"> Nome</label>
-                                        <input class="form-control" type="text" value="">
+                            <div>
+                                <form class="row" action="" method="post" enctype="multipart/form-data">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="nome" class="form-control-label"> Nome</label>
+                                            <input class="form-control" type="text" name="nome" id="nome" required>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Descrição</label>
-                                        <textarea class="form-control" value=""></textarea>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="descricao" class="form-control-label">Descrição</label>
+                                            <textarea class="form-control" name="descricao" id="descricao" required></textarea>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Quantidade</label>
-                                        <input class="form-control" type="number" value="">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="PROD_QTD" class="form-control-label">Quantidade</label>
+                                            <input class="form-control" type="number" name="PROD_QTD" id="PROD_QTD" >
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Categoria</label>
-                                        <input class="form-control" type="text" value="">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="CAT_NOME" class="form-control-label">Categoria</label>
+                                            <input class="form-control" type="text" name="CAT_NOME" id="CAT_NOME">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Preço</label>
-                                        <input class="form-control" type="number" value="">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="preco" class="form-control-label">Preço</label>
+                                            <input class="form-control" type="number" name="preco" id="preco" step="0.01" required>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Desconto</label>
-                                        <input class="form-control" type="number" value="">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="desconto" class="form-control-label">Desconto</label>
+                                            <input class="form-control" type="number" name="desconto" id="desconto" step="0.01">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Imagem</label>
-                                        <input class="form-control" type="file" value="">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="IMG_URL" class="form-control-label">URL da Imagem</label>
+                                            <input class="form-control" type="text" name="IMG_URL" id="IMG_URL">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                    <label class="form-check-label" for="exampleCheck1">Ativo</label>
-                                </div>
-                                <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Cadastrar">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="status">Status</label>
+                                            <select class="form-control" name="status" id="status">
+                                                <option value="1">Ativo</option>
+                                                <option value="0">Inativo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Cadastrar">
+                                </form>
                             </div>
                             <hr class="horizontal dark">
                         </div>
