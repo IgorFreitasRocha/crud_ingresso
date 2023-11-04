@@ -10,11 +10,38 @@ if (!isset($_SESSION['admin_logado'])) {
 }
 
 try {
-  $stmt = $pdo->prepare("SELECT * FROM produtos");
+  $stmt = $pdo->prepare("SELECT
+    p.PRODUTO_ID,
+    p.PRODUTO_NOME, 
+    p.PRODUTO_DESC, 
+    p.PRODUTO_PRECO,
+    p.PRODUTO_DESCONTO,
+    p.CATEGORIA_ID,
+    p.PRODUTO_ATIVO,
+    c.CATEGORIA_NOME,
+    pe.PRODUTO_QTD
+    FROM produto AS p
+    INNER JOIN categoria AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
+    INNER JOIN produto_estoque as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+  ");
   $stmt->execute();
   $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $erro) {
   echo "Erro " . $erro->getMessage();
+}
+
+function buscarImagens($pdo, $produto_id){
+  $sql = "SELECT
+      IMAGEM_URL
+    FROM produto_imagem 
+    WHERE PRODUTO_ID = :PRODUTO_ID
+  ";
+  $stmt = $pdo->prepare($sql); 
+  $stmt->bindParam(':PRODUTO_ID', $produto_id, PDO::PARAM_INT);
+  $stmt->execute();
+  $imagens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  return $imagens;
 }
 
 ?>
@@ -160,13 +187,19 @@ try {
 
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Categoria</th>
 
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Qtd</th>
+
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Preço</th>
 
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Desconto</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Preço com desconto</th>
 
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Imagem</th>
 
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
+
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Editar</th>
+
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Remover</th>
 
                       <th class="text-secondary opacity-7"></th>
                     </tr>
@@ -176,43 +209,51 @@ try {
                     ?>
                       <tr>
                         <td class="align-middle text-center">
-                          <?php echo $produto['id']; ?>
+                          <?php echo $produto['PRODUTO_ID']; ?>
                         </td>
                         <td class="align-middle text-center">
-                          <?php echo $produto['nome']; ?>
+                          <?php echo $produto['PRODUTO_NOME']; ?>
                         <td class="align-middle text-center">
-                          <?php echo $produto['descricao']; ?>
+                          <?php echo $produto['PRODUTO_DESC']; ?>
                         </td>
                         </td>
                         <td class="align-middle text-center">
-                          <?php echo $produto['CAT_NOME']; ?>
+                          <?php echo $produto['CATEGORIA_NOME']; ?>
                         </td>
                         <td class="align-middle text-center">
-                          <?php echo "R$" . $produto['preco']; ?>
+                          <?php echo $produto['PRODUTO_QTD']; ?>
                         </td>
                         <td class="align-middle text-center">
-                          <?php echo "R$" . $produto['desconto']; ?>
+                          <?php echo "R$ " . $produto['PRODUTO_PRECO']; ?>
                         </td>
                         <td class="align-middle text-center">
-                          <img src="<?php echo $produto['IMG_URL']; ?>" alt="<?php echo $produto['nome']; ?>" width="50">
+                          <?php echo "R$ " . ($produto['PRODUTO_PRECO'] - $produto['PRODUTO_DESCONTO']); ?>
+                        </td>
+                        <td class="align-middle text-center">
+                          <?php 
+                          $imagens = buscarImagens($pdo, $produto['PRODUTO_ID']); 
+                          foreach($imagens as $imagem){
+                          ?>
+                            <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo $produto['PRODUTO_NOME']; ?>" width="50">
+                          <?php } ?>
                         </td>
                         <td class="align-middle text-center">
                         <?php
-                          if($produto['status'] == 0) {
-                            echo'<span class="statusUser badge badge-sm bg-gradient-secondary">Inativo</span>';
-                          }else{
+                          if($produto['PRODUTO_ATIVO']) {
                             echo'<span class="statusUser badge badge-sm bg-gradient-success">Ativo</span>';
+                          }else{
+                            echo'<span class="statusUser badge badge-sm bg-gradient-secondary">Inativo</span>';
                           };
                           ?>
                         </td>
-                        <td class="align-middle">
+                        <td class="align-middle text-center">
                           <a href="editar_produto.php" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                            Edit
+                            Editar
                           </a>
                         </td>
-                        <td class="align-middle">
+                        <td class="align-middle text-center">
                           <a href="deletar_produto.php" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                            Delete
+                            Remover
                           </a>
                         </td>
                       </tr>

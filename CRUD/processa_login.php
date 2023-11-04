@@ -8,9 +8,11 @@
     $nome = $_POST['nome']; // busca no arquivo requerido
     $senha = $_POST['senha']; // busca no arquivo requerido
 
-    $sql = "SELECT * FROM administrador WHERE ADM_NOME = :nome AND
-    ADM_SENHA  = :senha AND ADM_ATIVO = 1";  //Comando sql para buscar na tabela ADMINISTRADOR o ADM_NOME e ADM_SENHA  e ADM_ATIVO
-
+    $sql = "SELECT ADM_NOME, ADM_SENHA, ADM_ATIVO
+        FROM administrador
+        WHERE ADM_NOME = :nome 
+        AND ADM_SENHA  = :senha
+        AND ADM_ATIVO = 1"; 
 
 
     $query = $pdo->prepare($sql);
@@ -22,13 +24,10 @@
 
     if ($query->rowCount() > 0) {    //rowCount() = quantidade de linhas 
         $_SESSION['admin_logado'] = true;
-        //direcione (header) o usuario para ../pages/dashboard.html
         header('Location: pages/dashboard.php');
     }else {
         header('Location: logout.php'); //Se não retorne para a pagina de login 
     }
-
-
 
     //Função para deslogar 
 
@@ -38,6 +37,4 @@
         session_destroy();
         header("location: ../login/index.php");
     }   
-
-
 ?>
