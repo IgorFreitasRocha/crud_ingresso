@@ -26,19 +26,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nome = $_POST['nome'];
     $descricao = $_POST['descricao'];
     $preco = $_POST['preco'];
-    $categoria_id = $_POST['categoria_id'];
+    $CAT_ID = $_POST['CAT_ID'];
     $ativo = isset($_POST['ativo']) ? 1 : 0;
     $desconto = $_POST['desconto'];
     $imagens = $_POST['imagem_url'];
 
     // Inserindo produto no banco.
     try {
-        $sql = "INSERT INTO produtos (PRODUTO_NOME, PRODUTO_DESC, PRODUTO_PRECO, CATEGORIA_ID, PRODUTO_ATIVO, PRODUTO_DESCONTO) VALUES (:nome, :descricao, :preco, :categoria_id, :ativo, :desconto)";
+        $sql = "INSERT INTO produtos (PRODUTO_NOME, PRODUTO_DESC, PRODUTO_PRECO, CAT_ID, PRODUTO_ATIVO, PRODUTO_DESCONTO) VALUES (:nome, :descricao, :preco, :CAT_ID, :ativo, :desconto)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
         $stmt->bindParam(':descricao', $descricao, PDO::PARAM_STR);
         $stmt->bindParam(':preco', $preco, PDO::PARAM_STR);
-        $stmt->bindParam(':categoria_id', $categoria_id, PDO::PARAM_INT);
+        $stmt->bindParam(':CAT_ID', $CAT_ID, PDO::PARAM_INT);
         $stmt->bindParam(':ativo', $ativo, PDO::PARAM_INT);
         $stmt->bindParam(':desconto', $desconto, PDO::PARAM_STR);
         $stmt->execute();
@@ -95,8 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <label for="desconto">Desconto:</label>
     <input type="number" name="desconto" id="desconto" step="0.01" required>
     <p>
-    <label for="categoria_id">Categoria:</label>
-    <select name="categoria_id" id="categoria_id" required>
+    <label for="CAT_ID">Categoria:</label>
+    <select name="CAT_ID" id="CAT_ID" required>
         <?php 
             // Loop para preencher o dropdown de categorias.
             foreach ($categorias as $categoria): 

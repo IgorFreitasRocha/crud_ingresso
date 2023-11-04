@@ -1,32 +1,70 @@
 <?php
 session_start();
 
+// Importa a configuração de conexão com o banco de dados.
+require_once('../conexao.php');
+
 //Varificação se o usuario está logado
 if (!isset($_SESSION['admin_logado'])) {
     header("Location:../logout.php");
     exit();
 }
 
+// Bloco de consulta para buscar categorias.
+try {
+    $stmt_categoria = $pdo->prepare("SELECT * FROM categoria");
+    $stmt_categoria->execute();
+    $categoria = $stmt_categoria->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $erro) {
+    echo "<div id='messagee'>Erro ao buscar categoria " . $erro->getMessage() . "</div>";
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $nome = $_POST['nome'];
     $descricao = $_POST['descricao'];
-    $preco = $_POST['preco'];
     $CAT_NOME = $_POST['CAT_NOME'];
+    $preco = $_POST['preco'];
+    $desconto = $_POST['desconto'];
     $IMG_URL = $_POST['IMG_URL'];
+    $status = $_POST['status'];
+
 
 
     try {
-        $sql = "INSERT INTO produtos (nome, descricao, preco, CAT_NOME, IMG_URL) VALUES (:nome, :descricao, :preco, :CAT_NOME, :IMG_URL)";
+        $sql = "INSERT INTO produtos (nome, descricao, CAT_NOME, preco, desconto, IMG_URL, status) VALUES (:nome, :descricao, :CAT_NOME, :preco, :desconto :IMG_URL, :status)";
         $stmt = $pdo->prepare($sql); // Preparação para não conter injeção de sql
         $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
         $stmt->bindParam(':descricao', $descricao, PDO::PARAM_STR);
-        $stmt->bindParam(':preco', $preco, PDO::PARAM_STR);
         $stmt->bindParam(':CAT_NOME', $CAT_NOME, PDO::PARAM_STR);
+        $stmt->bindParam(':preco', $preco, PDO::PARAM_STR);
+        $stmt->bindParam(':desconto', $desconto, PDO::PARAM_STR);
         $stmt->bindParam(':IMG_URL', $IMG_URL, PDO::PARAM_STR);
+        $stmt->bindParam(':status', $status, PDO::PARAM_STR);
 
         $stmt->execute(); //execulta os comando á cima
+        // Pegando o ID do produto inserido.
+        $id = $pdo->lastInsertId();
+
+        // Inserindo imagens no banco.
+        foreach ($imagens as $IMG_ORDEM => $IMG_URL) {
+            $sql_imagem = "INSERT INTO produto_imagem (IMG_URL, id, IMG_ORDEM) VALUES (:IMG_URL, :id, :IMG_ORDEM)";
+            $stmt_imagem = $pdo->prepare($sql_imagem);
+            $stmt_imagem->bindParam(':IMG_URL', $IMG_URL, PDO::PARAM_STR);
+            $stmt_imagem->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt_imagem->bindParam(':IMG_ORDEM', $IMG_ORDEM, PDO::PARAM_INT);
+            $stmt_imagem->execute();
+        }
+
+        //Inserindo novas categorias 
+        foreach ($categorias as $CAT_ATIVO => $CAT_NOME) {
+            $sql_imagem = "INSERT INTO categoria (CAT_NOME, CAT_DESC, CAT_ATIVO) VALUES (:CAT_NOME, :CAT_DESC, :CAT_ATIVO)";
+            $stmt_imagem = $pdo->prepare($sql_imagem);
+            $stmt_imagem->bindParam(':CAT_NOME', $CAT_NOME, PDO::PARAM_STR);
+            $stmt_imagem->bindParam(':CAT_DESC', $produto_id, PDO::PARAM_INT);
+            $stmt_imagem->bindParam(':CAT_ATIVO', $CAT_ATIVO, PDO::PARAM_INT);
+            $stmt_imagem->execute();
+        }
 
         echo "<div id='messagee'>Cadastrado com sucesso</div>";
     } catch (PDOException $erro) {
@@ -50,6 +88,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>
         Cadastrar Produto
     </title>
+    <script>
+        // Adiciona um novo campo de imagem URL.
+        function adicionarImagem() {
+            const containerImagens = document.getElementById('containerImagens');
+            const novoInput = document.createElement('input');
+            novoInput.type = 'text';
+            novoInput.name = 'IMG_URL[]';
+            novoInput.className = 'form-control';
+            containerImagens.appendChild(novoInput);
+        }
+
+        // Adiciona um novo campo de Categoria.
+        function adicionarCategoria() {
+            const containerCategoria = document.getElementById('containerCategoria');
+            const novoInputCat = document.createElement('input');
+            novoInputCat.type = 'text';
+            novoInputCat.name = 'CAT_NOME[]';
+            novoInputCat.className = 'form-control';
+            containerCategoria.appendChild(novoInputCat);
+        }
+    </script>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->
@@ -168,13 +227,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="PROD_QTD" class="form-control-label">Quantidade</label>
-                                            <input class="form-control" type="number" name="PROD_QTD" id="PROD_QTD" >
+                                            <input class="form-control" type="number" name="PROD_QTD" id="PROD_QTD">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="CAT_NOME" class="form-control-label">Categoria</label>
-                                            <input class="form-control" type="text" name="CAT_NOME" id="CAT_NOME">
+                                            <select class="form-control" type="text" name="CAT_NOME" id="CAT_NOME" required>
+                                                <?php
+                                                // Loop para preencher o dropdown de categorias.
+                                                foreach ($categoria as $categorias) :
+                                                ?>
+                                                    <option class="form-control" value="<?= $categorias['id'] ?>"><?= $categorias['CAT_NOME'] ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <div id="containerCategoria"> </div>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm " onclick="adicionarCategoria()">Adicionar categoria</button>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -193,6 +261,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <div class="form-group">
                                             <label for="IMG_URL" class="form-control-label">URL da Imagem</label>
                                             <input class="form-control" type="text" name="IMG_URL" id="IMG_URL">
+                                            <div id="containerImagens"> </div>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="adicionarImagem()">Adicionar mais imagens</button>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
