@@ -4,7 +4,7 @@ require_once('../conexao.php');
 
 
 if(!isset($_SESSION['admin_logado'])){
-    header("Location:logout.php");
+    header("Location:../logout.php");
     exit();
 
 

@@ -206,12 +206,12 @@ try {
                           ?>
                         </td>
                         <td class="align-middle">
-                          <a href="edit.php" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                          <a href="editar_produto.php" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
                             Edit
                           </a>
                         </td>
                         <td class="align-middle">
-                          <a href="edit.php" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                          <a href="deletar_produto.php" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
                             Delete
                           </a>
                         </td>

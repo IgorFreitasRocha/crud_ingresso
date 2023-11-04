@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     try {
-        $sql = "INSERT INTO produtos (nome, descricao, CAT_NOME, preco, desconto, IMG_URL, status) VALUES (:nome, :descricao, :CAT_NOME, :preco, :desconto :IMG_URL, :status)";
+        $sql = "INSERT INTO produtos (nome, descricao, CAT_NOME, preco, desconto, IMG_URL, status) VALUES (:nome, :descricao, :CAT_NOME, :preco, :desconto, :IMG_URL, :status)";
         $stmt = $pdo->prepare($sql); // Preparação para não conter injeção de sql
         $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
         $stmt->bindParam(':descricao', $descricao, PDO::PARAM_STR);
@@ -61,14 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $sql_imagem = "INSERT INTO categoria (CAT_NOME, CAT_DESC, CAT_ATIVO) VALUES (:CAT_NOME, :CAT_DESC, :CAT_ATIVO)";
             $stmt_imagem = $pdo->prepare($sql_imagem);
             $stmt_imagem->bindParam(':CAT_NOME', $CAT_NOME, PDO::PARAM_STR);
-            $stmt_imagem->bindParam(':CAT_DESC', $produto_id, PDO::PARAM_INT);
+            $stmt_imagem->bindParam(':CAT_DESC', $CAT_DESC, PDO::PARAM_INT);
             $stmt_imagem->bindParam(':CAT_ATIVO', $CAT_ATIVO, PDO::PARAM_INT);
             $stmt_imagem->execute();
         }
 
         echo "<div id='messagee'>Cadastrado com sucesso</div>";
     } catch (PDOException $erro) {
-        "<div id='messagee'>Erro ao realizar o cadastro</div>" . $erro->getMessage() . "</p>";
+        echo "<div id='messagee'>Erro ao realizar o cadastro</div>" . $erro->getMessage() . "</p>";
     }
 }
 
@@ -233,13 +233,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="CAT_NOME" class="form-control-label">Categoria</label>
-                                            <select class="form-control" type="text" name="CAT_NOME" id="CAT_NOME" required>
+                                            <select class="form-control" type="text" name="CAT_NOME" id="CAT_NOME">
                                                 <?php
                                                 // Loop para preencher o dropdown de categorias.
-                                                foreach ($categoria as $categorias) :
+                                                foreach ($categoria as $categorias) {
                                                 ?>
-                                                    <option class="form-control" value="<?= $categorias['id'] ?>"><?= $categorias['CAT_NOME'] ?></option>
-                                                <?php endforeach; ?>
+                                                    <option class="form-control" value="<?= $categorias['CAT_ID'] ?>"><?= $categorias['CAT_NOME'] ?></option>
+                                                <?php }; ?>
                                             </select>
                                             <div id="containerCategoria"> </div>
                                             <button type="button" class="btn btn-outline-secondary btn-sm " onclick="adicionarCategoria()">Adicionar categoria</button>
