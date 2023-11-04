@@ -161,7 +161,7 @@ try {
                     <?php foreach ($administrador as $adms) { ?>
                       <tr>
                         <td>
-                          <?php echo $adms['id']; ?>
+                          <?php echo $adms['ADM_ID']; ?>
                         </td>
                         <td>
                           <?php echo $adms['ADM_NOME']; ?>
@@ -179,12 +179,12 @@ try {
                           ?>
                         </td>
                         <td class="align-middle text-center">
-                          <a href="editar_admin.php?id=<?php echo $adms['id']; ?>" class="btn badge badge-sm bg-gradient-primary" data-toggle="tooltip" data-original-title="Edit user">
+                          <a href="editar_admin.php?id=<?php echo $adms['ADM_ID']; ?>" class="btn badge badge-sm bg-gradient-primary" data-toggle="tooltip" data-original-title="Edit user">
                             Edit
                           </a>
                         </td>
                         <td class="align-middle text-center">
-                          <a href="deletar_admin.php?id=<?php echo $adms['id']; ?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
+                          <a href="deletar_admin.php?id=<?php echo $adms['ADM_ID']; ?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
                             Delete
                           </a>
                         </td>
