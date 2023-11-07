@@ -4,12 +4,8 @@ session_start();
 
 // Importa a configuração de conexão com o banco de dados.
 require_once('../conexao.php');
-
-// Verifica se o administrador está logado.
-if (!isset($_SESSION['admin_logado'])) {
-    header("Location:../logout.php");
-    exit();
-}
+//Varificação se o usuario está logado
+require_once('../valida_login.php');
 
 // Bloco de consulta para buscar categorias.
 try {

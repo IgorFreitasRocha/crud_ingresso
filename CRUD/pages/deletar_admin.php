@@ -2,13 +2,8 @@
 session_start();
 require_once('../conexao.php');
 
-
-if(!isset($_SESSION['admin_logado'])){
-    header("Location:../logout.php");
-    exit();
-
-
-}
+//Varificação se o usuario está logado
+require_once('../valida_login.php');
 
 
 $mensagem = '';

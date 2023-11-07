@@ -6,7 +6,4 @@ if (!isset($_SESSION['admin_logado'])) {
     exit();
 }
 
-
-
-
 ?>

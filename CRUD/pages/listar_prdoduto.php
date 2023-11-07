@@ -2,12 +2,8 @@
 session_start();
 //Requisiçao com banco de dados 
 require_once('../conexao.php');
-
-//Varificação se o usuario está logado
-if (!isset($_SESSION['admin_logado'])) {
-  header("Location:../logout.php");
-  exit();
-}
+//Valida se o usuario está logado 
+require_once('../valida_login.php');
 
 try {
   $stmt = $pdo->prepare("SELECT
@@ -178,9 +174,6 @@ function buscarImagens($pdo, $produto_id){
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Id</th>
-
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Nome</th>
 
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Descrição</th>
@@ -208,9 +201,6 @@ function buscarImagens($pdo, $produto_id){
                     <?php foreach ($produtos as $produto) {
                     ?>
                       <tr>
-                        <td class="align-middle text-center">
-                          <?php echo $produto['PRODUTO_ID']; ?>
-                        </td>
                         <td class="align-middle text-center">
                           <?php echo $produto['PRODUTO_NOME']; ?>
                         <td class="align-middle text-center">

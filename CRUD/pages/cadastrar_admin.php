@@ -3,10 +3,7 @@ session_start();
 require_once('../conexao.php');
 
 //Varificação se o usuario está logado
-if (!isset($_SESSION['admin_logado'])) {
-    header("Location:../logout.php");
-    exit();
-}
+require_once('../valida_login.php');
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados

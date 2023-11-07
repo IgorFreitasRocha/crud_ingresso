@@ -1,18 +1,20 @@
 <?php
 session_start();
 
-//Varificação se o usuario está logado
-if (!isset($_SESSION['admin_logado'])) {
-  header("Location:../logout.php");
-  exit();
-}
-
 //Conexão com banco de dados
-
 require_once('../conexao.php');
+//Varificação se o usuario está logado
+require_once('../valida_login.php');
+
 
 try {
-  $stmt = $pdo->prepare("SELECT * FROM administrador");
+  $stmt = $pdo->prepare("SELECT 
+    ADM_ID,
+    ADM_NOME,
+    ADM_SENHA,
+    ADM_ATIVO 
+    FROM administrador
+    ");
   $stmt->execute();
   $administrador = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $erro) {
@@ -29,7 +31,7 @@ try {
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <title>
-    Argon Dashboard 2 by Creative Tim
+    Administradores
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -161,7 +163,7 @@ try {
                     <?php foreach ($administrador as $adms) { ?>
                       <tr>
                         <td class="align-middle text-center">
-                          <?php echo $adms['id']; ?>
+                          <?php echo $adms['ADM_ID']; ?>
                         </td>
                         <td class="align-middle text-center">
                           <?php echo $adms['ADM_NOME']; ?>
@@ -179,12 +181,12 @@ try {
                           ?>
                         </td>
                         <td class="align-middle text-center">
-                          <a href="editar_admin.php?id=<?php echo $adms['id']; ?>" class="btn badge badge-sm bg-gradient-primary" data-toggle="tooltip" data-original-title="Edit user">
+                          <a href="editar_admin.php?ADM_ID=<?php echo $adms['ADM_ID']; ?>" class="btn badge badge-sm bg-gradient-primary" data-toggle="tooltip" data-original-title="Edit user">
                             Edit
                           </a>
                         </td>
                         <td class="align-middle text-center">
-                          <a href="deletar_admin.php?id=<?php echo $adms['id']; ?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
+                          <a href="deletar_admin.php?ADM_ID=<?php echo $adms['ADM_ID']; ?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
                             Delete
                           </a>
                         </td>

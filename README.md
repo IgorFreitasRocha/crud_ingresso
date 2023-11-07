@@ -16,3 +16,7 @@ HTML, CSS, PHP, MySQL e JavaScript
  - [Ticket360](https://www.ticket360.com.br/)
  - [Clube do Ingresso](https://www.clubedoingresso.com/)
  - [Eventim](https://www.eventim.com.br/)
+
+ * Tarefas *
+
+ -- Linha 52 editar_produto

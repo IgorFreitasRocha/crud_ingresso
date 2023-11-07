@@ -2,10 +2,68 @@
 session_start();
 
 //Varificação se o usuario está logado
-if (!isset($_SESSION['admin_logado'])) {
-  header("Location:../logout.php");
-  exit();
+require_once('../valida_login.php');
+//Conexão com banco de dados
+require_once('../conexao.php');
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+  if (isset($_GET['PRODUTO_ID'])) {
+      $PRODUTO_ID = $_GET['PRODUTO_ID'];
+      try {
+          $stmt = $pdo->prepare("SELECT * FROM produtos WHERE PRODUTO_ID = :PRODUTO_ID");//Quando você executa uma consulta SELECT no banco de dados usando PDO e utiliza o método fetch(PDO::FETCH_ASSOC), o resultado é um array associativo, onde cada chave do array é o nome de uma coluna da tabela no banco de dados, e o valor associado a essa chave é o valor correspondente daquela coluna para o registro selecionado
+          $stmt->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+          $stmt->execute();
+          $produto = $stmt->fetch(PDO::FETCH_ASSOC);//$produto é um array associativo que contém os detalhes do produto que foi recuperado do banco de dados. Por exemplo, se a tabela de produtos tem colunas como ID, NOME, DESCRICAO, PRECO, e URL_IMAGEM, então o array $produto terá essas chaves, e você pode acessar os valores correspondentes usando a sintaxe de colchetes, 
+      } catch (PDOException $erro) {
+          echo "Erro: " . $erro->getMessage();
+      }
+  } else {
+      header('Location: listar_produto.php');
+      exit();
+  }
 }
+
+// Se o formulário de edição foi submetido, a página é acessada via método POST, e o script tenta atualizar os detalhes do produto no banco de dados com as informações fornecidas no formulário.
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $PRODUTO_ID = $_POST['PRODUTO_ID'];
+  $PRODUTO_NOME = $_POST['PRODUTO_NOME'];
+  $PRODUTO_DESC = $_POST['PRODUTO_DESC'];
+  $PRODUTO_PRECO = $_POST['PRODUTO_PRECO'];
+  $PRODUTO_DESCONTO = $_POST['PRODUTO_DESCONTO'];
+  $CATEGORIA_ID = $_POST['CATEGORIA_ID'];
+  $PRODUTO_ATIVO = $_POST['PRODUTO_ATIVO'];
+
+  try {
+      $stmt = $pdo->prepare("UPDATE produto SET
+      PRODUTO_NOME = :PRODUTO_NOME,
+      PRODUTO_DESC = :PRODUTO_DESC,
+      PRODUTO_PRECO = :PRODUTO_PRECO,
+      PRODUTO_DESCONTO = :PRODUTO_DESCONTO,
+      CATEGORIA_ID = :CATEGORIA_ID,
+      PRODUTO_ATIVO = :PRODUTO_ATIVO
+      WHERE PRODUTO_ID = :PRODUTO_ID
+      ");
+      $stmt->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+      $stmt->bindParam(':PRODUTO_NOME', $PRODUTO_NOME, PDO::PARAM_STR);
+      $stmt->bindParam(':PRODUTO_DESC', $PRODUTO_DESC, PDO::PARAM_STR);
+      $stmt->bindParam(':PRODUTO_PRECO', $PRODUTO_PRECO, PDO::PARAM_STR);
+      $stmt->bindParam(':PRODUTO_DESCONTO', $PRODUTO_DESCONTO, PDO::PARAM_STR);
+      $stmt->bindParam(':CATEGORIA_ID', $CATEGORIA_ID, PDO::PARAM_STR);
+      $stmt->bindParam(':PRODUTO_ATIVO', $PRODUTO_ATIVO, PDO::PARAM_STR);
+
+
+      $stmt->execute(); 
+
+      header('Location: painel_admin.php');
+      exit();
+  } catch (PDOException $erro) {
+      echo "Erro: " . $erro->getMessage();
+  }
+}
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -16,7 +74,7 @@ if (!isset($_SESSION['admin_logado'])) {
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <title>
-    Argon Dashboard 2 by Creative Tim
+    Editar produto
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -139,42 +197,69 @@ if (!isset($_SESSION['admin_logado'])) {
               </div>
             </div>
             <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="example-text-input" class="form-control-label">Nome</label>
-                    <input class="form-control" type="text" value="">
+              <div>
+                <form class="row" action="editar_produto.php" method="post" enctype="multipart/form-data">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="nome" class="form-control-label"> Nome</label>
+                      <input class="form-control" type="text" name="nome" id="nome" required>
+                    </div>
                   </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="example-text-input" class="form-control-label">Descrição</label>
-                    <input class="form-control" type="email" value="">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="descricao" class="form-control-label">Descrição</label>
+                      <textarea class="form-control" name="descricao" id="descricao" required></textarea>
+                    </div>
                   </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="example-text-input" class="form-control-label">Categoria</label>
-                    <input class="form-control" type="text" value="">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="quantidade" class="form-control-label">Quantidade</label>
+                      <input class="form-control" type="number" name="quantidade" id="quantidade">
+                    </div>
                   </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="example-text-input" class="form-control-label">Preço</label>
-                    <input class="form-control" type="number" value="">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="categoria" class="form-control-label">Categoria</label>
+                      <select class="form-control" type="text" name="categoria" id="categoria">
+                        <?php foreach ($categoria as $categorias) { // Loop para preencher o dropdown de categorias. 
+                        ?>
+                          <option class="form-control" value="<?= $categorias['CATEGORIA_ID'] ?>"><?= $categorias['CATEGORIA_NOME'] ?></option>
+                        <?php }; ?>
+                      </select>
+                    </div>
                   </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="example-text-input" class="form-control-label">Quantidade</label>
-                    <input class="form-control" type="number" value="">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="preco" class="form-control-label">Preço</label>
+                      <input class="form-control" type="number" name="preco" id="preco" step="0.01" required>
+                    </div>
                   </div>
-                </div>
-                <div class="col-md-6 ">
-                  <input type="checkbox" class="form-check-input border border-secundary" id="exampleCheck1">
-                  <label class="form-check-label" for="exampleCheck1">Ativo</label>
-                </div>
-                <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Cadastrar">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="desconto" class="form-control-label">Desconto</label>
+                      <input class="form-control" type="number" name="desconto" id="desconto" step="0.01">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="imagem_url" class="form-control-label">URL da Imagem</label>
+                      <div id="containerImagens">
+                        <input class="form-control" type="text" name="imagem_url[]" required id="imagem_url">
+                      </div>
+                      <button type="button" class="btn btn-outline-secondary btn-sm" onclick="adicionarImagem()">Adicionar mais imagens</button>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="status">Status</label>
+                      <select class="form-control" name="status" id="status">
+                        <option value="1">Ativo</option>
+                        <option value="0">Inativo</option>
+                      </select>
+                    </div>
+                  </div>
+                  <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Cadastrar">
+                </form>
               </div>
               <hr class="horizontal dark">
             </div>

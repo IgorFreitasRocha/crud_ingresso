@@ -2,10 +2,8 @@
 session_start();
 
 //Varificação se o usuario está logado
-if (!isset($_SESSION['admin_logado'])) {
-    header("Location:../logout.php");
-    exit();
-}
+require_once('../valida_login.php');
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
