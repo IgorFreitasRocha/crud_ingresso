@@ -9,10 +9,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['ADM_ID'])) {
         $ADM_ID = $_GET['ADM_ID'];
         try {
-            $stmt = $pdo->prepare("SELECT * FROM administrador WHERE ADM_ID = :ADM_ID"); //Quando você executa uma consulta SELECT no banco de dados usando PDO e utiliza o método fetch(PDO::FETCH_ASSOC), o resultado é um array associativo, onde cada chave do array é o nome de uma coluna da tabela no banco de dados, e o valor associado a essa chave é o valor correspondente daquela coluna para o registro selecionado
+            $stmt = $pdo->prepare(
+            "SELECT *
+            FROM administrador
+            WHERE ADM_ID = :ADM_ID"
+            );
             $stmt->bindParam(':ADM_ID', $ADM_ID, PDO::PARAM_INT);
             $stmt->execute();
-            $adms = $stmt->fetch(PDO::FETCH_ASSOC); //$adms é um array associativo que contém os detalhes do adms que foi recuperado do banco de dados. Por exemplo, se a tabela de admss tem colunas como ID, NOME, DESCRICAO, PRECO, e URL_IMAGEM, então o array $adms terá essas chaves, e você pode acessar os valores correspondentes usando a sintaxe de colchetes, 
+            $adms = $stmt->fetch(PDO::FETCH_ASSOC);
+
         } catch (PDOException $erro) {
             echo "Erro: " . $erro->getMessage();
         }
@@ -30,14 +35,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $ADM_ATIVO = $_POST['ADM_ATIVO'];
 
     try {
-        $stmt = $pdo->prepare("UPDATE administrador SET ADM_NOME = :ADM_NOME, ADM_SENHA = :ADM_SENHA, ADM_ATIVO = :ADM_ATIVO WHERE ADM_ID = :ADM_ID");
+        $stmt = $pdo->prepare(
+            "UPDATE administrador
+            SET ADM_NOME = :ADM_NOME,
+                ADM_SENHA = :ADM_SENHA, 
+                ADM_ATIVO = :ADM_ATIVO 
+          WHERE ADM_ID = :ADM_ID"
+            );
         $stmt->bindParam(':ADM_ID', $ADM_ID, PDO::PARAM_INT);
         $stmt->bindParam(':ADM_NOME', $ADM_NOME, PDO::PARAM_STR);
         $stmt->bindParam(':ADM_SENHA', $ADM_SENHA, PDO::PARAM_STR);
         $stmt->bindParam(':ADM_ATIVO', $ADM_ATIVO, PDO::PARAM_STR);
         $stmt->execute();
 
-        header('Location: listar_admin.php');
+        /*Parametro para mensagem de sucesso através de GET */
+        header('Location: listar_admin.php?update=success');
         exit();
     } catch (PDOException $erro) {
         echo "Erro: " . $erro->getMessage();
@@ -52,6 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <link rel="stylesheet" href="../assets/css/mensagem.css">
+    <script src="../js/javinha.js"></script>
     <title>
         Editar Administrador
     </title>
@@ -157,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                         </div>
                         <div class="card-body">
-                                <div class="row align-items-center">
+                            <div class="row align-items-center">
                                 <form action="editar_admin.php" method="post">
                                     <input type="hidden" name="ADM_ID" value="<?php echo $adms['ADM_ID']; ?>">
                                     <!-- Essa linha cria um campo de entrada (input) oculto no formulário. Um campo de entrada oculto é usado quando você quer incluir um dado no formulário que não precisa ser visível ou editável pelo usuário, mas que precisa ser enviado junto com os outros dados quando o formulário é submetido. -->
@@ -181,9 +195,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         </select>
                                     </div>
                                     <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Atualizar">
-                                    </form>
-                                </div>
-                           
+                                </form>
+                            </div>
+
                             <hr class="horizontal dark">
                         </div>
                     </div>

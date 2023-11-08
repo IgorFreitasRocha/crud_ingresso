@@ -26,20 +26,6 @@ try {
   echo "Erro " . $erro->getMessage();
 }
 
-function buscarImagens($pdo, $produto_id){
-  $sql = "SELECT
-      IMAGEM_URL
-    FROM produto_imagem 
-    WHERE PRODUTO_ID = :PRODUTO_ID
-  ";
-  $stmt = $pdo->prepare($sql); 
-  $stmt->bindParam(':PRODUTO_ID', $produto_id, PDO::PARAM_INT);
-  $stmt->execute();
-  $imagens = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-  return $imagens;
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -237,12 +223,12 @@ function buscarImagens($pdo, $produto_id){
                           ?>
                         </td>
                         <td class="align-middle text-center">
-                          <a href="editar_produto.php" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                          <a href="editar_produto.php?PRODUTO_ID=<?php echo $produto['PRODUTO_ID'];?>" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
                             Editar
                           </a>
                         </td>
                         <td class="align-middle text-center">
-                          <a href="deletar_produto.php" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                        <a href="editar_deletar.php?PRODUTO_ID=<?php echo $produto['PRODUTO_ID'];?>" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
                             Remover
                           </a>
                         </td>

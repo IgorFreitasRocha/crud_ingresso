@@ -6,6 +6,9 @@ require_once('../conexao.php');
 //Varificação se o usuario está logado
 require_once('../valida_login.php');
 
+if (isset($_GET['update']) && $_GET['update'] === 'success') {
+  echo "<div id='messagee'>Administrador atualizado com sucesso!</div>";
+}
 
 try {
   $stmt = $pdo->prepare("SELECT 
@@ -30,6 +33,8 @@ try {
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="stylesheet" href="../assets/css/mensagem.css">
+    <script src="../js/javinha.js"></script>
   <title>
     Administradores
   </title>

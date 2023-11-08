@@ -17,4 +17,19 @@ try{
 }catch(PDOException $erro){
         echo "Erro ao tentar conectar com o banco de dados <p> .$erro";
     };
+
+/*fUNÇÃO PARA GERAR IMAGENS */
+function buscarImagens($pdo, $produto_id){
+    $sql = "SELECT
+      IMAGEM_URL
+      FROM produto_imagem 
+      WHERE PRODUTO_ID = :PRODUTO_ID
+    ";
+    $stmt = $pdo->prepare($sql); 
+    $stmt->bindParam(':PRODUTO_ID', $produto_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $imagens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  
+    return $imagens;
+  }
 ?>
