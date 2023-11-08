@@ -20,3 +20,5 @@ HTML, CSS, PHP, MySQL e JavaScript
  * Tarefas *
 
  -- Linha 52 editar_produto
+ -- Deletar as imagens por id em editar produto
+ --  
