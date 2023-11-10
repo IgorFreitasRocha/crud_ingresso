@@ -1,80 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;600&family=Poppins:wght@200;500&display=swap');
 
 body{
+
+    background: #120052;
     font-family: noto sans;
     font-weight: 300;
-    background-color: #fbd781;
-}
+}   
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 10%;
-    margin-left: 35%;
-    margin-right: 35%;
-    background-color: #ffffff;
-    padding: 20px;
-    border: 1px solid lightgrey;
-    border-radius: 5%;
-    width: 400px;
-}
-
-
-h1{
-    color: #33383d;
-}
-
-p{
-    color: #011425;
-    font-size: 16px;
-    font-weight: 300;
-    font-family: noto sans;
-}
-
-button {
-    background-color: #011425;
-    color: white;
-    padding: 16px 20px;
-    border: none;
-    cursor: pointer;
-    width: 30%;
-    opacity: 0.9;
-    font-size: 20px;
-    font-weight: 300;
-    font-family: noto sans;
+.btn{
     border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
     margin-top: 10px;
-    margin-left: 35%;
-    margin-right: 35%;
-    margin-bottom: 10px;
-}
-
-button:hover {
-    opacity: 0.8;
-}
-
-
-input[type=email], input[type=password] {
-    width: 90%;
-    padding: 15px;
-    margin: 5px 0 12px 0;
-    display: inline-block;
-    border: none;
-    background: #f1f1f1;
-    font-size: 14px;
-}
-
-input[type=email]:focus, input[type=password]:focus {
-    background-color: #e8e7e7;
-    outline: none;
-}
-
-.imagem{
-    width: 40%;
-    height: 40%;
-    margin-left: 30%;
-    margin-right: 30%;
 
 }
