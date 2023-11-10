@@ -16,9 +16,9 @@ try {
     p.PRODUTO_ATIVO,
     c.CATEGORIA_NOME,
     pe.PRODUTO_QTD
-    FROM produto AS p
-    INNER JOIN categoria AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
-    INNER JOIN produto_estoque as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+    FROM PRODUTO AS p
+    LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
+    LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
   ");
   $stmt->execute();
   $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -31,7 +31,7 @@ function buscarImagens($pdo, $produto_id){
   $sql = "SELECT
     IMAGEM_ID,
     IMAGEM_URL
-    FROM produto_imagem 
+    FROM PRODUTO_IMAGEM 
     WHERE PRODUTO_ID = :PRODUTO_ID
   ";
   $stmt = $pdo->prepare($sql); 
@@ -88,7 +88,7 @@ function buscarImagens($pdo, $produto_id){
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="../pages/listar_prdoduto.php">
+          <a class="nav-link active" href="../pages/listar_produto.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
             </div>
@@ -239,12 +239,12 @@ function buscarImagens($pdo, $produto_id){
                           ?>
                         </td>
                         <td class="align-middle text-center">
-                          <a href="editar_produto.php?PRODUTO_ID=<?php echo $produto['PRODUTO_ID'];?>" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                          <a href="editar_produto.php?id=<?php echo $produto['PRODUTO_ID'];?>" class="btn badge badge-sm bg-gradient-primary" data-toggle="tooltip" data-original-title="Edit user">
                             Editar
                           </a>
                         </td>
                         <td class="align-middle text-center">
-                        <a href="editar_deletar.php?PRODUTO_ID=<?php echo $produto['PRODUTO_ID'];?>" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                        <a href="deletar_produto.php?PRODUTO_ID=<?php echo $produto['PRODUTO_ID'];?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
                             Remover
                           </a>
                         </td>

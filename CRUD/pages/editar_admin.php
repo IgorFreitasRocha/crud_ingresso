@@ -10,14 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $ADM_ID = $_GET['ADM_ID'];
         try {
             $stmt = $pdo->prepare(
-            "SELECT *
-            FROM administrador
+                "SELECT *
+            FROM ADMINISTRADOR
             WHERE ADM_ID = :ADM_ID"
             );
             $stmt->bindParam(':ADM_ID', $ADM_ID, PDO::PARAM_INT);
             $stmt->execute();
             $adms = $stmt->fetch(PDO::FETCH_ASSOC);
-
         } catch (PDOException $erro) {
             echo "Erro: " . $erro->getMessage();
         }
@@ -31,19 +30,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $ADM_ID = $_POST['ADM_ID'];
     $ADM_NOME = $_POST['ADM_NOME'];
+    $ADM_EMAIL = $_POST['ADM_EMAIL'];
     $ADM_SENHA = $_POST['ADM_SENHA'];
     $ADM_ATIVO = $_POST['ADM_ATIVO'];
 
     try {
         $stmt = $pdo->prepare(
-            "UPDATE administrador
+            "UPDATE ADMINISTRADOR
             SET ADM_NOME = :ADM_NOME,
+                ADM_EMAIL = :ADM_EMAIL, 
                 ADM_SENHA = :ADM_SENHA, 
                 ADM_ATIVO = :ADM_ATIVO 
           WHERE ADM_ID = :ADM_ID"
-            );
+        );
         $stmt->bindParam(':ADM_ID', $ADM_ID, PDO::PARAM_INT);
         $stmt->bindParam(':ADM_NOME', $ADM_NOME, PDO::PARAM_STR);
+        $stmt->bindParam(':ADM_EMAIL', $ADM_EMAIL, PDO::PARAM_STR);
         $stmt->bindParam(':ADM_SENHA', $ADM_SENHA, PDO::PARAM_STR);
         $stmt->bindParam(':ADM_ATIVO', $ADM_ATIVO, PDO::PARAM_STR);
         $stmt->execute();
@@ -103,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../pages/listar_prdoduto.php">
+                    <a class="nav-link" href="../pages/listar_produto.php">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
                         </div>
@@ -183,13 +185,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
+                                            <label for="ADM_EMAIL" class="form-control-label">Usuario</label>
+                                            <input class="form-control" type="text" name="ADM_EMAIL" id="ADM_EMAIL" value="<?php echo $adms['ADM_EMAIL']; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
                                             <label for="ADM_SENHA" class="form-control-label">Senha</label>
                                             <input class="form-control" type="password" name="ADM_SENHA" id="ADM_SENHA" value="<?php echo $adms['ADM_SENHA']; ?>">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="ADM_ATIVO">Status</label>
-                                        <select class="form-control" name="ADM_ATIVO" id="ADM_ATIVO">
+                                        <select class="form-control" name="ADM_ATIVO" id="ADM_ATIVO" value="<?php $adms['ADM_ATIVO'] ?>">
                                             <option value="1">Ativo</option>
                                             <option value="0">Inativo</option>
                                         </select>
@@ -248,25 +256,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
             </div>
-        </div>
-        <!--   Core JS Files   -->
-        <script src="../assets/js/core/popper.min.js"></script>
-        <script src="../assets/js/core/bootstrap.min.js"></script>
-        <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-        <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-        <script>
-            var win = navigator.platform.indexOf('Win') > -1;
-            if (win && document.querySelector('#sidenav-scrollbar')) {
-                var options = {
-                    damping: '0.5'
-                }
-                Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-            }
-        </script>
-        <!-- Github buttons -->
-        <script async defer src="https://buttons.github.io/buttons.js"></script>
-        <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-        <script src="../assets/js/argon-dashboard.min.js?v=2.0.4"></script>
-</body>
-
-</html>
+            <script>
+                document.querySelector("#ADM_ATIVO").value = <?php echo $adms['ADM_ATIVO']  ?>;
+            </script>
+            
+            <?php require_once('../layouts/fim.php'); ?>

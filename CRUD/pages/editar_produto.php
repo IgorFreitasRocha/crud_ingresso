@@ -8,7 +8,7 @@ require_once('../conexao.php');
 
 // Bloco de consulta para buscar categorias.
 try {
-  $stmt_categoria = $pdo->prepare("SELECT * FROM categoria");
+  $stmt_categoria = $pdo->prepare("SELECT * FROM CATEGORIA");
   $stmt_categoria->execute();
   $categoria = $stmt_categoria->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $erro) {
@@ -17,8 +17,9 @@ try {
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-  if (isset($_GET['PRODUTO_ID'])) {
-    $PRODUTO_ID = $_GET['PRODUTO_ID'];
+  if (isset($_GET['id'])) {
+    $PRODUTO_ID = $_GET['id'];
+
     try {
       $stmt_produto = $pdo->prepare(
       "SELECT
@@ -32,9 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         p.CATEGORIA_ID,
         c.CATEGORIA_NOME,
         pe.PRODUTO_QTD
-      FROM produto AS p
-      INNER JOIN categoria AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
-      INNER JOIN produto_estoque as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+      FROM PRODUTO AS p
+      INNER JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
+      INNER JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
       WHERE p.PRODUTO_ID = :PRODUTO_ID
       "); 
 
@@ -45,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $sql_imagem = "SELECT
         IMAGEM_ID,
         IMAGEM_URL
-        FROM produto_imagem 
+        FROM PRODUTO_IMAGEM 
         WHERE PRODUTO_ID = :PRODUTO_ID
       ";
 
@@ -65,16 +66,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 }
 
 // Se o formulário de edição foi submetido, a página é acessada via método POST, e o script tenta atualizar os detalhes do produto no banco de dados com as informações fornecidas no formulário.
-if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $PRODUTO_NOME = $_POST['PRODUTO_NOME'];
   $PRODUTO_DESC = $_POST['PRODUTO_DESC'];
   $PRODUTO_PRECO = $_POST['PRODUTO_PRECO'];
   $PRODUTO_DESCONTO = $_POST['PRODUTO_DESCONTO'];
   $CATEGORIA_ID = $_POST['CATEGORIA_ID'];
   $PRODUTO_ATIVO = $_POST['PRODUTO_ATIVO'];
+  $PRODUTO_ID = $_POST['PRODUTO_ID'];
 
   try {
-    $stmt_produto = $pdo->prepare("UPDATE produto
+    $stmt_produto = $pdo->prepare("UPDATE PRODUTO
       SET PRODUTO_NOME = :PRODUTO_NOME,
           PRODUTO_DESC = :PRODUTO_DESC,
           PRODUTO_PRECO = :PRODUTO_PRECO,
@@ -88,13 +90,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $stmt_produto->bindParam(':PRODUTO_PRECO', $PRODUTO_PRECO);
     $stmt_produto->bindParam(':PRODUTO_DESCONTO', $PRODUTO_DESCONTO);
     $stmt_produto->bindParam(':CATEGORIA_ID', $CATEGORIA_ID);
-    $stmt_produto->bindParam(':PRODUTO_ATIVO', $PRODUTO_ATIVO);
-    $stmt_produto->bindParam(':PRODUTO_ID', $PRODUTO_ID);
+    $stmt_produto->bindParam(':PRODUTO_ATIVO', $PRODUTO_ATIVO, PDO::PARAM_INT);
+    $stmt_produto->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
     $stmt_produto->execute();
 
-
-    echo "<div id='messagee'>Cadastrado com sucesso</div>";
-    header('Location: painel_admin.php');
+    echo "<div id='messagee'>Editado com sucesso </div>";
+    header('Location: listar_produto.php');
     exit();
   } catch (PDOException $erro) {
     echo "Erro: " . $erro->getMessage();
@@ -135,11 +136,11 @@ require_once('../layouts/inicio.php');
             </div>
             <div class="card-body">
               <div>
-                <form class="row" action="editar_produto.php" method="put" enctype="multipart/form-data">
+                <form class="row" action="editar_produto.php" method="POST" enctype="multipart/form-data">
                   <div class="col-md-12 d-none">
-                    <div class="form-group">
-                      <label for="id" class="form-control-label"> Id do Produto</label>
-                      <input class="form-control" type="text" name="nome" id="id" value="<?= $produto['PRODUTO_ID'] ?>" readonly >
+                  <div class="form-group">
+                      <label for="PRODUTO_ID" class="form-control-label"> Id do Produto</label>
+                      <input class="form-control" type="text" name="PRODUTO_ID" id="PRODUTO_ID" value="<?= $produto['PRODUTO_ID'] ?>" required readonly>
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -163,7 +164,7 @@ require_once('../layouts/inicio.php');
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="CATEGORIA_NOME" class="form-control-label">Categoria</label>
-                      <select class="form-control" type="text" name="CATEGORIA_NOME" id="CATEGORIA_NOME">
+                      <select class="form-control" type="text" name="CATEGORIA_ID" id="CATEGORIA_NOME">
                         <?php foreach ($categoria as $categorias) { // Loop para preencher o dropdown de categorias. 
                         ?>
                           <option class="form-control" value="<?= $categorias['CATEGORIA_ID'] ?>"><?= $categorias['CATEGORIA_NOME'] ?></option>
@@ -174,7 +175,7 @@ require_once('../layouts/inicio.php');
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="PRODUTO_PRECO" class="form-control-label">Preço</label>
-                      <input class="form-control" type="number" name="preco" id="preco" step="0.01" value="<?= $produto['PRODUTO_PRECO'] ?>" required>
+                      <input class="form-control" type="number" name="PRODUTO_PRECO" id="preco" step="0.01" value="<?= $produto['PRODUTO_PRECO'] ?>" required>
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -231,30 +232,30 @@ require_once('../layouts/inicio.php');
 
   const addImagem = document.getElementById("addImagem");
   
-  addImagem.addEventListener("change", ev => {
-    const formdata = new FormData()
-    formdata.append("image", ev.target.files[0])
-    fetch("https://api.imgur.com/3/image/", {
-        method: "post",
-        headers: {
-            Authorization: "Client-ID 71b77e2c9d97d97"
-        },
-        body: formdata
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error('Erro ao enviar a imagem ao Imgur');
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert(data.data.link);
+  //addImagem.addEventListener("change", ev => {
+   // const formdata = new FormData()
+   // formdata.append("image", ev.target.files[0])
+    //fetch("https://api.imgur.com/3/image/", {
+      //  method: "post",
+        //headers: {
+          //  Authorization: "Client-ID 71b77e2c9d97d97"
+       // },
+       // body: formdata
+   // }).then(response => {
+        //if (!response.ok) {
+    //        throw new Error('Erro ao enviar a imagem ao Imgur');
+   //     }
+    //    return response.json();
+   // })
+   // .then(data => {
+   //     alert(data.data.link);
         // adicionarImagem(data.data.link);
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-    });
+   // })
+   // .catch(error => {
+   //     console.error('Erro:', error);
+   // });
 
-  });
+ // });
 
   function adicionarImagem(url){
     const containerImagens = document.getElementById('containerImagens');

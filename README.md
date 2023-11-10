@@ -21,4 +21,4 @@ HTML, CSS, PHP, MySQL e JavaScript
 
  -- Linha 52 editar_produto
  -- Deletar as imagens por id em editar produto
- --  
+ -- Erro para URL de imagens maior que 8000

@@ -14,9 +14,10 @@ try {
   $stmt = $pdo->prepare("SELECT 
     ADM_ID,
     ADM_NOME,
+    ADM_EMAIL,
     ADM_SENHA,
     ADM_ATIVO 
-    FROM administrador
+    FROM ADMINISTRADOR
     ");
   $stmt->execute();
   $administrador = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -72,7 +73,7 @@ try {
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../pages/listar_prdoduto.php">
+          <a class="nav-link" href="../pages/listar_produto.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
             </div>
@@ -158,6 +159,7 @@ try {
                     <tr>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">ID</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Nome</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Email</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Senha</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
                       <th class="text-secondary opacity-7"></th>
@@ -172,6 +174,9 @@ try {
                         </td>
                         <td class="align-middle text-center">
                           <?php echo $adms['ADM_NOME']; ?>
+                        </td>
+                        <td class="align-middle text-center">
+                          <?php echo $adms['ADM_EMAIL']; ?>
                         </td>
                         <td class="align-middle text-center text-sm">
                           <?php echo $adms['ADM_SENHA']; ?>
@@ -254,26 +259,4 @@ try {
           </div>
         </div>
       </div>
-    </div>
-    <!--   Core JS Files   -->
-    <script src="../assets/js/core/popper.min.js"></script>
-    <script src="../assets/js/core/bootstrap.min.js"></script>
-    <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-    <script src="../js/javinha.js"></script>
-    <script>
-      var win = navigator.platform.indexOf('Win') > -1;
-      if (win && document.querySelector('#sidenav-scrollbar')) {
-        var options = {
-          damping: '0.5'
-        }
-        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-      }
-    </script>
-    <!-- Github buttons -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="../assets/js/argon-dashboard.min.js?v=2.0.4"></script>
-</body>
-
-</html>
+    require_once('')

@@ -9,11 +9,11 @@ require_once('../valida_login.php');
 
 $mensagem = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])){
-    $id = $_GET['id'];
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['PRODUTO_ID'])){
+    $id = $_GET['PRODUTO_ID'];
     try {
-        $stmt = $pdo->prepare("DELETE FROM produtos WHERE id = :id");
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt = $pdo->prepare("DELETE FROM produto WHERE PRODUTO_ID = :PRODUTO_ID");
+        $stmt->bindParam(':PRODUTO_ID', $id, PDO::PARAM_INT);
         $stmt->execute();
 
         if ($stmt->rowCount() > 0){

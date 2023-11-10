@@ -9,13 +9,15 @@ require_once('../valida_login.php');
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
 
     $ADM_NOME = $_POST['ADM_NOME'];
+    $ADM_EMAIL = $_POST['ADM_EMAIL'];
     $ADM_SENHA = $_POST['ADM_SENHA'];
     $ADM_ATIVO = $_POST['ADM_ATIVO'];
 
     try {
-        $sql = "INSERT INTO administrador (ADM_NOME, ADM_SENHA, ADM_ATIVO) VALUES (:ADM_NOME, :ADM_SENHA, :ADM_ATIVO)";
+        $sql = "INSERT INTO ADMINISTRADOR (ADM_NOME, ADM_EMAIL, ADM_SENHA, ADM_ATIVO) VALUES (:ADM_NOME, :ADM_EMAIL, :ADM_SENHA, :ADM_ATIVO)";
         $stmt = $pdo->prepare($sql); // Preparação para não conter injeção de sql
         $stmt->bindParam(':ADM_NOME', $ADM_NOME, PDO::PARAM_STR);
+        $stmt->bindParam(':ADM_EMAIL', $ADM_EMAIL, PDO::PARAM_STR);
         $stmt->bindParam(':ADM_SENHA', $ADM_SENHA, PDO::PARAM_STR);
         $stmt->bindParam(':ADM_ATIVO', $ADM_ATIVO, PDO::PARAM_STR);
         $stmt->execute(); //execulta os comando á cima
@@ -151,6 +153,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
+                                            <label for="ADM_EMAIL" class="form-control-label"> Email</label>
+                                            <input class="form-control" type="text" name="ADM_EMAIL" id="ADM_EMAIL" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
                                             <label for="ADM_SENHA" class="form-control-label">Senha</label>
                                             <input class="form-control" type="password" name="ADM_SENHA" id="ADM_SENHA" required>
                                         </div>
@@ -216,25 +224,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
                     </div>
                 </div>
             </div>
-        </div>
-        <!--   Core JS Files   -->
-        <script src="../assets/js/core/popper.min.js"></script>
-        <script src="../assets/js/core/bootstrap.min.js"></script>
-        <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-        <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-        <script>
-            var win = navigator.platform.indexOf('Win') > -1;
-            if (win && document.querySelector('#sidenav-scrollbar')) {
-                var options = {
-                    damping: '0.5'
-                }
-                Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-            }
-        </script>
-        <!-- Github buttons -->
-        <script async defer src="https://buttons.github.io/buttons.js"></script>
-        <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-        <script src="../assets/js/argon-dashboard.min.js?v=2.0.4"></script>
-</body>
-
-</html>
+            <?php require_once('../layouts/fim.php'); ?>

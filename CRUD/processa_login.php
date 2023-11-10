@@ -9,7 +9,7 @@
     $senha = $_POST['senha']; // busca no arquivo requerido
 
     $sql = "SELECT ADM_NOME, ADM_SENHA, ADM_ATIVO
-        FROM administrador
+        FROM ADMINISTRADOR
         WHERE ADM_NOME = :nome 
         AND ADM_SENHA  = :senha
         AND ADM_ATIVO = 1"; 

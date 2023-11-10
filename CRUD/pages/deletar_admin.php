@@ -8,11 +8,11 @@ require_once('../valida_login.php');
 
 $mensagem = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])){
-    $id = $_GET['id'];
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['ADM_ID'])){
+    $ADM_ID = $_GET['ADM_ID'];
     try {
-        $stmt = $pdo->prepare("DELETE FROM administrador WHERE id = :id");
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt = $pdo->prepare("DELETE FROM administrador WHERE ADM_ID = :ADM_ID");
+        $stmt->bindParam(':ADM_ID', $ADM_ID, PDO::PARAM_INT);
         $stmt->execute();
 
         if ($stmt->rowCount() > 0){

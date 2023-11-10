@@ -9,7 +9,7 @@ require_once('../valida_login.php');
 
 // Bloco de consulta para buscar categorias.
 try {
-    $stmt_categoria = $pdo->prepare("SELECT * FROM categoria");
+    $stmt_categoria = $pdo->prepare("SELECT * FROM CATEGORIA");
     $stmt_categoria->execute();
     $categoria = $stmt_categoria->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $erro) {
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $imagens = $_POST['imagem_url'];
 
     try {
-        $sql_produto = "INSERT INTO produto
+        $sql_produto = "INSERT INTO PRODUTO
             (
                 PRODUTO_NOME, 
                 PRODUTO_DESC, 
@@ -52,16 +52,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bindParam(':PRODUTO_PRECO', $preco, PDO::PARAM_STR);
         $stmt->bindParam(':PRODUTO_DESCONTO', $desconto, PDO::PARAM_STR);
         $stmt->bindParam(':CATEGORIA_ID', $categoria_id, PDO::PARAM_STR);
-        $stmt->bindParam(':PRODUTO_ATIVO', $status, PDO::PARAM_STR);
+        $stmt->bindParam(':PRODUTO_ATIVO', $status, PDO::PARAM_INT);
 
         //Execulta os comando á cima
         $stmt->execute(); 
         //Pegando o ID do produto inserido.
-        $produto_id = $pdo->lastInsertId(); 
+        $produto_id = $pdo->lastInsertId();
 
         //Inserindo imagens no banco.
-        foreach ($imagens as $IMAGEM_ORDEM => $IMAGEM_URL) {
-            $sql_imagem = "INSERT INTO produto_imagem 
+        foreach ($imagens as $imagem => $imagem_url) {
+            $sql_imagem = "INSERT INTO PRODUTO_IMAGEM 
             (
                 IMAGEM_URL,
                 IMAGEM_ORDEM,
@@ -73,14 +73,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             )";
 
             $stmt_imagem = $pdo->prepare($sql_imagem);
-            $stmt_imagem->bindParam(':IMAGEM_URL', $IMAGEM_URL, PDO::PARAM_STR);
-            $stmt_imagem->bindParam(':IMAGEM_ORDEM', $IMAGEM_ORDEM, PDO::PARAM_INT);
+            $stmt_imagem->bindParam(':IMAGEM_URL', $imagem_url, PDO::PARAM_STR);
+            $stmt_imagem->bindParam(':IMAGEM_ORDEM', $imagem_url, PDO::PARAM_INT);
             $stmt_imagem->bindParam(':PRODUTO_ID', $produto_id, PDO::PARAM_INT);
             $stmt_imagem->execute();
         }
 
         //Inserindo estoque
-        $sql_estoque = "INSERT INTO produto_estoque 
+        $sql_estoque = "INSERT INTO PRODUTO_ESTOQUE 
         (
             PRODUTO_ID,
             PRODUTO_QTD
@@ -161,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../pages/listar_prdoduto.php">
+                    <a class="nav-link" href="../pages/listar_produto.php">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
                         </div>
@@ -341,25 +341,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
             </div>
-        </div>
-        <!--   Core JS Files   -->
-        <script src="../assets/js/core/popper.min.js"></script>
-        <script src="../assets/js/core/bootstrap.min.js"></script>
-        <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-        <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-        <script>
-            var win = navigator.platform.indexOf('Win') > -1;
-            if (win && document.querySelector('#sidenav-scrollbar')) {
-                var options = {
-                    damping: '0.5'
-                }
-                Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-            }
-        </script>
-        <!-- Github buttons -->
-        <script async defer src="https://buttons.github.io/buttons.js"></script>
-        <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-        <script src="../assets/js/argon-dashboard.min.js?v=2.0.4"></script>
-</body>
-
-</html>
+            <?php require_once('../layouts/fim.php'); ?>
