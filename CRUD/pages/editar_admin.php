@@ -192,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="ADM_SENHA" class="form-control-label">Senha</label>
-                                            <input class="form-control" type="password" name="ADM_SENHA" id="ADM_SENHA" value="<?php echo $adms['ADM_SENHA']; ?>">
+                                            <input class="form-control" type="password" name="ADM_SENHA" id="ADM_SENHA" placeholder="Nova senha">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
