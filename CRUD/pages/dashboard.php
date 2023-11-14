@@ -4,6 +4,31 @@ session_start();
 //Varificação se o usuario está logado
 require_once('../valida_login.php');
 
+require_once('../conexao.php');
+
+try {
+  $stmt_contagem_pd = $pdo->prepare("SELECT COUNT(*) total
+    FROM PRODUTO
+  ");
+  $stmt_contagem_pd->execute();
+  $resultado_pd = $stmt_contagem_pd->fetch(PDO::FETCH_ASSOC);
+  $contagem_produtos = $resultado_pd['total'];
+} catch (PDOException $erro) {
+  echo "Erro " . $erro->getMessage();
+}
+
+
+try {
+  $stmt_contagem_adm = $pdo->prepare("SELECT COUNT(*) total
+    FROM ADMINISTRADOR
+  ");
+  $stmt_contagem_adm->execute();
+  $resultado_adm = $stmt_contagem_adm->fetch(PDO::FETCH_ASSOC);
+  $contagem_adms = $resultado_adm['total'];
+} catch (PDOException $erro) {
+  echo "Erro " . $erro->getMessage();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -14,7 +39,7 @@ require_once('../valida_login.php');
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <title>
-    Argon Dashboard 2 by Creative Tim
+    Dashboard
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -117,7 +142,7 @@ require_once('../valida_login.php');
                   <div class="numbers">
                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Produtos cadastrados</p>
                     <h5 class="font-weight-bolder">
-                      2
+                      <?php echo $contagem_produtos;?>
                     </h5>
                   </div>
                 </div>
@@ -138,7 +163,7 @@ require_once('../valida_login.php');
                   <div class="numbers">
                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Administradores cadastrados</p>
                     <h5 class="font-weight-bolder">
-                      2
+                      <?php echo $contagem_adms;?>
                     </h5>
                   </div>
                 </div>

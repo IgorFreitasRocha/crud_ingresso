@@ -15,7 +15,6 @@ try {
     ADM_ID,
     ADM_NOME,
     ADM_EMAIL,
-    ADM_SENHA,
     ADM_ATIVO 
     FROM ADMINISTRADOR
     ");
@@ -160,7 +159,6 @@ try {
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">ID</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Nome</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Email</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Senha</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
                       <th class="text-secondary opacity-7"></th>
                     </tr>
@@ -177,9 +175,6 @@ try {
                         </td>
                         <td class="align-middle text-center">
                           <?php echo $adms['ADM_EMAIL']; ?>
-                        </td>
-                        <td class="align-middle text-center text-sm">
-                          <?php echo $adms['ADM_SENHA']; ?>
                         </td>
                         <td class="align-middle text-center">
                           <?php
