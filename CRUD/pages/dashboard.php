@@ -7,8 +7,12 @@ require_once('../valida_login.php');
 require_once('../conexao.php');
 
 try {
-  $stmt_contagem_pd = $pdo->prepare("SELECT COUNT(*) total
-    FROM PRODUTO
+  $stmt_contagem_pd = $pdo->prepare("SELECT
+    COUNT(*) total
+    FROM PRODUTO AS p
+    INNER JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
+    INNER JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+    GROUP BY PRODUTO_ID  
   ");
   $stmt_contagem_pd->execute();
   $resultado_pd = $stmt_contagem_pd->fetch(PDO::FETCH_ASSOC);
