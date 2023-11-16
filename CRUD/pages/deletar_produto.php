@@ -9,20 +9,19 @@ require_once('../valida_login.php');
 
 $mensagem = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['PRODUTO_ID'])){
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['PRODUTO_ID'])) {
     $id = $_GET['PRODUTO_ID'];
     try {
         $stmt = $pdo->prepare("DELETE FROM produto WHERE PRODUTO_ID = :PRODUTO_ID");
         $stmt->bindParam(':PRODUTO_ID', $id, PDO::PARAM_INT);
         $stmt->execute();
 
-        if ($stmt->rowCount() > 0){
+        if ($stmt->rowCount() > 0) {
             $mensagem = "Produto excluido com sucesso!";
-        }else {
+        } else {
             $mensagem = "Erro ao excluir o produto";
         }
-    
-    }catch (PDOException $erro) {
+    } catch (PDOException $erro) {
         $mensagem = "Erro: " . $erro->getMessage();
     }
 }
@@ -33,16 +32,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['PRODUTO_ID'])){
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Excluir produto</title>
 </head>
+
 <body>
-    <h2>Excluir produto</h2>    
+    <h2>Excluir produto</h2>
     <p><?php echo $mensagem ?></p>
     <a href="listar_produto.php">Voltar a lista de produtos</a>
 
 </body>
+
 </html>

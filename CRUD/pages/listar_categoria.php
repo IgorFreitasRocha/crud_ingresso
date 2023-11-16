@@ -1,46 +1,27 @@
 <?php
 session_start();
-//Requisiçao com banco de dados 
+
+//Conexão com banco de dados
 require_once('../conexao.php');
-//Valida se o usuario está logado 
+//Varificação se o usuario está logado
 require_once('../valida_login.php');
 
-try {
-  $stmt = $pdo->prepare("SELECT
-    p.PRODUTO_ID,
-    p.PRODUTO_NOME, 
-    p.PRODUTO_DESC, 
-    p.PRODUTO_PRECO,
-    p.PRODUTO_DESCONTO,
-    p.CATEGORIA_ID,
-    p.PRODUTO_ATIVO,
-    c.CATEGORIA_NOME,
-    pe.PRODUTO_QTD
-    FROM PRODUTO AS p
-    INNER JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
-    INNER JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
-  ");
-  $stmt->execute();
-  $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $erro) {
-  echo "Erro " . $erro->getMessage();
+if (isset($_GET['update']) && $_GET['update'] === 'success') {
+  echo "<div id='messagee'>Categoria atualizada com sucesso!</div>";
 }
 
-/*FUNÇÃO PARA GERAR IMAGENS */
-function buscarImagens($pdo, $produto_id)
-{
-  $sql = "SELECT
-    IMAGEM_ID,
-    IMAGEM_URL
-    FROM PRODUTO_IMAGEM 
-    WHERE PRODUTO_ID = :PRODUTO_ID
-  ";
-  $stmt = $pdo->prepare($sql);
-  $stmt->bindParam(':PRODUTO_ID', $produto_id, PDO::PARAM_INT);
+try {
+  $stmt = $pdo->prepare("SELECT 
+    CATEGORIA_ID,
+    CATEGORIA_NOME,
+    CATEGORIA_DESC,
+    CATEGORIA_ATIVO 
+    FROM CATEGORIA
+    ");
   $stmt->execute();
-  $imagens = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-  return $imagens;
+  $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $erro) {
+  echo "Erro " . $erro->getMessage();
 }
 
 ?>
@@ -51,9 +32,9 @@ function buscarImagens($pdo, $produto_id)
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
         <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white">Pages</a></li>
-        <li class="breadcrumb-item text-sm text-white active" aria-current="page">Produto</li>
+        <li class="breadcrumb-item text-sm text-white active" aria-current="page">Categoria</li>
       </ol>
-      <h6 class="font-weight-bolder text-white mb-0">Produtos</h6>
+      <h6 class="font-weight-bolder text-white mb-0">Categoria</h6>
     </nav>
     <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
       <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -78,9 +59,7 @@ function buscarImagens($pdo, $produto_id)
             </div>
           </a>
         </li>
-      </ul>
     </div>
-  </div>
 </nav>
 <!-- End Navbar -->
 <div class="container-fluid py-4">
@@ -89,85 +68,52 @@ function buscarImagens($pdo, $produto_id)
       <div class="card mb-4">
         <div class="card-body d-flex justify-content-between">
           <div>
-            <h6 class="card-link">Produtos</h6>
+            <h6 class="card-link">Categoria</h6>
           </div>
-          <a href="cadastrar_produto.php" class="card-link btn btn-danger btn-sm ms-auto">Cadastrar Produtos</a>
+          <a href="cadastrar_categoria.php" class="card-link btn btn-danger btn-sm ms-auto">Cadastrar Categorias</a>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">ID</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Nome</th>
-
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Descrição</th>
-
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Categoria</th>
-
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Qtd</th>
-
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Preço</th>
-
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Preço com desconto</th>
-
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Imagem</th>
-
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
-
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Editar</th>
-
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Remover</th>
-
                   <th class="text-secondary opacity-7"></th>
                 </tr>
               </thead>
+
               <tbody>
-                <?php foreach ($produtos as $produto) {
-                ?>
+                <?php foreach ($categorias as $categoria) { ?>
                   <tr>
                     <td class="align-middle text-center">
-                      <?php echo $produto['PRODUTO_NOME']; ?>
-                    <td class="align-middle text-center">
-                      <?php echo $produto['PRODUTO_DESC']; ?>
-                    </td>
+                      <?php echo $categoria['CATEGORIA_ID']; ?>
                     </td>
                     <td class="align-middle text-center">
-                      <?php echo $produto['CATEGORIA_NOME']; ?>
+                      <?php echo $categoria['CATEGORIA_NOME']; ?>
                     </td>
                     <td class="align-middle text-center">
-                      <?php echo $produto['PRODUTO_QTD']; ?>
-                    </td>
-                    <td class="align-middle text-center">
-                      <?php echo "R$ " . $produto['PRODUTO_PRECO']; ?>
-                    </td>
-                    <td class="align-middle text-center">
-                      <?php echo "R$ " . ($produto['PRODUTO_PRECO'] - $produto['PRODUTO_DESCONTO']); ?>
+                      <?php echo $categoria['CATEGORIA_DESC']; ?>
                     </td>
                     <td class="align-middle text-center">
                       <?php
-                      $imagens = buscarImagens($pdo, $produto['PRODUTO_ID']);
-                      foreach ($imagens as $imagem) {
-                      ?>
-                        <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo $produto['PRODUTO_NOME']; ?>" width="50">
-                      <?php } ?>
-                    </td>
-                    <td class="align-middle text-center">
-                      <?php
-                      if ($produto['PRODUTO_ATIVO']) {
-                        echo '<span class="statusUser badge badge-sm bg-gradient-success">Ativo</span>';
-                      } else {
+                      if ($categoria['CATEGORIA_ATIVO'] == 0) {
                         echo '<span class="statusUser badge badge-sm bg-gradient-secondary">Inativo</span>';
+                      } else {
+                        echo '<span class="statusUser badge badge-sm bg-gradient-success">Ativo</span>';
                       };
                       ?>
                     </td>
                     <td class="align-middle text-center">
-                      <a href="editar_produto.php?id=<?php echo $produto['PRODUTO_ID']; ?>" class="btn badge badge-sm bg-gradient-primary" data-toggle="tooltip" data-original-title="Edit user">
-                        Editar
+                      <a href="editar_categoria.php?CATEGORIA_ID=<?php echo $categoria['CATEGORIA_ID']; ?>" class="btn badge badge-sm bg-gradient-primary" data-toggle="tooltip" data-original-title="Edit user">
+                        Edit
                       </a>
                     </td>
                     <td class="align-middle text-center">
-                      <a href="deletar_produto.php?PRODUTO_ID=<?php echo $produto['PRODUTO_ID']; ?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
-                        Remover
+                      <a href="deletar_categoria.php?CATEGORIA_ID=<?php echo $categoria['CATEGORIA_ID']; ?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
+                        Delete
                       </a>
                     </td>
                   </tr>
@@ -229,30 +175,9 @@ function buscarImagens($pdo, $produto_id)
         </div>
       </div>
     </div>
-  </div>
-  <!--Ativar a class de ativo no menu de navegação-->
-  <script>
-    let navegaa = document.getElementById('nevega2');
-    navegaa.classList.add('active');
-  </script>
-  <!--   Core JS Files   -->
-  <script src="../assets/js/core/popper.min.js"></script>
-  <script src="../assets/js/core/bootstrap.min.js"></script>
-  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-    }
-  </script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/argon-dashboard.min.js?v=2.0.4"></script>
-  </body>
-
-  </html>
+    <!--Ativar a class de ativo no menu de navegação-->
+    <script>
+      let navegaa = document.getElementById('nevega4');
+      navegaa.classList.add('active');
+    </script>
+    <?php require_once('../layouts/fim.php'); ?>

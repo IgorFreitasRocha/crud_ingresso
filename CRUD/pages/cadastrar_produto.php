@@ -44,9 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 :CATEGORIA_ID, 
                 :PRODUTO_ATIVO
             )";
-        
+
         //Preparação para não conter injeção de sql.
-        $stmt = $pdo->prepare($sql_produto); 
+        $stmt = $pdo->prepare($sql_produto);
         $stmt->bindParam(':PRODUTO_NOME', $nome, PDO::PARAM_STR);
         $stmt->bindParam(':PRODUTO_DESC', $descricao, PDO::PARAM_STR);
         $stmt->bindParam(':PRODUTO_PRECO', $preco, PDO::PARAM_STR);
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bindParam(':PRODUTO_ATIVO', $status, PDO::PARAM_INT);
 
         //Execulta os comando á cima
-        $stmt->execute(); 
+        $stmt->execute();
         //Pegando o ID do produto inserido.
         $produto_id = $pdo->lastInsertId();
 
@@ -124,8 +124,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             novoInput.className = 'form-control';
             containerImagens.appendChild(novoInput);
         }
-
-
     </script>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -252,7 +250,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <div class="form-group">
                                             <label for="categoria" class="form-control-label">Categoria</label>
                                             <select class="form-control" type="text" name="categoria" id="categoria">
-                                                <?php  foreach ($categoria as $categorias) { // Loop para preencher o dropdown de categorias. ?>
+                                                <?php foreach ($categoria as $categorias) { // Loop para preencher o dropdown de categorias. 
+                                                ?>
                                                     <option class="form-control" value="<?= $categorias['CATEGORIA_ID'] ?>"><?= $categorias['CATEGORIA_NOME'] ?></option>
                                                 <?php }; ?>
                                             </select>
@@ -274,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <div class="form-group">
                                             <label for="imagem_url" class="form-control-label">URL da Imagem</label>
                                             <div id="containerImagens">
-                                                <input  class="form-control" type="text" name="imagem_url[]" required id="imagem_url">
+                                                <input class="form-control" type="text" name="imagem_url[]" required id="imagem_url">
                                             </div>
                                             <button type="button" class="btn btn-outline-secondary btn-sm" onclick="adicionarImagem()">Adicionar mais imagens</button>
                                         </div>

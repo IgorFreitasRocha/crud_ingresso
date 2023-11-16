@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -8,7 +9,7 @@
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <link rel="stylesheet" href="../assets/css/mensagem.css">
   <script src="../js/javinha.js"></script>
-  <title>Editar produto</title>
+  <title>Bravo Ticket</title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
   <!-- Nucleo Icons -->
@@ -35,7 +36,7 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link " href="../pages/dashboard.php">
+          <a id="nevega1" class="nav-link" href="../pages/dashboard.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
             </div>
@@ -43,7 +44,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../pages/listar_produto.php">
+          <a id="nevega2" class="nav-link" href="../pages/listar_produto.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
             </div>
@@ -51,11 +52,19 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../pages/listar_admin.php">
+          <a id="nevega3" class="nav-link" href="../pages/listar_admin.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-single-copy-04 text-warning text-sm opacity-10"></i>
             </div>
             <span class="nav-link-text ms-1">Administradores</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a id="nevega4" class="nav-link" href="../pages/listar_categoria.php">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-single-copy-04 text-warning text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Categoria</span>
           </a>
         </li>
       </ul>

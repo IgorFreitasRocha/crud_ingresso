@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-    <link rel="icon" type="image/png" href="../assets/img/favicon.png"> 
+    <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <link href="../assets/css/mensagem.css" rel="stylesheet">
     <script src="../js/javinha.js"></script>
     <title>
