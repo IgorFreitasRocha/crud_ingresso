@@ -174,6 +174,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <span class="nav-link-text ms-1">Administradores</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../pages/listar_categoria.php">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-single-copy-04 text-warning text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Categoria</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </aside>
@@ -186,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white">Pages</a></li>
                         <li class="breadcrumb-item text-sm text-white active" aria-current="page">Editar produto</li>
                     </ol>
-                    <h6 class="font-weight-bolder text-white mb-0">Editar prdouto</h6>
+                    <h6 class="font-weight-bolder text-white mb-0">Editar Produto</h6>
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -271,6 +279,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
+
+                                            <!-- UPDATE DE IMAGEM E SELEÇÃO POR LINK -->
                                             <label for="imagem_url" class="form-control-label">URL da Imagem</label>
                                             <div id="containerImagens">
                                                 <input class="form-control" type="text" name="imagem_url[]" required id="imagem_url">
