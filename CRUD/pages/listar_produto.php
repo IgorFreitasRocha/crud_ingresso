@@ -17,8 +17,8 @@ try {
     c.CATEGORIA_NOME,
     pe.PRODUTO_QTD
     FROM PRODUTO AS p
-    INNER JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
-    INNER JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+    LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
+    LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
   ");
   $stmt->execute();
   $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -42,7 +42,6 @@ function buscarImagens($pdo, $produto_id)
 
   return $imagens;
 }
-
 ?>
 <?php require_once('../layouts/inicio.php'); ?>
 
@@ -127,9 +126,16 @@ function buscarImagens($pdo, $produto_id)
                   <tr>
                     <td class="align-middle text-center">
                       <?php echo $produto['PRODUTO_NOME']; ?>
-                    <td class="align-middle text-center">
-                      <?php echo $produto['PRODUTO_DESC']; ?>
                     </td>
+                      <td class="align-middle text-center">
+                      <?php 
+                        $texto = $produto['PRODUTO_DESC'];
+                        $limiteCaracteres = 20;
+                        if (strlen($texto) > $limiteCaracteres) {
+                          $texto = substr($texto, 0, $limiteCaracteres) . "...";
+                        }
+                        echo $texto;
+                      ?>
                     </td>
                     <td class="align-middle text-center">
                       <?php echo $produto['CATEGORIA_NOME']; ?>
@@ -138,18 +144,20 @@ function buscarImagens($pdo, $produto_id)
                       <?php echo $produto['PRODUTO_QTD']; ?>
                     </td>
                     <td class="align-middle text-center">
-                      <?php echo "R$ " . $produto['PRODUTO_PRECO']; ?>
+                      <?php echo "R$" . $produto['PRODUTO_PRECO']; ?>
                     </td>
                     <td class="align-middle text-center">
-                      <?php echo "R$ " . ($produto['PRODUTO_PRECO'] - $produto['PRODUTO_DESCONTO']); ?>
+                      <?php echo "R$" . ($produto['PRODUTO_PRECO'] - $produto['PRODUTO_DESCONTO']); ?>
                     </td>
                     <td class="align-middle text-center">
                       <?php
                       $imagens = buscarImagens($pdo, $produto['PRODUTO_ID']);
-                      foreach ($imagens as $imagem) {
+                        foreach ($imagens as $imagem) {
+                          ?>
+                          <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="50" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'">
+                          <?php
+                        }
                       ?>
-                        <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo $produto['PRODUTO_NOME']; ?>" width="70">
-                      <?php } ?>
                     </td>
                     <td class="align-middle text-center">
                       <?php
