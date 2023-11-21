@@ -17,8 +17,8 @@ try {
     c.CATEGORIA_NOME,
     pe.PRODUTO_QTD
     FROM PRODUTO AS p
-    INNER JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
-    INNER JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+    LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
+    LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
   ");
   $stmt->execute();
   $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -128,7 +128,7 @@ function buscarImagens($pdo, $produto_id)
                     <td class="align-middle text-center">
                       <?php echo $produto['PRODUTO_NOME']; ?>
                     <td class="align-middle text-center">
-                      <?php echo $produto['PRODUTO_DESC']; ?>
+                      <?php echo mb_strimwidth($produto['PRODUTO_DESC'], 0, 20, '...'); ?>
                     </td>
                     </td>
                     <td class="align-middle text-center">
