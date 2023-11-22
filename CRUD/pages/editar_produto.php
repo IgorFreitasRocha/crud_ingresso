@@ -34,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         c.CATEGORIA_NOME,
         pe.PRODUTO_QTD
       FROM PRODUTO AS p
-      INNER JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
-      INNER JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+      LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
+      LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
       WHERE p.PRODUTO_ID = :PRODUTO_ID
       "
       );
@@ -196,9 +196,8 @@ require_once('../layouts/inicio.php');
               <div class="col-md-12">
                 <div class="form-group">
                   <label for="IMAGEM_URL" class="form-control-label">URL da Imagem</label>
-                  <input class="form-control" type="file" id="addImagem">
-
-
+                  <input class="form-control" type="text" id="addImagem">
+                  <button class="btn mb-0" type="button" id="remover" onclick="removerInputImagem(this)">Adicionar</button>
                 </div>
               </div>
               <div class="col-md-12">
