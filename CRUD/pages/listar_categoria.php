@@ -24,6 +24,26 @@ try {
   echo "Erro " . $erro->getMessage();
 }
 
+
+//Trazer buscas em categoria feitas pelo usuario
+if (isset($_GET['busca'])){
+  try {
+    $pesquisa = $_GET['busca'];
+    $stmt = $pdo->prepare("SELECT
+      CATEGORIA_ID,
+      CATEGORIA_NOME,
+      CATEGORIA_DESC,
+      CATEGORIA_ATIVO 
+      FROM CATEGORIA
+      WHERE CATEGORIA_NOME LIKE '%$pesquisa%'
+    ");
+    $stmt->execute();
+    $resultado_busca = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  } catch (PDOException $erro) {
+    echo "Erro " . $erro->getMessage();
+  }
+}
+
 ?>
 <?php require_once('../layouts/inicio.php'); ?>
 
@@ -38,10 +58,12 @@ try {
     </nav>
     <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
       <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-        <div class="input-group">
-          <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-          <input type="text" class="form-control" placeholder="Buscar Produto...">
-        </div>
+        <form action="">
+          <div class="input-group">
+            <input name="busca" class="form-control" placeholder="Buscar Categoria..." type="text"> 
+            <button type="submit" class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></button>
+          </div>
+        </form>
       </div>
       <ul class="navbar-nav  justify-content-end">
         <li class="nav-item d-flex align-items-center">
@@ -86,6 +108,9 @@ try {
               </thead>
 
               <tbody>
+                  <?php if(isset($_GET['busca'])){
+                    $categorias = $resultado_busca;
+                  } ?>
                 <?php foreach ($categorias as $categoria) { ?>
                   <tr>
                     <td class="align-middle text-center">
@@ -127,54 +152,6 @@ try {
   </div>
 </div>
 </main>
-<div class="fixed-plugin">
-  <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
-    <i class="fa fa-cog py-2"> </i>
-  </a>
-  <div class="card shadow-lg">
-    <div class="card-header pb-0 pt-3 ">
-      <div class="float-start">
-        <h5 class="mt-3 mb-0">Argon Configurator</h5>
-        <p>See our dashboard options.</p>
-      </div>
-      <div class="float-end mt-4">
-        <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
-          <i class="fa fa-close"></i>
-        </button>
-      </div>
-      <!-- End Toggle Button -->
-    </div>
-    <hr class="horizontal dark my-1">
-    <div class="card-body pt-sm-3 pt-0 overflow-auto">
-      <!-- Sidebar Backgrounds -->
-      <div>
-        <h6 class="mb-0">Sidebar Colors</h6>
-      </div>
-      <a href="javascript:void(0)" class="switch-trigger background-color">
-        <div class="badge-colors my-2 text-start">
-          <span class="badge filter bg-gradient-primary active" data-color="primary" onclick="sidebarColor(this)"></span>
-          <span class="badge filter bg-gradient-dark" data-color="dark" onclick="sidebarColor(this)"></span>
-          <span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
-          <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
-          <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
-          <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
-        </div>
-      </a>
-      <!-- Navbar Fixed -->
-      <div class="d-flex my-3">
-        <h6 class="mb-0">Navbar Fixed</h6>
-        <div class="form-check form-switch ps-0 ms-auto my-auto">
-          <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
-        </div>
-      </div>
-      <hr class="horizontal dark my-sm-4">
-      <div class="mt-2 mb-5 d-flex">
-        <h6 class="mb-0">Light / Dark</h6>
-        <div class="form-check form-switch ps-0 ms-auto my-auto">
-          <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
-        </div>
-      </div>
-    </div>
     <!--Ativar a class de ativo no menu de navegação-->
     <script>
       let navegaa = document.getElementById('nevega4');

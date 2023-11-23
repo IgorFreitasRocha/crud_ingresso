@@ -43,7 +43,7 @@ function buscarImagens($pdo, $produto_id)
   return $imagens;
 }
 
-//Trazer buscas feitas pelo usuario
+//Trazer buscas feitas em produto pelo usuario
 if (isset($_GET['busca'])){
   try {
     $pesquisa = $_GET['busca'];
