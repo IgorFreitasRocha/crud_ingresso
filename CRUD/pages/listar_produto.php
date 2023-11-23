@@ -66,7 +66,8 @@ if (isset($_GET['busca'])){
     // Obtém todos os resultados da consulta como um array de arrays associativos
     $resultados_busca = $stmt_busca->fetchAll(PDO::FETCH_ASSOC);
   } catch (PDOException $erro) {
-    echo "Erro " . $erro->getMessage(); // Exibe a mensagem de erro caso ocorra uma exceção
+    // Exibe a mensagem de erro caso ocorra uma exceção
+    echo "Erro " . $erro->getMessage();
   }
 }
 ?>
@@ -85,7 +86,7 @@ if (isset($_GET['busca'])){
       <div class="ms-md-auto pe-md-3 d-flex align-items-center">
         <form action="">
             <div class="input-group">
-              <input name="busca" class="form-control" placeholder="Buscar Produto..." type="text"> 
+              <input name="busca" value="<?php if(isset($_GET['busca'])) echo $_GET['busca']; ?>" class="form-control" placeholder="Buscar Produto..." type="text"> 
               <button type="submit" class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></button>
             </div>
           </form>
@@ -221,8 +222,8 @@ if (isset($_GET['busca'])){
   </div>
 </div>
 </main>
-  <!--Ativar a class de ativo no menu de navegação-->
   <script>
+  /* Ativar a class de ativo no menu de navegação */ 
     let navegaa = document.getElementById('nevega2');
     navegaa.classList.add('active');
   </script>

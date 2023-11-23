@@ -156,8 +156,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <script>
                 document.querySelector("#ADM_ATIVO").value = <?php echo $adms['ADM_ATIVO']  ?>;
             </script>
-            <!--Ativar a class de ativo no menu de navegação-->
             <script>
+                /* Ativar a class de ativo no menu de navegação */
                 let navegaa = document.getElementById('nevega3');
                 navegaa.classList.add('active');
             </script>

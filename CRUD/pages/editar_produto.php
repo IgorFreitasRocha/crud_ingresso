@@ -165,7 +165,8 @@ require_once('../layouts/inicio.php');
                 <div class="form-group">
                   <label for="CATEGORIA_NOME" class="form-control-label">Categoria</label>
                   <select class="form-control" type="text" name="CATEGORIA_ID" id="CATEGORIA_NOME">
-                    <?php foreach ($categoria as $categorias) { // Loop para preencher o dropdown de categorias. 
+                    <?php foreach ($categoria as $categorias) {
+                      // Loop para preencher o dropdown de categorias. 
                     ?>
                       <option class="form-control" value="<?= $categorias['CATEGORIA_ID'] ?>"><?= $categorias['CATEGORIA_NOME'] ?></option>
                     <?php }; ?>
@@ -223,8 +224,8 @@ require_once('../layouts/inicio.php');
     </div>
   </div>
 </div>
-<!--Ativar a class de ativo no menu de navegação-->
 <script>
+    /* Ativar a class de ativo no menu de navegação */
   let navegaa = document.getElementById('nevega2');
   navegaa.classList.add('active');
 </script>
