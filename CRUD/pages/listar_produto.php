@@ -127,17 +127,17 @@ function buscarImagens($pdo, $produto_id)
                     <td class="align-middle text-center">
                       <?php echo $produto['PRODUTO_NOME']; ?>
                     </td>
-                      <td class="align-middle text-center">
+                      <td style="font-size: 0.8rem;" class="align-middle text-center">
                       <?php 
                         $texto = $produto['PRODUTO_DESC'];
-                        $limiteCaracteres = 20;
+                        $limiteCaracteres = 30;
                         if (strlen($texto) > $limiteCaracteres) {
                           $texto = substr($texto, 0, $limiteCaracteres) . "...";
                         }
                         echo $texto;
                       ?>
                     </td>
-                    <td class="align-middle text-center">
+                    <td style="font-size: 0.8rem;" class="align-middle text-center">
                       <?php echo $produto['CATEGORIA_NOME']; ?>
                     </td>
                     <td class="align-middle text-center">
