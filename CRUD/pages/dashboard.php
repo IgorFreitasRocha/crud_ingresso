@@ -21,7 +21,7 @@ try {
   echo "Erro " . $erro->getMessage();
 }
 
-
+//Trazer adms
 try {
   $stmt_contagem_adm = $pdo->prepare("SELECT COUNT(*) total
     FROM ADMINISTRADOR
@@ -29,6 +29,18 @@ try {
   $stmt_contagem_adm->execute();
   $resultado_adm = $stmt_contagem_adm->fetch(PDO::FETCH_ASSOC);
   $contagem_adms = $resultado_adm['total'];
+} catch (PDOException $erro) {
+  echo "Erro " . $erro->getMessage();
+}
+
+//Trazer categorias
+try {
+  $stmt_contagem_ctg = $pdo->prepare("SELECT COUNT(*) total
+    FROM CATEGORIA
+  ");
+  $stmt_contagem_ctg->execute();
+  $resultado_ctg = $stmt_contagem_ctg->fetch(PDO::FETCH_ASSOC);
+  $contagem_ctgs = $resultado_ctg['total'];
 } catch (PDOException $erro) {
   echo "Erro " . $erro->getMessage();
 }
@@ -46,12 +58,6 @@ try {
       <h6 class="font-weight-bolder text-white mb-0">Dashboard</h6>
     </nav>
     <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-      <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-        <div class="input-group">
-          <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-          <input type="text" class="form-control" placeholder="Buscar Produto...">
-        </div>
-      </div>
       <ul class="navbar-nav  justify-content-end">
         <li class="nav-item d-flex align-items-center">
           <a href="../logout.php" class="nav-link text-white font-weight-bold px-0">
@@ -83,7 +89,7 @@ try {
               <div class="numbers">
                 <p class="text-sm mb-0 text-uppercase font-weight-bold">Produtos cadastrados</p>
                 <h5 class="font-weight-bolder">
-                  <?php echo $contagem_produtos; ?>
+                  <?php echo $contagem_produtos;?>
                 </h5>
               </div>
             </div>
@@ -111,6 +117,27 @@ try {
             <div class="col-4 text-end">
               <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
                 <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+      <div class="card">
+        <div class="card-body p-3">
+          <div class="row">
+            <div class="col-8">
+              <div class="numbers">
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">Categorias cadastradas</p>
+                <h5 class="font-weight-bolder">
+                  <?php echo $contagem_ctgs; ?>
+                </h5>
+              </div>
+            </div>
+            <div class="col-4 text-end">
+              <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
               </div>
             </div>
           </div>
