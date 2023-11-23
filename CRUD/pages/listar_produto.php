@@ -42,6 +42,33 @@ function buscarImagens($pdo, $produto_id)
 
   return $imagens;
 }
+
+//Trazer buscas feitas pelo usuario
+if (isset($_GET['busca'])){
+  try {
+    $pesquisa = $_GET['busca'];
+    $stmt_busca = $pdo->prepare("SELECT
+    p.PRODUTO_ID,
+    p.PRODUTO_NOME, 
+    p.PRODUTO_DESC, 
+    p.PRODUTO_PRECO,
+    p.PRODUTO_DESCONTO,
+    p.CATEGORIA_ID,
+    p.PRODUTO_ATIVO,
+    c.CATEGORIA_NOME,
+    pe.PRODUTO_QTD
+    FROM PRODUTO AS p
+    LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
+    LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+    WHERE p.PRODUTO_NOME LIKE '%$pesquisa%'");
+    // Executa a consulta preparada
+    $stmt_busca->execute();
+    // Obtém todos os resultados da consulta como um array de arrays associativos
+    $resultados_busca = $stmt_busca->fetchAll(PDO::FETCH_ASSOC);
+  } catch (PDOException $erro) {
+    echo "Erro " . $erro->getMessage(); // Exibe a mensagem de erro caso ocorra uma exceção
+  }
+}
 ?>
 <?php require_once('../layouts/inicio.php'); ?>
 
@@ -56,10 +83,12 @@ function buscarImagens($pdo, $produto_id)
     </nav>
     <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
       <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-        <div class="input-group">
-          <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-          <input type="text" class="form-control" placeholder="Buscar Produto...">
-        </div>
+        <form action="">
+            <div class="input-group">
+              <input name="busca" class="form-control" placeholder="Buscar Produto..." type="text"> 
+              <button type="submit" class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></button>
+            </div>
+          </form>
       </div>
       <ul class="navbar-nav  justify-content-end">
         <li class="nav-item d-flex align-items-center">
@@ -121,6 +150,9 @@ function buscarImagens($pdo, $produto_id)
                 </tr>
               </thead>
               <tbody>
+                <?php if(isset($_GET['busca'])){
+                  $produtos = $resultados_busca;
+                } ?>
                 <?php foreach ($produtos as $produto) {
                 ?>
                   <tr>
@@ -154,7 +186,7 @@ function buscarImagens($pdo, $produto_id)
                       $imagens = buscarImagens($pdo, $produto['PRODUTO_ID']);
                         foreach ($imagens as $imagem) {
                           ?>
-                          <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="50" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'">
+                          <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="60" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'">
                           <?php
                         }
                       ?>

@@ -11,12 +11,12 @@ $mensagem = '';
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['ADM_ID'])) {
     $ADM_ID = $_GET['ADM_ID'];
     try {
-        $stmt = $pdo->prepare("DELETE FROM administrador WHERE ADM_ID = :ADM_ID");
+        $stmt = $pdo->prepare("UPDATE ADMINISTRADOR SET ADM_ATIVO = 0 WHERE ADM_ID = :ADM_ID");
         $stmt->bindParam(':ADM_ID', $ADM_ID, PDO::PARAM_INT);
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
-            $mensagem = "Administrador excluido com sucesso!";
+            $mensagem = "Administrador desativado com sucesso!";
         } else {
             $mensagem = "Erro ao excluir o administrador";
         }
