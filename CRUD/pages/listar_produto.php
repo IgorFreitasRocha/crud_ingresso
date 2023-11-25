@@ -31,9 +31,10 @@ function buscarImagens($pdo, $produto_id)
 {
   $sql = "SELECT
     IMAGEM_ID,
-    IMAGEM_URL
+    IMAGEM_URL,
+    IMAGEM_ORDEM
     FROM PRODUTO_IMAGEM 
-    WHERE PRODUTO_ID = :PRODUTO_ID
+    WHERE PRODUTO_ID = :PRODUTO_ID AND IMAGEM_ORDEM >= 0
   ";
   $stmt = $pdo->prepare($sql);
   $stmt->bindParam(':PRODUTO_ID', $produto_id, PDO::PARAM_INT);
