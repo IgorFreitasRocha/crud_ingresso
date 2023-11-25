@@ -2,317 +2,416 @@
 session_start();
 
 //Varificação se o usuario está logado
-if (!isset($_SESSION['admin_logado'])) {
-  header("Location:../logout.php");
-  exit();
+require_once('../valida_login.php');
+//Conexão com banco de dados
+require_once('../conexao.php');
+
+// Bloco de consulta para buscar categorias.
+try {
+  $stmt_categoria = $pdo->prepare("SELECT * FROM CATEGORIA");
+  $stmt_categoria->execute();
+  $categoria = $stmt_categoria->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $erro) {
+  echo "<div id='messagee'>Erro ao buscar categoria " . $erro->getMessage() . "</div>";
 }
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+  if (isset($_GET['id'])) {
+    $PRODUTO_ID = $_GET['id'];
+
+    try{
+      $produto = buscarProduto($pdo, $PRODUTO_ID);
+
+      $imagens = buscarImagens($pdo, $PRODUTO_ID);
+    } catch (PDOException $erro) {
+      echo "Erro: " . $erro->getMessage();
+    }
+  } else {
+    header('Location: listar_produto.php');
+    exit();
+  }
+}
+
+// Se o formulário de edição foi submetido, a página é acessada via método POST, e o script tenta atualizar os detalhes do produto no banco de dados com as informações fornecidas no formulário.
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $PRODUTO_NOME = $_POST['PRODUTO_NOME'];
+  $PRODUTO_DESC = $_POST['PRODUTO_DESC'];
+  $PRODUTO_PRECO = $_POST['PRODUTO_PRECO'];
+  $PRODUTO_DESCONTO = $_POST['PRODUTO_DESCONTO'];
+  $CATEGORIA_ID = $_POST['CATEGORIA_ID'];
+  $PRODUTO_ATIVO = $_POST['PRODUTO_ATIVO'];
+  $PRODUTO_ID = $_POST['PRODUTO_ID'];
+  $PRODUTO_QTD = $_POST['PRODUTO_QTD'];
+  $imagens = $_POST['imagem_url'];
+
+  try {
+ 
+
+
+    echo "<div id='messagee'>Editado com sucesso </div>";
+    header('Location: listar_produto.php');
+    exit();
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function buscarProduto($pdo, $PRODUTO_ID){
+  try {
+    $stmt_produto = $pdo->prepare(
+      "SELECT
+      p.PRODUTO_ID,
+      p.PRODUTO_NOME, 
+      p.PRODUTO_DESC, 
+      p.PRODUTO_PRECO,
+      p.PRODUTO_DESCONTO,
+      p.CATEGORIA_ID,
+      p.PRODUTO_ATIVO,
+      p.CATEGORIA_ID,
+      c.CATEGORIA_NOME,
+      pe.PRODUTO_QTD
+    FROM PRODUTO AS p
+    LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
+    LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+    WHERE p.PRODUTO_ID = :PRODUTO_ID
+    ");
+
+    $stmt_produto->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt_produto->execute();
+    $produto = $stmt_produto->fetch(PDO::FETCH_ASSOC);
+
+    return $produto;
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+
+}
+
+function buscarImagens($pdo, $PRODUTO_ID){
+  try{
+    $stmt_imagem = $pdo->prepare("SELECT
+      IMAGEM_ID,
+      IMAGEM_URL,
+      IMAGEM_ORDEM
+      FROM PRODUTO_IMAGEM 
+      WHERE PRODUTO_ID = :PRODUTO_ID AND IMAGEM_ORDEM >= 0
+    ");
+    $stmt_imagem->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt_imagem->execute();
+
+    $imagens = $stmt_imagem->fetchAll(PDO::FETCH_ASSOC);
+
+    return $imagens;
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function editarProduto($pdo, $PRODUTO_NOME, $PRODUTO_DESC, $PRODUTO_PRECO, $PRODUTO_DESCONTO, $CATEGORIA_ID, $PRODUTO_ATIVO, $PRODUTO_ID){
+  try{
+    $stmt_produto = $pdo->prepare("UPDATE PRODUTO
+      SET PRODUTO_NOME = :PRODUTO_NOME,
+          PRODUTO_DESC = :PRODUTO_DESC,
+          PRODUTO_PRECO = :PRODUTO_PRECO,
+          PRODUTO_DESCONTO = :PRODUTO_DESCONTO,
+          CATEGORIA_ID = :CATEGORIA_ID,
+          PRODUTO_ATIVO = :PRODUTO_ATIVO
+      WHERE PRODUTO_ID = :PRODUTO_ID
+      ");
+    $stmt_produto->bindParam(':PRODUTO_NOME', $PRODUTO_NOME);
+    $stmt_produto->bindParam(':PRODUTO_DESC', $PRODUTO_DESC);
+    $stmt_produto->bindParam(':PRODUTO_PRECO', $PRODUTO_PRECO);
+    $stmt_produto->bindParam(':PRODUTO_DESCONTO', $PRODUTO_DESCONTO);
+    $stmt_produto->bindParam(':CATEGORIA_ID', $CATEGORIA_ID);
+    $stmt_produto->bindParam(':PRODUTO_ATIVO', $PRODUTO_ATIVO, PDO::PARAM_INT);
+    $stmt_produto->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt_produto->execute();
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function editarImagem($pdo, $IMAGEM_ID, $IMAGEM_URL){
+
+  try{
+    $stmt_imagem = $pdo->prepare("UPDATE PRODUTO_IMAGEM 
+      SET IMAGEM_URL = :IMAGEM_URL 
+      WHERE IMAGEM_ID = :IMAGEM_ID
+    ");
+    $stmt_imagem->bindParam(':IMAGEM_ID', $IMAGEM_ID, PDO::PARAM_INT);
+    $stmt_imagem->bindParam(':IMAGEM_URL', $IMAGEM_URL, PDO::PARAM_STR);
+    $stmt_imagem->execute();
+    
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function adicionarImagem($pdo, $PRODUTO_ID, $IMAGEM_URL){
+
+  try{
+    //ULTIMA ORDEM + 1
+    $stmt_ordem= $pdo->prepare("SELECT 
+      COALESCE(
+        (SELECT (IMAGEM_ORDEM + 1) 
+        FROM PRODUTO_IMAGEM 
+        WHERE PRODUTO_ID = :PRODUTO_ID AND IMAGEM_ORDEM > 0), 
+        1) AS IMAGEM_ORDEM
+    ");
+
+    $stmt_ordem->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt_ordem->execute();
+    $IMAGEM_ORDEM_SQL = $stmt_ordem->fetch(PDO::FETCH_ASSOC);
+
+    $IMAGEM_ORDEM = $IMAGEM_ORDEM_SQL["IMAGEM_ORDEM"];
+    
+    //ADICIONAR IMAGEM
+    $stmt_imagem = $pdo->prepare("INSERT INTO PRODUTO_IMAGEM 
+    (
+        IMAGEM_URL,
+        IMAGEM_ORDEM,
+        PRODUTO_ID
+    ) VALUES (
+        :IMAGEM_URL,
+        :IMAGEM_ORDEM,
+        :PRODUTO_ID
+    )");
+    $stmt_imagem->bindParam(':IMAGEM_URL', $IMAGEM_URL, PDO::PARAM_STR);
+    $stmt_imagem->bindParam(':IMAGEM_ORDEM', $IMAGEM_ORDEM, PDO::PARAM_INT);
+    $stmt_imagem->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt_imagem->execute();
+    
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function removerImagem($pdo, $IMAGEM_ID){
+
+  try{
+    $stmt_imagem = $pdo->prepare("UPDATE PRODUTO_IMAGEM 
+      SET IMAGEM_ORDEM = -1, IMAGEM_URL = 'REMOVIDA' 
+      WHERE IMAGEM_ID = :IMAGEM_ID
+    ");
+    $stmt_imagem->bindParam(':IMAGEM_ID', $IMAGEM_ID, PDO::PARAM_INT);
+    $stmt_imagem->execute();
+    
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function buscarEstoque($pdo, $PRODUTO_ID){
+  try{
+    $stmt = $pdo->prepare("SELECT 
+      COALESCE(
+        (SELECT PRODUTO_QTD FROM PRODUTO_ESTOQUE WHERE PRODUTO_ID = :PRODUTO_ID), 0
+      ) AS PRODUTO_QTD");
+    $stmt->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt->execute();
+    $estoque = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $estoque["PRODUTO_QTD"];
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function editarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD){
+  try{
+    $stmt = $pdo->prepare("UPDATE PRODUTO_ESTOQUE 
+      SET PRODUTO_QTD = :PRODUTO_QTD 
+      WHERE PRODUTO_ID = :PRODUTO_ID
+    ");
+    $stmt->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt->bindParam(':PRODUTO_QTD', $PRODUTO_QTD, PDO::PARAM_INT);
+    $stmt->execute();
+
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function adicionarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD){
+  try{
+    $stmt = $pdo->prepare("INSERT INTO PRODUTO_ESTOQUE 
+    (
+      PRODUTO_ID,
+      PRODUTO_QTD
+    ) VALUES (
+      :PRODUTO_ID,
+      :PRODUTO_QTD
+    )");
+    $stmt->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt->bindParam(':PRODUTO_QTD', $PRODUTO_QTD, PDO::PARAM_INT);
+    $stmt->execute();
+  
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+
+}
+
+require_once('../layouts/inicio.php');
 ?>
-<!DOCTYPE html>
-<html lang="pt-br">
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
-  <title>
-    Argon Dashboard 2 by Creative Tim
-  </title>
-  <!--     Fonts and icons     -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-  <!-- Nucleo Icons -->
-  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <!-- CSS Files -->
-  <link id="pagestyle" href="../assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
-</head>
-
-<body class="g-sidenav-show bg-gray-100">
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
-  <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
-    <div class="sidenav-header">
-      <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html " target="_blank">
-        <img src="../assets/img/logobravo.png" class="navbar-brand-img h-100" alt="main_logo">
-        <span class="ms-1 font-weight-bold">Bravo Ticket</span>
-      </a>
-    </div>
-    <hr class="horizontal dark mt-0">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link " href="../pages/dashboard.php">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Dashboard</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="../pages/listar_prdoduto.php">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Produtos</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="../pages/listar_admin.php">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-single-copy-04 text-warning text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Administradores</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="../pages/edit.php">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Editar produto</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="../pages/cadastrar_produto.php">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Cadastrar produto</span>
-          </a>
-        </li>
-      </ul>
-      </ul>
-    </div>
-  </aside>
-  <main class="main-content position-relative border-radius-lg ">
-    <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
-      <div class="container-fluid py-1 px-3">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white">Pages</a></li>
-            <li class="breadcrumb-item text-sm text-white active" aria-current="page">Editar produto</li>
-          </ol>
-          <h6 class="font-weight-bolder text-white mb-0">Editar prdouto</h6>
-        </nav>
-        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-            <div class="input-group">
-              <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-              <input type="text" class="form-control" placeholder="Type here...">
-            </div>
-          </div>
-          <ul class="navbar-nav  justify-content-end">
-            <li class="nav-item d-flex align-items-center">
-              <a href="../logout.php" class="nav-link text-white font-weight-bold px-0">
-                <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Sign in</span>
-              </a>
-            </li>
-            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
-                <div class="sidenav-toggler-inner">
-                  <i class="sidenav-toggler-line bg-white"></i>
-                  <i class="sidenav-toggler-line bg-white"></i>
-                  <i class="sidenav-toggler-line bg-white"></i>
-                </div>
-              </a>
-            </li>
-            <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
-              <li class="mb-2">
-                <a class="dropdown-item border-radius-md" href="javascript:;">
-                  <div class="d-flex py-1">
-                    <div class="my-auto">
-                      <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                      <h6 class="text-sm font-weight-normal mb-1">
-                        <span class="font-weight-bold">New album</span> by Travis Scott
-                      </h6>
-                      <p class="text-xs text-secondary mb-0">
-                        <i class="fa fa-clock me-1"></i>
-                        1 day
-                      </p>
-                    </div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item border-radius-md" href="javascript:;">
-                  <div class="d-flex py-1">
-                    <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
-                      <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <title>credit-card</title>
-                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                          <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
-                            <g transform="translate(1716.000000, 291.000000)">
-                              <g transform="translate(453.000000, 454.000000)">
-                                <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
-                                <path class="color-background" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
-                              </g>
-                            </g>
-                          </g>
-                        </g>
-                      </svg>
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                      <h6 class="text-sm font-weight-normal mb-1">
-                        Payment successfully completed
-                      </h6>
-                      <p class="text-xs text-secondary mb-0">
-                        <i class="fa fa-clock me-1"></i>
-                        2 days
-                      </p>
-                    </div>
-                  </div>
-                </a>
-              </li>
-            </ul>
-            </li>
-          </ul>
+<div class="card shadow-lg mx-4 card-profile-bottom">
+  <div class="card-body p-3">
+    <div class="row gx-4">
+      <div class="col-auto">
+        <div class="avatar avatar-xl position-relative">
+          <img src= "<?php $imagem['IMAGEM_URL']?>" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
         </div>
       </div>
-    </nav>
-    <!-- End Navbar -->
-    <div class="card shadow-lg mx-4 card-profile-bottom">
-      <div class="card-body p-3">
-        <div class="row gx-4">
-          <div class="col-auto">
-            <div class="avatar avatar-xl position-relative">
-              <img src="../assets/img/team-1.jpg" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
-            </div>
-          </div>
-          <div class="col-auto my-auto">
-            <div class="h-100">
-              <h5 class="mb-1">
-                Nome do Produto
-              </h5>
-            </div>
-          </div>
+      <div class="col-auto my-auto">
+        <div class="h-100">
+          <h5 class="mb-1">
+            Nome do Produto
+          </h5>
         </div>
       </div>
     </div>
-    <div class="container-fluid py-4">
-      <div class="row">
-        <div class="col-md-8">
-          <div class="card">
-            <div class="card-header pb-0">
-              <div class="d-flex align-items-center">
-                <p class="mb-0">Editar Produto</p>
-                <button class="btn btn-danger btn-sm ms-auto">Delete</button>
-              </div>
-            </div>
-            <div class="card-body">
-              <p class="text-uppercase text-sm">Produto</p>
-              <div class="row align-items-center">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="example-text-input" class="form-control-label">Nome</label>
-                    <input class="form-control" type="text" value="">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="example-text-input" class="form-control-label">Descrição</label>
-                    <input class="form-control" type="email" value="">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="example-text-input" class="form-control-label">Categoria</label>
-                    <input class="form-control" type="text" value="">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="example-text-input" class="form-control-label">Preço</label>
-                    <input class="form-control" type="number" value="">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="example-text-input" class="form-control-label">Quantidade</label>
-                    <input class="form-control" type="number" value="">
-                  </div>
-                </div>
-                <div class="col-md-6 ">
-                  <input type="checkbox" class="form-check-input border border-secundary" id="exampleCheck1">
-                  <label class="form-check-label" for="exampleCheck1">Ativo</label>
-                </div>
-                <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Cadastrar">
-              </div>
-              <hr class="horizontal dark">
-            </div>
+  </div>
+</div>
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header pb-0">
+          <div class="d-flex align-items-center">
+            <p class="mb-0">Editar Produto</p>
+            <button class="btn btn-danger btn-sm ms-auto">Delete</button>
           </div>
         </div>
-      </div>
-    </div>
-    </div>
-    <div class="fixed-plugin">
-      <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
-        <i class="fa fa-cog py-2"> </i>
-      </a>
-      <div class="card shadow-lg">
-        <div class="card-header pb-0 pt-3 ">
-          <div class="float-start">
-            <h5 class="mt-3 mb-0">Argon Configurator</h5>
-            <p>See our dashboard options.</p>
-          </div>
-          <div class="float-end mt-4">
-            <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
-              <i class="fa fa-close"></i>
-            </button>
-          </div>
-          <!-- End Toggle Button -->
-        </div>
-        <hr class="horizontal dark my-1">
-        <div class="card-body pt-sm-3 pt-0 overflow-auto">
-          <!-- Sidebar Backgrounds -->
+        <div class="card-body">
           <div>
-            <h6 class="mb-0">Sidebar Colors</h6>
+            <form class="row" action="editar_produto.php" method="POST" enctype="multipart/form-data">
+              <div class="col-md-12 d-none">
+                <div class="form-group">
+                  <label for="PRODUTO_ID" class="form-control-label"> Id do Produto</label>
+                  <input class="form-control" type="text" name="PRODUTO_ID" id="PRODUTO_ID" value="<?= $produto['PRODUTO_ID'] ?>" required readonly>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="PRODUTO_NOME" class="form-control-label"> Nome do Produto</label>
+                  <input class="form-control" type="text" name="PRODUTO_NOME" id="PRODUTO_NOME" value="<?= $produto['PRODUTO_NOME'] ?>" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="PRODUTO_DESC" class="form-control-label">Descrição</label>
+                  <textarea class="form-control" name="PRODUTO_DESC" id="PRODUTO_DESC" required><?= $produto['PRODUTO_DESC'] ?></textarea>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="PRODUTO_QTD" class="form-control-label">Quantidade</label>
+                  <input class="form-control" type="number" name="PRODUTO_QTD" id="PRODUTO_QTD" value="<?= $produto['PRODUTO_QTD'] ?>" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="CATEGORIA_NOME" class="form-control-label">Categoria</label>
+                  <select class="form-control" type="text" name="CATEGORIA_ID" id="CATEGORIA_NOME">
+                    <?php foreach ($categoria as $categorias) { // Loop para preencher o dropdown de categorias. 
+                    ?>
+                      <option class="form-control" value="<?= $categorias['CATEGORIA_ID'] ?>"><?= $categorias['CATEGORIA_NOME'] ?></option>
+                    <?php }; ?>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="PRODUTO_PRECO" class="form-control-label">Preço</label>
+                  <input class="form-control" type="number" name="PRODUTO_PRECO" id="preco" step="0.01" value="<?= $produto['PRODUTO_PRECO'] ?>" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="PRODUTO_DESCONTO" class="form-control-label">Desconto</label>
+                  <input class="form-control" type="number" name="PRODUTO_DESCONTO" id="PRODUTO_DESCONTO" step="0.01" value="<?= $produto['PRODUTO_DESCONTO'] ?>">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="PRODUTO_ATIVO">Status</label>
+                  <select class="form-control" name="PRODUTO_ATIVO" id="PRODUTO_ATIVO" value="<?= $produto['PRODUTO_ATIVO'] ?>" required>
+                    <option value="1">Ativo</option>
+                    <option value="0">Inativo</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="IMAGEM_URL" class="form-control-label">URL da Imagem</label>
+                  
+                  <button class="btn ms-4 bm-0" type="button" id="" onclick="adicionarImagem()" >Adicionar</button>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <div id="containerImagens">
+                    <?php foreach ($imagens as $imagem) { ?>
+                      <div class="input-group mb-3">
+                        <input class="form-control" type="text" name="imagem_url[<?= $imagem['IMAGEM_ID'] ?>]" value="<?= $imagem['IMAGEM_URL'] ?>">
+                        <button class="btn mb-0" type="button" id="remover" onclick="removerInputImagem(this)">Remover</button>
+                      </div>
+
+                    <?php } ?>
+                  </div>
+                </div>
+              </div>
+
+              <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Editar">
+            </form>
           </div>
-          <a href="javascript:void(0)" class="switch-trigger background-color">
-            <div class="badge-colors my-2 text-start">
-              <span class="badge filter bg-gradient-primary active" data-color="primary" onclick="sidebarColor(this)"></span>
-              <span class="badge filter bg-gradient-dark" data-color="dark" onclick="sidebarColor(this)"></span>
-              <span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
-              <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
-              <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
-              <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
-            </div>
-          </a>
-          <!-- Navbar Fixed -->
-          <hr class="horizontal dark my-sm-4">
-          <div class="mt-2 mb-5 d-flex">
-            <h6 class="mb-0">Light / Dark</h6>
-            <div class="form-check form-switch ps-0 ms-auto my-auto">
-              <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
-            </div>
-          </div>
+          <hr class="horizontal dark">
         </div>
       </div>
     </div>
-    <!--   Core JS Files   -->
-    <script src="../assets/js/core/popper.min.js"></script>
-    <script src="../assets/js/core/bootstrap.min.js"></script>
-    <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-    <script>
-      var win = navigator.platform.indexOf('Win') > -1;
-      if (win && document.querySelector('#sidenav-scrollbar')) {
-        var options = {
-          damping: '0.5'
-        }
-        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-      }
-    </script>
-    <!-- Github buttons -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="../assets/js/argon-dashboard.min.js?v=2.0.4"></script>
-</body>
+  </div>
+</div>
+<!--Ativar a class de ativo no menu de navegação-->
+<script>
+  let navegaa = document.getElementById('nevega2');
+  navegaa.classList.add('active');
+</script>
 
-</html>
+<script>
+  document.querySelector("#CATEGORIA_NOME").value = <?php echo $produto['CATEGORIA_ID']  ?>;
+
+  document.querySelector("#PRODUTO_ATIVO").value = <?php echo $produto['PRODUTO_ATIVO']  ?>;
+
+  function adicionarImagem() {
+    const containerImagens = document.getElementById('containerImagens');
+
+    const inputgroup = document.createElement('div');
+    inputgroup.className = "input-group mb-3"
+
+    const imagem = document.createElement('input');
+    imagem.type = 'text';
+    imagem.name = `imagem_url[ novo_${Math.floor(Math.random() * 65536).toString(16)}]`;
+    imagem.className = 'form-control';
+
+    const botao = document.createElement('button');
+    botao.className = "btn mb-0"
+    botao.innerText = 'Remover'
+    botao.onclick = function() {
+      removerInputImagem(botao);
+    };
+
+    inputgroup.appendChild(imagem);
+    inputgroup.appendChild(botao);
+
+    containerImagens.appendChild(inputgroup);
+
+  }
+
+  function removerInputImagem(eleMesmo) {
+    eleMesmo.parentNode.remove();   //parentNode é o pai <div> inputgroup 
+  }
+</script>
+
+<?php require_once('../layouts/fim.php'); ?>
