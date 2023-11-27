@@ -29,13 +29,12 @@ try {
 /*FUNÇÃO PARA GERAR IMAGENS */
 function buscarImagens($pdo, $produto_id)
 {
-  $sql = "SELECT
-    IMAGEM_ID,
-    IMAGEM_URL
-    FROM PRODUTO_IMAGEM 
-    WHERE PRODUTO_ID = :PRODUTO_ID
-  ";
-  $stmt = $pdo->prepare($sql);
+  $stmt = $pdo->prepare("SELECT
+  IMAGEM_ID,
+  IMAGEM_URL
+  FROM PRODUTO_IMAGEM 
+  WHERE PRODUTO_ID = :PRODUTO_ID
+");
   $stmt->bindParam(':PRODUTO_ID', $produto_id, PDO::PARAM_INT);
   $stmt->execute();
   $imagens = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -43,7 +42,7 @@ function buscarImagens($pdo, $produto_id)
   return $imagens;
 }
 
-//Trazer buscas feitas pelo usuario
+//Trazer buscas feitas em produto pelo usuario
 if (isset($_GET['busca'])){
   try {
     $pesquisa = $_GET['busca'];
@@ -160,17 +159,17 @@ if (isset($_GET['busca'])){
                     <td class="align-middle text-center">
                       <?php echo $produto['PRODUTO_NOME']; ?>
                     </td>
-                      <td class="align-middle text-center">
+                      <td style="font-size: 0.8rem;" class="align-middle text-center">
                       <?php 
                         $texto = $produto['PRODUTO_DESC'];
-                        $limiteCaracteres = 20;
+                        $limiteCaracteres = 30;
                         if (strlen($texto) > $limiteCaracteres) {
                           $texto = substr($texto, 0, $limiteCaracteres) . "...";
                         }
                         echo $texto;
                       ?>
                     </td>
-                    <td class="align-middle text-center">
+                    <td style="font-size: 0.8rem;" class="align-middle text-center">
                       <?php echo $produto['CATEGORIA_NOME']; ?>
                     </td>
                     <td class="align-middle text-center">

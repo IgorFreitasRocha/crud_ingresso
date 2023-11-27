@@ -24,6 +24,26 @@ try {
   echo "Erro " . $erro->getMessage();
 }
 
+
+//Trazer buscas em administrador feitas pelo usuario
+if (isset($_GET['busca'])){
+  try {
+    $pesquisa = $_GET['busca'];
+    $stmt = $pdo->prepare("SELECT
+      ADM_ID,
+      ADM_NOME,
+      ADM_EMAIL,
+      ADM_ATIVO 
+      FROM ADMINISTRADOR
+      WHERE ADM_NOME LIKE '%$pesquisa%'
+    ");
+    $stmt->execute();
+    $resultado_busca = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  } catch (PDOException $erro) {
+    echo "Erro " . $erro->getMessage();
+  }
+}
+
 ?>
 <?php require_once('../layouts/inicio.php'); ?>
 
@@ -38,10 +58,12 @@ try {
     </nav>
     <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
       <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-        <div class="input-group">
-          <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-          <input type="text" class="form-control" placeholder="Buscar Produto...">
-        </div>
+      <form action="">
+          <div class="input-group">
+            <input name="busca" value="<?php if(isset($_GET['busca'])) echo $_GET['busca'] ;?>" class="form-control" placeholder="Buscar Categoria..." type="text"> 
+            <button type="submit" class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></button>
+          </div>
+        </form>
       </div>
       <ul class="navbar-nav  justify-content-end">
         <li class="nav-item d-flex align-items-center">
@@ -86,6 +108,9 @@ try {
               </thead>
 
               <tbody>
+                  <?php if(isset($_GET['busca'])){
+                    $administrador = $resultado_busca;
+                } ?>
                 <?php foreach ($administrador as $adms) { ?>
                   <tr>
                     <td class="align-middle text-center">
