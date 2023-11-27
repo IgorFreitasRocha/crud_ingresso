@@ -44,13 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $PRODUTO_ID = $_POST['PRODUTO_ID'];
   $PRODUTO_QTD = $_POST['PRODUTO_QTD'];
   $imagens = $_POST['imagem_url'];
-
-  try {
- 
-
-
-    echo "<div id='messagee'>Editado com sucesso </div>";
-    header('Location: listar_produto.php');
+  try{
+    editarProduto($pdo, $PRODUTO_NOME, $PRODUTO_DESC, $PRODUTO_PRECO, $PRODUTO_DESCONTO, $CATEGORIA_ID, $PRODUTO_ATIVO, $PRODUTO_ID);
+    /*Parametro para mensagem de sucesso através de GET */
+    header('Location: listar_produto.php?update=success');
     exit();
   } catch (PDOException $erro) {
     echo "Erro: " . $erro->getMessage();
@@ -261,7 +258,14 @@ require_once('../layouts/inicio.php');
     <div class="row gx-4">
       <div class="col-auto">
         <div class="avatar avatar-xl position-relative">
-          <img src= "<?php $imagem['IMAGEM_URL']?>" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+        <?php
+        $imagens = buscarImagens($pdo, $produto['PRODUTO_ID']);
+          foreach ($imagens as $imagem) {
+            ?>
+            <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="60" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'" class="w-100 border-radius-lg shadow-sm">
+            <?php
+          }
+        ?>
         </div>
       </div>
       <div class="col-auto my-auto">
