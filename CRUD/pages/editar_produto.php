@@ -20,42 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   if (isset($_GET['id'])) {
     $PRODUTO_ID = $_GET['id'];
 
-    try {
-      $stmt_produto = $pdo->prepare(
-        "SELECT
-        p.PRODUTO_ID,
-        p.PRODUTO_NOME, 
-        p.PRODUTO_DESC, 
-        p.PRODUTO_PRECO,
-        p.PRODUTO_DESCONTO,
-        p.CATEGORIA_ID,
-        p.PRODUTO_ATIVO,
-        p.CATEGORIA_ID,
-        c.CATEGORIA_NOME,
-        pe.PRODUTO_QTD
-      FROM PRODUTO AS p
-      LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
-      LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
-      WHERE p.PRODUTO_ID = :PRODUTO_ID
-      "
-      );
+    try{
+      $produto = buscarProduto($pdo, $PRODUTO_ID);
 
-      $stmt_produto->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
-      $stmt_produto->execute();
-      $produto = $stmt_produto->fetch(PDO::FETCH_ASSOC);
-
-      $sql_imagem = "SELECT
-        IMAGEM_ID,
-        IMAGEM_URL
-        FROM PRODUTO_IMAGEM 
-        WHERE PRODUTO_ID = :PRODUTO_ID
-      ";
-
-      $stmt_imagem = $pdo->prepare($sql_imagem);
-      $stmt_imagem->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
-      $stmt_imagem->execute();
-
-      $imagens = $stmt_imagem->fetchAll(PDO::FETCH_ASSOC);
+      $imagens = buscarImagens($pdo, $PRODUTO_ID);
     } catch (PDOException $erro) {
       echo "Erro: " . $erro->getMessage();
     }
@@ -74,8 +42,71 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $CATEGORIA_ID = $_POST['CATEGORIA_ID'];
   $PRODUTO_ATIVO = $_POST['PRODUTO_ATIVO'];
   $PRODUTO_ID = $_POST['PRODUTO_ID'];
+  $PRODUTO_QTD = $_POST['PRODUTO_QTD'];
+  $imagens = $_POST['imagem_url'];
+  try{
+    editarProduto($pdo, $PRODUTO_NOME, $PRODUTO_DESC, $PRODUTO_PRECO, $PRODUTO_DESCONTO, $CATEGORIA_ID, $PRODUTO_ATIVO, $PRODUTO_ID);
+    /*Parametro para mensagem de sucesso através de GET */
+    header('Location: listar_produto.php?update=success');
+    exit();
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
 
+function buscarProduto($pdo, $PRODUTO_ID){
   try {
+    $stmt_produto = $pdo->prepare(
+      "SELECT
+      p.PRODUTO_ID,
+      p.PRODUTO_NOME, 
+      p.PRODUTO_DESC, 
+      p.PRODUTO_PRECO,
+      p.PRODUTO_DESCONTO,
+      p.CATEGORIA_ID,
+      p.PRODUTO_ATIVO,
+      p.CATEGORIA_ID,
+      c.CATEGORIA_NOME,
+      pe.PRODUTO_QTD
+    FROM PRODUTO AS p
+    LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
+    LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+    WHERE p.PRODUTO_ID = :PRODUTO_ID
+    ");
+
+    $stmt_produto->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt_produto->execute();
+    $produto = $stmt_produto->fetch(PDO::FETCH_ASSOC);
+
+    return $produto;
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+
+}
+
+function buscarImagens($pdo, $PRODUTO_ID){
+  try{
+    $stmt_imagem = $pdo->prepare("SELECT
+      IMAGEM_ID,
+      IMAGEM_URL,
+      IMAGEM_ORDEM
+      FROM PRODUTO_IMAGEM 
+      WHERE PRODUTO_ID = :PRODUTO_ID AND IMAGEM_ORDEM >= 0
+    ");
+    $stmt_imagem->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt_imagem->execute();
+
+    $imagens = $stmt_imagem->fetchAll(PDO::FETCH_ASSOC);
+
+    return $imagens;
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function editarProduto($pdo, $PRODUTO_NOME, $PRODUTO_DESC, $PRODUTO_PRECO, $PRODUTO_DESCONTO, $CATEGORIA_ID, $PRODUTO_ATIVO, $PRODUTO_ID){
+  try{
     $stmt_produto = $pdo->prepare("UPDATE PRODUTO
       SET PRODUTO_NOME = :PRODUTO_NOME,
           PRODUTO_DESC = :PRODUTO_DESC,
@@ -93,15 +124,131 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt_produto->bindParam(':PRODUTO_ATIVO', $PRODUTO_ATIVO, PDO::PARAM_INT);
     $stmt_produto->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
     $stmt_produto->execute();
-
-    echo "<div id='messagee'>Editado com sucesso </div>";
-    header('Location: listar_produto.php');
-    exit();
   } catch (PDOException $erro) {
     echo "Erro: " . $erro->getMessage();
   }
 }
 
+function editarImagem($pdo, $IMAGEM_ID, $IMAGEM_URL){
+
+  try{
+    $stmt_imagem = $pdo->prepare("UPDATE PRODUTO_IMAGEM 
+      SET IMAGEM_URL = :IMAGEM_URL 
+      WHERE IMAGEM_ID = :IMAGEM_ID
+    ");
+    $stmt_imagem->bindParam(':IMAGEM_ID', $IMAGEM_ID, PDO::PARAM_INT);
+    $stmt_imagem->bindParam(':IMAGEM_URL', $IMAGEM_URL, PDO::PARAM_STR);
+    $stmt_imagem->execute();
+    
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function adicionarImagem($pdo, $PRODUTO_ID, $IMAGEM_URL){
+
+  try{
+    //ULTIMA ORDEM + 1
+    $stmt_ordem= $pdo->prepare("SELECT 
+      COALESCE(
+        (SELECT (IMAGEM_ORDEM + 1) 
+        FROM PRODUTO_IMAGEM 
+        WHERE PRODUTO_ID = :PRODUTO_ID AND IMAGEM_ORDEM > 0), 
+        1) AS IMAGEM_ORDEM
+    ");
+
+    $stmt_ordem->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt_ordem->execute();
+    $IMAGEM_ORDEM_SQL = $stmt_ordem->fetch(PDO::FETCH_ASSOC);
+
+    $IMAGEM_ORDEM = $IMAGEM_ORDEM_SQL["IMAGEM_ORDEM"];
+    
+    //ADICIONAR IMAGEM
+    $stmt_imagem = $pdo->prepare("INSERT INTO PRODUTO_IMAGEM 
+    (
+        IMAGEM_URL,
+        IMAGEM_ORDEM,
+        PRODUTO_ID
+    ) VALUES (
+        :IMAGEM_URL,
+        :IMAGEM_ORDEM,
+        :PRODUTO_ID
+    )");
+    $stmt_imagem->bindParam(':IMAGEM_URL', $IMAGEM_URL, PDO::PARAM_STR);
+    $stmt_imagem->bindParam(':IMAGEM_ORDEM', $IMAGEM_ORDEM, PDO::PARAM_INT);
+    $stmt_imagem->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt_imagem->execute();
+    
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function removerImagem($pdo, $IMAGEM_ID){
+
+  try{
+    $stmt_imagem = $pdo->prepare("UPDATE PRODUTO_IMAGEM 
+      SET IMAGEM_ORDEM = -1, IMAGEM_URL = 'REMOVIDA' 
+      WHERE IMAGEM_ID = :IMAGEM_ID
+    ");
+    $stmt_imagem->bindParam(':IMAGEM_ID', $IMAGEM_ID, PDO::PARAM_INT);
+    $stmt_imagem->execute();
+    
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function buscarEstoque($pdo, $PRODUTO_ID){
+  try{
+    $stmt = $pdo->prepare("SELECT 
+      COALESCE(
+        (SELECT PRODUTO_QTD FROM PRODUTO_ESTOQUE WHERE PRODUTO_ID = :PRODUTO_ID), 0
+      ) AS PRODUTO_QTD");
+    $stmt->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt->execute();
+    $estoque = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $estoque["PRODUTO_QTD"];
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function editarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD){
+  try{
+    $stmt = $pdo->prepare("UPDATE PRODUTO_ESTOQUE 
+      SET PRODUTO_QTD = :PRODUTO_QTD 
+      WHERE PRODUTO_ID = :PRODUTO_ID
+    ");
+    $stmt->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt->bindParam(':PRODUTO_QTD', $PRODUTO_QTD, PDO::PARAM_INT);
+    $stmt->execute();
+
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+}
+
+function adicionarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD){
+  try{
+    $stmt = $pdo->prepare("INSERT INTO PRODUTO_ESTOQUE 
+    (
+      PRODUTO_ID,
+      PRODUTO_QTD
+    ) VALUES (
+      :PRODUTO_ID,
+      :PRODUTO_QTD
+    )");
+    $stmt->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
+    $stmt->bindParam(':PRODUTO_QTD', $PRODUTO_QTD, PDO::PARAM_INT);
+    $stmt->execute();
+  
+  } catch (PDOException $erro) {
+    echo "Erro: " . $erro->getMessage();
+  }
+
+}
 
 require_once('../layouts/inicio.php');
 ?>
@@ -111,7 +258,14 @@ require_once('../layouts/inicio.php');
     <div class="row gx-4">
       <div class="col-auto">
         <div class="avatar avatar-xl position-relative">
-          <img src= "<?php echo $imagens['IMAGEM_URL'];?>" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+        <?php
+        $imagens = buscarImagens($pdo, $produto['PRODUTO_ID']);
+          foreach ($imagens as $imagem) {
+            ?>
+            <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="60" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'" class="w-100 border-radius-lg shadow-sm">
+            <?php
+          }
+        ?>
         </div>
       </div>
       <div class="col-auto my-auto">
@@ -197,8 +351,8 @@ require_once('../layouts/inicio.php');
               <div class="col-md-12">
                 <div class="form-group">
                   <label for="IMAGEM_URL" class="form-control-label">URL da Imagem</label>
-                  <input class="form-control" type="text" id="addImagem">
-                  <button class="btn mb-0" type="button" id="remover" onclick="removerInputImagem(this)">Adicionar</button>
+                  
+                  <button class="btn ms-4 bm-0" type="button" id="" onclick="adicionarImagem()" >Adicionar</button>
                 </div>
               </div>
               <div class="col-md-12">
@@ -206,7 +360,7 @@ require_once('../layouts/inicio.php');
                   <div id="containerImagens">
                     <?php foreach ($imagens as $imagem) { ?>
                       <div class="input-group mb-3">
-                        <input class="form-control" type="text" name="IMAGEM_URL" id="IMAGEM_URL_<?php echo $imagem['IMAGEM_ID'] ?>" value="<?= $imagem['IMAGEM_URL'] ?>" readonly>
+                        <input class="form-control" type="text" name="imagem_url[<?= $imagem['IMAGEM_ID'] ?>]" value="<?= $imagem['IMAGEM_URL'] ?>">
                         <button class="btn mb-0" type="button" id="remover" onclick="removerInputImagem(this)">Remover</button>
                       </div>
 
@@ -235,38 +389,33 @@ require_once('../layouts/inicio.php');
 
   document.querySelector("#PRODUTO_ATIVO").value = <?php echo $produto['PRODUTO_ATIVO']  ?>;
 
-  const addImagem = document.getElementById("addImagem");
-
-  function adicionarImagem(url) {
+  function adicionarImagem() {
     const containerImagens = document.getElementById('containerImagens');
 
     const inputgroup = document.createElement('div');
     inputgroup.className = "input-group mb-3"
 
     const imagem = document.createElement('input');
-    imagem.readOnly = true;
     imagem.type = 'text';
-    imagem.name = 'imagem_url[]';
+    imagem.name = `imagem_url[ novo_${Math.floor(Math.random() * 65536).toString(16)}]`;
     imagem.className = 'form-control';
-    imagem.value = url; //alterar para a url do imgur
 
-    const remover = document.createElement('button');
-    remover.className = "btn mb-0"
-    remover.innerText = 'Remover'
-    remover.onclick = function() {
-      removerInputImagem(remover);
+    const botao = document.createElement('button');
+    botao.className = "btn mb-0"
+    botao.innerText = 'Remover'
+    botao.onclick = function() {
+      removerInputImagem(botao);
     };
 
     inputgroup.appendChild(imagem);
-    inputgroup.appendChild(remover);
+    inputgroup.appendChild(botao);
 
     containerImagens.appendChild(inputgroup);
 
-    addImagem.value = "";
   }
 
-  function removerInputImagem(remover) {
-    remover.parentNode.remove();
+  function removerInputImagem(eleMesmo) {
+    eleMesmo.parentNode.remove();   //parentNode é o pai <div> inputgroup 
   }
 </script>
 
