@@ -7,37 +7,37 @@ require_once('../conexao.php');
 require_once('../valida_login.php');
 
 if (isset($_GET['update']) && $_GET['update'] === 'success') {
-  echo "<div id='messagee'>Administrador atualizado com sucesso!</div>";
+  echo "<div id='messagee'>Categoria atualizada com sucesso!</div>";
 }
 
 try {
   $stmt = $pdo->prepare("SELECT 
-    ADM_ID,
-    ADM_NOME,
-    ADM_EMAIL,
-    ADM_ATIVO 
-    FROM ADMINISTRADOR
+    CATEGORIA_ID,
+    CATEGORIA_NOME,
+    CATEGORIA_DESC,
+    CATEGORIA_ATIVO 
+    FROM CATEGORIA
+
+    ORDER BY CATEGORIA_ID ASC
     ");
   $stmt->execute();
-  $administrador = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $erro) {
   echo "Erro " . $erro->getMessage();
 }
 
 
-//Trazer buscas em administrador feitas pelo usuario
+//Trazer buscas em categoria feitas pelo usuario
 if (isset($_GET['busca'])){
   try {
     $pesquisa = $_GET['busca'];
     $stmt = $pdo->prepare("SELECT
-      ADM_ID,
-      ADM_NOME,
-      ADM_EMAIL,
-      ADM_ATIVO 
-      FROM ADMINISTRADOR
-      WHERE ADM_NOME LIKE '%$pesquisa%'
-
-      ORDER BY ADM_ID ASC
+      CATEGORIA_ID,
+      CATEGORIA_NOME,
+      CATEGORIA_DESC,
+      CATEGORIA_ATIVO 
+      FROM CATEGORIA
+      WHERE CATEGORIA_NOME LIKE '%$pesquisa%'
     ");
     $stmt->execute();
     $resultado_busca = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -54,13 +54,13 @@ if (isset($_GET['busca'])){
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
         <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white">Pages</a></li>
-        <li class="breadcrumb-item text-sm text-white active" aria-current="page">Administrador</li>
+        <li class="breadcrumb-item text-sm text-white active" aria-current="page">Categoria</li>
       </ol>
-      <h6 class="font-weight-bolder text-white mb-0">Administradores</h6>
+      <h6 class="font-weight-bolder text-white mb-0">Categoria</h6>
     </nav>
     <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
       <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-      <form action="">
+        <form action="">
           <div class="input-group">
             <input name="busca" class="form-control" placeholder="Buscar Categoria..." type="text"> 
             <button type="submit" class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></button>
@@ -92,9 +92,9 @@ if (isset($_GET['busca'])){
       <div class="card mb-4">
         <div class="card-body d-flex justify-content-between">
           <div>
-            <h6 class="card-link">Administradores</h6>
+            <h6 class="card-link">Categoria</h6>
           </div>
-          <a href="cadastrar_admin.php" class="card-link btn btn-danger btn-sm ms-auto">Cadastrar Admin</a>
+          <a href="cadastrar_categoria.php" class="card-link btn btn-danger btn-sm ms-auto">Cadastrar Categorias</a>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
@@ -103,7 +103,7 @@ if (isset($_GET['busca'])){
                 <tr>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">ID</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Nome</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Email</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Descrição</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
                   <th class="text-secondary opacity-7"></th>
                 </tr>
@@ -111,22 +111,22 @@ if (isset($_GET['busca'])){
 
               <tbody>
                   <?php if(isset($_GET['busca'])){
-                    $administrador = $resultado_busca;
-                } ?>
-                <?php foreach ($administrador as $adms) { ?>
+                    $categorias = $resultado_busca;
+                  } ?>
+                <?php foreach ($categorias as $categoria) { ?>
                   <tr>
                     <td class="align-middle text-center">
-                      <?php echo $adms['ADM_ID']; ?>
+                      <?php echo $categoria['CATEGORIA_ID']; ?>
                     </td>
                     <td class="align-middle text-center">
-                      <?php echo $adms['ADM_NOME']; ?>
+                      <?php echo $categoria['CATEGORIA_NOME']; ?>
                     </td>
                     <td class="align-middle text-center">
-                      <?php echo $adms['ADM_EMAIL']; ?>
+                      <?php echo $categoria['CATEGORIA_DESC']; ?>
                     </td>
                     <td class="align-middle text-center">
                       <?php
-                      if ($adms['ADM_ATIVO'] == 0) {
+                      if ($categoria['CATEGORIA_ATIVO'] == 0) {
                         echo '<span class="statusUser badge badge-sm bg-gradient-secondary">Inativo</span>';
                       } else {
                         echo '<span class="statusUser badge badge-sm bg-gradient-success">Ativo</span>';
@@ -134,12 +134,12 @@ if (isset($_GET['busca'])){
                       ?>
                     </td>
                     <td class="align-middle text-center">
-                      <a href="editar_admin.php?ADM_ID=<?php echo $adms['ADM_ID']; ?>" class="btn badge badge-sm bg-gradient-primary" data-toggle="tooltip" data-original-title="Edit user">
+                      <a href="editar_categoria.php?CATEGORIA_ID=<?php echo $categoria['CATEGORIA_ID']; ?>" class="btn badge badge-sm bg-gradient-primary" data-toggle="tooltip" data-original-title="Edit user">
                         Edit
                       </a>
                     </td>
                     <td class="align-middle text-center">
-                      <a href="deletar_admin.php?ADM_ID=<?php echo $adms['ADM_ID']; ?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
+                      <a href="deletar_categoria.php?CATEGORIA_ID=<?php echo $categoria['CATEGORIA_ID']; ?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
                         Delete
                       </a>
                     </td>
@@ -156,7 +156,7 @@ if (isset($_GET['busca'])){
 </main>
     <!--Ativar a class de ativo no menu de navegação-->
     <script>
-      let navegaa = document.getElementById('nevega3');
+      let navegaa = document.getElementById('nevega4');
       navegaa.classList.add('active');
     </script>
     <?php require_once('../layouts/fim.php'); ?>

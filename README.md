@@ -16,3 +16,7 @@ HTML, CSS, PHP, MySQL e JavaScript
  - [Ticket360](https://www.ticket360.com.br/)
  - [Clube do Ingresso](https://www.clubedoingresso.com/)
  - [Eventim](https://www.eventim.com.br/)
+
+ * Tarefas *
+ -- Deletar as imagens por id em editar produto
+ -- Erro para URL de imagens maior que 8000

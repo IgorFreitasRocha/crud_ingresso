@@ -3,29 +3,28 @@ session_start();
 require_once('../conexao.php');
 
 //Varificação se o usuario está logado
-if (!isset($_SESSION['admin_logado'])) {
-    header("Location:../logout.php");
-    exit();
-}
+require_once('../valida_login.php');
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
 
     $ADM_NOME = $_POST['ADM_NOME'];
+    $ADM_EMAIL = $_POST['ADM_EMAIL'];
     $ADM_SENHA = $_POST['ADM_SENHA'];
     $ADM_ATIVO = $_POST['ADM_ATIVO'];
 
     try {
-        $sql = "INSERT INTO administrador (ADM_NOME, ADM_SENHA, ADM_ATIVO) VALUES (:ADM_NOME, :ADM_SENHA, :ADM_ATIVO)";
+        $sql = "INSERT INTO ADMINISTRADOR (ADM_NOME, ADM_EMAIL, ADM_SENHA, ADM_ATIVO) VALUES (:ADM_NOME, :ADM_EMAIL, :ADM_SENHA, :ADM_ATIVO)";
         $stmt = $pdo->prepare($sql); // Preparação para não conter injeção de sql
         $stmt->bindParam(':ADM_NOME', $ADM_NOME, PDO::PARAM_STR);
+        $stmt->bindParam(':ADM_EMAIL', $ADM_EMAIL, PDO::PARAM_STR);
         $stmt->bindParam(':ADM_SENHA', $ADM_SENHA, PDO::PARAM_STR);
         $stmt->bindParam(':ADM_ATIVO', $ADM_ATIVO, PDO::PARAM_STR);
         $stmt->execute(); //execulta os comando á cima
 
-        echo "<p style='color:green;'> Administrador cadastrado com sucesso</p>";
+        echo "<div id='messagee'>Cadastrado com sucesso</div>";
     } catch (PDOException $erro) {
-        echo "<p style='color:red;'>Erro ao cadastrar o administrador: </p>" . $erro->getMessage() . "</p>";
+        echo "<div id='messagee'>Erro ao realizar o cadastro</div>" . $erro->getMessage() . "</p>";
     }
 }
 
@@ -38,6 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <link href="../assets/css/mensagem.css" rel="stylesheet">
+    <script src="../js/javinha.js"></script>
     <title>
         Cadastrar Administradores
     </title>
@@ -90,22 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
                         <span class="nav-link-text ms-1">Administradores</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../pages/edit.php">
-                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Editar Administradores</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="../pages/edit.php">
-                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Cadastrar Administradores</span>
-                    </a>
-                </li>
             </ul>
         </div>
     </aside>
@@ -124,14 +109,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                         <div class="input-group">
                             <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Type here...">
+                            <input type="text" class="form-control" placeholder="Buscar Produto...">
                         </div>
                     </div>
                     <ul class="navbar-nav  justify-content-end">
                         <li class="nav-item d-flex align-items-center">
                             <a href="../logout.php" class="nav-link text-white font-weight-bold px-0">
                                 <i class="fa fa-user me-sm-1"></i>
-                                <span class="d-sm-inline d-none">Sign in</span>
+                                <span class="d-sm-inline d-none">Logout</span>
                             </a>
                         </li>
                         <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -158,7 +143,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
                             </div>
                         </div>
                         <div class="card-body">
-                            <p class="text-uppercase text-sm">Cadastrar</p>
                             <div class="row">
                                 <form action="" method="post" enctype="multipart/form-data">
                                     <div class="col-md-6">
@@ -169,14 +153,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
+                                            <label for="ADM_EMAIL" class="form-control-label"> Email</label>
+                                            <input class="form-control" type="text" name="ADM_EMAIL" id="ADM_EMAIL" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
                                             <label for="ADM_SENHA" class="form-control-label">Senha</label>
                                             <input class="form-control" type="password" name="ADM_SENHA" id="ADM_SENHA" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="example-text-input" class="form-control-label">Status</label>
-                                            <input class="form-control" type="text" name="ADM_ATIVO" id="ADM_ATIVO" required>
+                                            <label for="ADM_ATIVO">Status</label>
+                                            <select class="form-control" name="ADM_ATIVO" id="ADM_ATIVO">
+                                                <option value="1">Ativo</option>
+                                                <option value="0">Inativo</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Cadastrar">
@@ -231,25 +224,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //Conexão com o banco de dados
                     </div>
                 </div>
             </div>
-        </div>
-        <!--   Core JS Files   -->
-        <script src="../assets/js/core/popper.min.js"></script>
-        <script src="../assets/js/core/bootstrap.min.js"></script>
-        <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-        <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-        <script>
-            var win = navigator.platform.indexOf('Win') > -1;
-            if (win && document.querySelector('#sidenav-scrollbar')) {
-                var options = {
-                    damping: '0.5'
-                }
-                Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-            }
-        </script>
-        <!-- Github buttons -->
-        <script async defer src="https://buttons.github.io/buttons.js"></script>
-        <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-        <script src="../assets/js/argon-dashboard.min.js?v=2.0.4"></script>
-</body>
-
-</html>
+            <?php require_once('../layouts/fim.php'); ?>

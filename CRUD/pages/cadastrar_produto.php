@@ -1,11 +1,105 @@
 <?php
 session_start();
 
-//Varificação se o usuario está logado
-if (!isset($_SESSION['admin_logado'])) {
-    header("Location:../logout.php");
-    exit();
+// Importa a configuração de conexão com o banco de dados.
+require_once('../conexao.php');
+
+// Valida login
+require_once('../valida_login.php');
+
+// Bloco de consulta para buscar categorias.
+try {
+    $stmt_categoria = $pdo->prepare("SELECT * FROM CATEGORIA");
+    $stmt_categoria->execute();
+    $categoria = $stmt_categoria->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $erro) {
+    echo "<div id='messagee'>Erro ao buscar categoria " . $erro->getMessage() . "</div>";
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $nome = $_POST['nome'];
+    $descricao = $_POST['descricao'];
+    $preco = $_POST['preco'];
+    $quantidade = $_POST['quantidade'];
+    $desconto = $_POST['desconto'];
+    $categoria_id = $_POST['categoria'];
+    $status = $_POST['status'];
+    $imagens = $_POST['imagem_url'];
+
+    try {
+        $sql_produto = "INSERT INTO PRODUTO
+            (
+                PRODUTO_NOME, 
+                PRODUTO_DESC, 
+                PRODUTO_PRECO,
+                PRODUTO_DESCONTO,
+                CATEGORIA_ID,
+                PRODUTO_ATIVO
+            ) VALUES (
+                :PRODUTO_NOME,
+                :PRODUTO_DESC, 
+                :PRODUTO_PRECO, 
+                :PRODUTO_DESCONTO, 
+                :CATEGORIA_ID, 
+                :PRODUTO_ATIVO
+            )";
+
+        //Preparação para não conter injeção de sql.
+        $stmt = $pdo->prepare($sql_produto);
+        $stmt->bindParam(':PRODUTO_NOME', $nome, PDO::PARAM_STR);
+        $stmt->bindParam(':PRODUTO_DESC', $descricao, PDO::PARAM_STR);
+        $stmt->bindParam(':PRODUTO_PRECO', $preco, PDO::PARAM_STR);
+        $stmt->bindParam(':PRODUTO_DESCONTO', $desconto, PDO::PARAM_STR);
+        $stmt->bindParam(':CATEGORIA_ID', $categoria_id, PDO::PARAM_STR);
+        $stmt->bindParam(':PRODUTO_ATIVO', $status, PDO::PARAM_INT);
+
+        //Execulta os comando á cima
+        $stmt->execute();
+        //Pegando o ID do produto inserido.
+        $produto_id = $pdo->lastInsertId();
+
+        //Inserindo imagens no banco.
+        foreach ($imagens as $imagem => $imagem_url) {
+            $sql_imagem = "INSERT INTO PRODUTO_IMAGEM 
+            (
+                IMAGEM_URL,
+                IMAGEM_ORDEM,
+                PRODUTO_ID
+            ) VALUES (
+                :IMAGEM_URL,
+                :IMAGEM_ORDEM,
+                :PRODUTO_ID
+            )";
+
+            $stmt_imagem = $pdo->prepare($sql_imagem);
+            $stmt_imagem->bindParam(':IMAGEM_URL', $imagem_url, PDO::PARAM_STR);
+            $stmt_imagem->bindParam(':IMAGEM_ORDEM', $imagem_url, PDO::PARAM_INT);
+            $stmt_imagem->bindParam(':PRODUTO_ID', $produto_id, PDO::PARAM_INT);
+            $stmt_imagem->execute();
+        }
+
+        //Inserindo estoque
+        $sql_estoque = "INSERT INTO PRODUTO_ESTOQUE 
+        (
+            PRODUTO_ID,
+            PRODUTO_QTD
+        ) VALUES (
+            :PRODUTO_ID,
+            :PRODUTO_QTD
+        )";
+
+        $stmt_estoque = $pdo->prepare($sql_estoque);
+        $stmt_estoque->bindParam(':PRODUTO_ID', $produto_id, PDO::PARAM_INT);
+        $stmt_estoque->bindParam(':PRODUTO_QTD', $quantidade, PDO::PARAM_INT);
+        $stmt_estoque->execute();
+
+        echo "<div id='messagee'>Cadastrado com sucesso</div>";
+    } catch (PDOException $erro) {
+        echo "<div id='messagee'>Erro ao realizar o cadastro</div>" . $erro->getMessage() . "</p>";
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -15,9 +109,22 @@ if (!isset($_SESSION['admin_logado'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <link rel="stylesheet" href="../assets/css/mensagem.css">
+    <script src="../js/javinha.js"></script>
     <title>
         Cadastrar Produto
     </title>
+    <script>
+        // Adiciona um novo campo de imagem URL.
+        function adicionarImagem() {
+            const containerImagens = document.getElementById('containerImagens');
+            const novoInput = document.createElement('input');
+            novoInput.type = 'text';
+            novoInput.name = 'imagem_url[]';
+            novoInput.className = 'form-control';
+            containerImagens.appendChild(novoInput);
+        }
+    </script>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->
@@ -52,7 +159,7 @@ if (!isset($_SESSION['admin_logado'])) {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../pages/listar_prdoduto.php">
+                    <a class="nav-link" href="../pages/listar_produto.php">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
                         </div>
@@ -68,19 +175,11 @@ if (!isset($_SESSION['admin_logado'])) {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../pages/edit.php">
+                    <a class="nav-link" href="../pages/listar_categoria.php">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
+                            <i class="ni ni-single-copy-04 text-warning text-sm opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1">Editar produto</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="../pages/edit.php">
-                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Cadastrar produto</span>
+                        <span class="nav-link-text ms-1">Categoria</span>
                     </a>
                 </li>
             </ul>
@@ -95,20 +194,20 @@ if (!isset($_SESSION['admin_logado'])) {
                         <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white">Pages</a></li>
                         <li class="breadcrumb-item text-sm text-white active" aria-current="page">Editar produto</li>
                     </ol>
-                    <h6 class="font-weight-bolder text-white mb-0">Editar prdouto</h6>
+                    <h6 class="font-weight-bolder text-white mb-0">Editar Produto</h6>
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                         <div class="input-group">
                             <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Type here...">
+                            <input type="text" class="form-control" placeholder="Buscar Produto...">
                         </div>
                     </div>
                     <ul class="navbar-nav  justify-content-end">
                         <li class="nav-item d-flex align-items-center">
                             <a href="../logout.php" class="nav-link text-white font-weight-bold px-0">
                                 <i class="fa fa-user me-sm-1"></i>
-                                <span class="d-sm-inline d-none">Sign in</span>
+                                <span class="d-sm-inline d-none">Logout</span>
                             </a>
                         </li>
                         <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -127,7 +226,7 @@ if (!isset($_SESSION['admin_logado'])) {
         <!-- End Navbar -->
         <div class="container-fluid py-4">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-6">
                     <div class="card">
                         <div class="card-header pb-0">
                             <div class="d-flex align-items-center">
@@ -135,49 +234,71 @@ if (!isset($_SESSION['admin_logado'])) {
                             </div>
                         </div>
                         <div class="card-body">
-                            <p class="text-uppercase text-sm">Cadastrar</p>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label"> Nome</label>
-                                        <input class="form-control" type="text" value="">
+                            <div>
+                                <form class="row" action="" method="post" enctype="multipart/form-data">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="nome" class="form-control-label"> Nome</label>
+                                            <input class="form-control" type="text" name="nome" id="nome" required>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Descrição</label>
-                                        <input class="form-control" type="email" value="">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="descricao" class="form-control-label">Descrição</label>
+                                            <textarea class="form-control" name="descricao" id="descricao" required></textarea>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Categoria</label>
-                                        <input class="form-control" type="text" value="">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="quantidade" class="form-control-label">Quantidade</label>
+                                            <input class="form-control" type="number" name="quantidade" id="quantidade">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Preço</label>
-                                        <input class="form-control" type="number" value="">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="categoria" class="form-control-label">Categoria</label>
+                                            <select class="form-control" type="text" name="categoria" id="categoria">
+                                                <?php foreach ($categoria as $categorias) { // Loop para preencher o dropdown de categorias. 
+                                                ?>
+                                                    <option class="form-control" value="<?= $categorias['CATEGORIA_ID'] ?>"><?= $categorias['CATEGORIA_NOME'] ?></option>
+                                                <?php }; ?>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Desconto</label>
-                                        <input class="form-control" type="number" value="">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="preco" class="form-control-label">Preço</label>
+                                            <input class="form-control" type="number" name="preco" id="preco" step="0.01" required>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Imagem</label>
-                                        <input class="form-control" type="file" value="">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="desconto" class="form-control-label">Desconto</label>
+                                            <input class="form-control" type="number" name="desconto" id="desconto" step="0.01">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                    <label class="form-check-label" for="exampleCheck1">Ativo</label>
-                                </div>
-                                <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Cadastrar">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+
+                                            <!-- UPDATE DE IMAGEM E SELEÇÃO POR LINK -->
+                                            <label for="imagem_url" class="form-control-label">URL da Imagem</label>
+                                            <div id="containerImagens">
+                                                <input class="form-control" type="text" name="imagem_url[]" required id="imagem_url">
+                                            </div>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="adicionarImagem()">Adicionar mais imagens</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="status">Status</label>
+                                            <select class="form-control" name="status" id="status">
+                                                <option value="1">Ativo</option>
+                                                <option value="0">Inativo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Cadastrar">
+                                </form>
                             </div>
                             <hr class="horizontal dark">
                         </div>
@@ -229,25 +350,4 @@ if (!isset($_SESSION['admin_logado'])) {
                     </div>
                 </div>
             </div>
-        </div>
-        <!--   Core JS Files   -->
-        <script src="../assets/js/core/popper.min.js"></script>
-        <script src="../assets/js/core/bootstrap.min.js"></script>
-        <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-        <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-        <script>
-            var win = navigator.platform.indexOf('Win') > -1;
-            if (win && document.querySelector('#sidenav-scrollbar')) {
-                var options = {
-                    damping: '0.5'
-                }
-                Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-            }
-        </script>
-        <!-- Github buttons -->
-        <script async defer src="https://buttons.github.io/buttons.js"></script>
-        <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-        <script src="../assets/js/argon-dashboard.min.js?v=2.0.4"></script>
-</body>
-
-</html>
+            <?php require_once('../layouts/fim.php'); ?>
