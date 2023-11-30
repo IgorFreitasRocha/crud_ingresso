@@ -17,6 +17,8 @@ try {
     CATEGORIA_DESC,
     CATEGORIA_ATIVO 
     FROM CATEGORIA
+
+    ORDER BY CATEGORIA_ID ASC
     ");
   $stmt->execute();
   $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -152,8 +154,8 @@ if (isset($_GET['busca'])){
   </div>
 </div>
 </main>
-    <script>  
-  /* Ativar a class de ativo no menu de navegação */ 
+    <!--Ativar a class de ativo no menu de navegação-->
+    <script>
       let navegaa = document.getElementById('nevega4');
       navegaa.classList.add('active');
     </script>

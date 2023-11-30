@@ -48,7 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     editarProduto($pdo, $PRODUTO_NOME, $PRODUTO_DESC, $PRODUTO_PRECO, $PRODUTO_DESCONTO, $CATEGORIA_ID, $PRODUTO_ATIVO, $PRODUTO_ID);
 
     editarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD);
-    
+
+    editarImagem($pdo, $IMAGEM_ID, $IMAGEM_URL);
+
     /*Parametro para mensagem de sucesso através de GET */
     header('Location: listar_produto.php?update=success');
     exit();
@@ -264,7 +266,7 @@ require_once('../layouts/inicio.php');
         <?php
           foreach ($imagens as $imagem) {
             ?>
-            <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="40" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'" class="w-100 border-radius-lg shadow-sm">
+            <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="50" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'" class="w-100 border-radius-lg shadow-sm">
             <?php
           }
         ?>
@@ -395,16 +397,16 @@ require_once('../layouts/inicio.php');
     const containerImagens = document.getElementById('containerImagens');
 
     const inputgroup = document.createElement('div');
-    inputgroup.className = "input-group mb-3"
+    inputgroup.className = "input-group mb-3";
 
     const imagem = document.createElement('input');
     imagem.type = 'text';
-    imagem.name = `imagem_url[ novo_${Math.floor(Math.random() * 65536).toString(16)}]`;
+    imagem.name = `imagem_url[novo_${Math.floor(Math.random() * 65536).toString(16)}]`;
     imagem.className = 'form-control';
 
     const botao = document.createElement('button');
-    botao.className = "btn mb-0"
-    botao.innerText = 'Remover'
+    botao.className = "btn mb-0";
+    botao.innerText = 'Remover';
     botao.onclick = function() {
       removerInputImagem(botao);
     };
