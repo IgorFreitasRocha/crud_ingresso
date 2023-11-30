@@ -60,7 +60,7 @@ if (isset($_GET['busca'])){
       <div class="ms-md-auto pe-md-3 d-flex align-items-center">
       <form action="">
           <div class="input-group">
-            <input name="busca" class="form-control" placeholder="Buscar Categoria..." type="text"> 
+            <input name="busca" value="<?php if(isset($_GET['busca'])) echo $_GET['busca'] ;?>" class="form-control" placeholder="Buscar Categoria..." type="text"> 
             <button type="submit" class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></button>
           </div>
         </form>
@@ -152,9 +152,9 @@ if (isset($_GET['busca'])){
   </div>
 </div>
 </main>
-    <!--Ativar a class de ativo no menu de navegação-->
-    <script>
-      let navegaa = document.getElementById('nevega3');
+<script>
+  /* Ativar a class de ativo no menu de navegação */ 
+  let navegaa = document.getElementById('nevega3');
       navegaa.classList.add('active');
     </script>
     <?php require_once('../layouts/fim.php'); ?>
