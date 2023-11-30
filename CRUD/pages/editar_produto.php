@@ -44,13 +44,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $PRODUTO_ID = $_POST['PRODUTO_ID'];
   $PRODUTO_QTD = $_POST['PRODUTO_QTD'];
   $imagens = $_POST['imagem_url'];
+  try{
+    editarProduto($pdo, $PRODUTO_NOME, $PRODUTO_DESC, $PRODUTO_PRECO, $PRODUTO_DESCONTO, $CATEGORIA_ID, $PRODUTO_ATIVO, $PRODUTO_ID);
 
-  try {
- 
+    editarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD);
 
+    editarImagem($pdo, $IMAGEM_ID, $IMAGEM_URL);
 
-    echo "<div id='messagee'>Editado com sucesso </div>";
-    header('Location: listar_produto.php');
+    /*Parametro para mensagem de sucesso através de GET */
+    header('Location: listar_produto.php?update=success');
     exit();
   } catch (PDOException $erro) {
     echo "Erro: " . $erro->getMessage();
@@ -261,7 +263,13 @@ require_once('../layouts/inicio.php');
     <div class="row gx-4">
       <div class="col-auto">
         <div class="avatar avatar-xl position-relative">
-          <img src= "<?php $imagem['IMAGEM_URL']?>" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+        <?php
+          foreach ($imagens as $imagem) {
+            ?>
+            <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="50" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'" class="w-100 border-radius-lg shadow-sm">
+            <?php
+          }
+        ?>
         </div>
       </div>
       <div class="col-auto my-auto">
@@ -315,7 +323,8 @@ require_once('../layouts/inicio.php');
                 <div class="form-group">
                   <label for="CATEGORIA_NOME" class="form-control-label">Categoria</label>
                   <select class="form-control" type="text" name="CATEGORIA_ID" id="CATEGORIA_NOME">
-                    <?php foreach ($categoria as $categorias) { // Loop para preencher o dropdown de categorias. 
+                    <?php foreach ($categoria as $categorias) {
+                      // Loop para preencher o dropdown de categorias. 
                     ?>
                       <option class="form-control" value="<?= $categorias['CATEGORIA_ID'] ?>"><?= $categorias['CATEGORIA_NOME'] ?></option>
                     <?php }; ?>
@@ -373,8 +382,8 @@ require_once('../layouts/inicio.php');
     </div>
   </div>
 </div>
-<!--Ativar a class de ativo no menu de navegação-->
 <script>
+    /* Ativar a class de ativo no menu de navegação */
   let navegaa = document.getElementById('nevega2');
   navegaa.classList.add('active');
 </script>
@@ -388,16 +397,16 @@ require_once('../layouts/inicio.php');
     const containerImagens = document.getElementById('containerImagens');
 
     const inputgroup = document.createElement('div');
-    inputgroup.className = "input-group mb-3"
+    inputgroup.className = "input-group mb-3";
 
     const imagem = document.createElement('input');
     imagem.type = 'text';
-    imagem.name = `imagem_url[ novo_${Math.floor(Math.random() * 65536).toString(16)}]`;
+    imagem.name = `imagem_url[novo_${Math.floor(Math.random() * 65536).toString(16)}]`;
     imagem.className = 'form-control';
 
     const botao = document.createElement('button');
-    botao.className = "btn mb-0"
-    botao.innerText = 'Remover'
+    botao.className = "btn mb-0";
+    botao.innerText = 'Remover';
     botao.onclick = function() {
       removerInputImagem(botao);
     };

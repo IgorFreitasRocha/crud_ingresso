@@ -27,8 +27,7 @@ try {
 }
 
 /*FUNÇÃO PARA GERAR IMAGENS */
-function buscarImagens($pdo, $produto_id)
-{
+function buscarImagens($pdo, $produto_id){
   $sql = "SELECT
     IMAGEM_ID,
     IMAGEM_URL,
@@ -43,6 +42,9 @@ function buscarImagens($pdo, $produto_id)
 
   return $imagens;
 }
+
+$imgCount = 0; // Inicializa o contador de imagens
+
 
 //Trazer buscas feitas em produto pelo usuario
 if (isset($_GET['busca'])){
@@ -67,7 +69,8 @@ if (isset($_GET['busca'])){
     // Obtém todos os resultados da consulta como um array de arrays associativos
     $resultados_busca = $stmt_busca->fetchAll(PDO::FETCH_ASSOC);
   } catch (PDOException $erro) {
-    echo "Erro " . $erro->getMessage(); // Exibe a mensagem de erro caso ocorra uma exceção
+    // Exibe a mensagem de erro caso ocorra uma exceção
+    echo "Erro " . $erro->getMessage();
   }
 }
 ?>
@@ -86,7 +89,7 @@ if (isset($_GET['busca'])){
       <div class="ms-md-auto pe-md-3 d-flex align-items-center">
         <form action="">
             <div class="input-group">
-              <input name="busca" class="form-control" placeholder="Buscar Produto..." type="text"> 
+              <input name="busca" value="<?php if(isset($_GET['busca'])) echo $_GET['busca']; ?>" class="form-control" placeholder="Buscar Produto..." type="text"> 
               <button type="submit" class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></button>
             </div>
           </form>
@@ -185,11 +188,31 @@ if (isset($_GET['busca'])){
                     <td class="align-middle text-center">
                       <?php
                       $imagens = buscarImagens($pdo, $produto['PRODUTO_ID']);
-                        foreach ($imagens as $imagem) {
+                      foreach ($imagens as $key => $imagem) {
+                        // Verifica se a imagem atual está vazia
+                        if (empty($imagem['IMAGEM_URL'])) {
+                          // Se for uma imagem vazia, verifique se a imagem anterior também era vazia
+                          if ($key > 0 && empty($imagens[$key - 1]['IMAGEM_URL'])) {
+                            continue; // Não exibe a imagem vazia entre duas imagens vazias
+                          }
+                        } else {
+                          // Exibe a imagem não vazia
                           ?>
                           <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="60" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'">
                           <?php
                         }
+                    
+                        // Incrementa o contador de imagens, apenas se a imagem atual não for vazia
+                        if (!empty($imagem['IMAGEM_URL'])) {
+                          $imgCount++;
+                        }
+                    
+                        // Se o contador for maior que 4, adiciona uma quebra de linha
+                        if ($imgCount > 4) {
+                          echo '<br>';
+                          $imgCount = 0; // Reinicia o contador
+                        }
+                      }
                       ?>
                     </td>
                     <td class="align-middle text-center">
@@ -221,30 +244,5 @@ if (isset($_GET['busca'])){
     </div>
   </div>
 </div>
-</main>
-  <!--Ativar a class de ativo no menu de navegação-->
-  <script>
-    let navegaa = document.getElementById('nevega2');
-    navegaa.classList.add('active');
-  </script>
-  <!--   Core JS Files   -->
-  <script src="../assets/js/core/popper.min.js"></script>
-  <script src="../assets/js/core/bootstrap.min.js"></script>
-  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-    }
-  </script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/argon-dashboard.min.js?v=2.0.4"></script>
-  </body>
 
-  </html>
+<?php require_once('../layouts/fim.php'); ?>
