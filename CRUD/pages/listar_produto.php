@@ -25,7 +25,7 @@ try {
 
     WHERE p.PRODUTO_ATIVO = 1
 
-    ORDER BY p.PRODUTO_ID ASC
+    ORDER BY p.PRODUTO_ID DESC
   ");
   $stmt->execute();
   $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
