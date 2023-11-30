@@ -36,6 +36,8 @@ if (isset($_GET['busca'])){
       ADM_ATIVO 
       FROM ADMINISTRADOR
       WHERE ADM_NOME LIKE '%$pesquisa%'
+
+      ORDER BY ADM_ID ASC
     ");
     $stmt->execute();
     $resultado_busca = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -108,6 +110,7 @@ if (isset($_GET['busca'])){
               </thead>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                   <tbody>
                     <?php foreach ($administrador as $adms) { ?>
                       <tr>
@@ -146,6 +149,8 @@ if (isset($_GET['busca'])){
               </div>
             </div>
 =======
+=======
+>>>>>>> 8dfd4bb304b491a044291292bc133921c591cf3f
               <tbody>
                   <?php if(isset($_GET['busca'])){
                     $administrador = $resultado_busca;
@@ -184,7 +189,10 @@ if (isset($_GET['busca'])){
                 <?php } ?>
               </tbody>
             </table>
+<<<<<<< HEAD
 >>>>>>> 4ca638aa955589355b15bc36bca0444ab2fad40f
+=======
+>>>>>>> 8dfd4bb304b491a044291292bc133921c591cf3f
           </div>
         </div>
       </div>
@@ -192,9 +200,15 @@ if (isset($_GET['busca'])){
   </div>
 </div>
 </main>
+<<<<<<< HEAD
 <script>
   /* Ativar a class de ativo no menu de navegação */ 
   let navegaa = document.getElementById('nevega3');
+=======
+    <!--Ativar a class de ativo no menu de navegação-->
+    <script>
+      let navegaa = document.getElementById('nevega3');
+>>>>>>> 8dfd4bb304b491a044291292bc133921c591cf3f
       navegaa.classList.add('active');
     </script>
     <?php require_once('../layouts/fim.php'); ?>

@@ -5,13 +5,16 @@ require_once('../conexao.php');
 //Valida se o usuario está logado 
 require_once('../valida_login.php');
 
+if (isset($_GET['update']) && $_GET['update'] === 'success') {
+  echo "<div id='messagee'>Produto atualizado com sucesso!</div>";
+}
+
 try {
   $stmt = $pdo->prepare("SELECT
     p.PRODUTO_ID,
     p.PRODUTO_NOME, 
     p.PRODUTO_DESC, 
     p.PRODUTO_PRECO,
-    p.PRODUTO_DESCONTO,
     p.CATEGORIA_ID,
     p.PRODUTO_ATIVO,
     c.CATEGORIA_NOME,
@@ -19,7 +22,10 @@ try {
     FROM PRODUTO AS p
     LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
     LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+
     WHERE p.PRODUTO_ATIVO = 1
+
+    ORDER BY p.PRODUTO_ID ASC
   ");
   $stmt->execute();
   $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -28,7 +34,8 @@ try {
 }
 
 /*FUNÇÃO PARA GERAR IMAGENS */
-function buscarImagens($pdo, $produto_id){
+function buscarImagens($pdo, $produto_id)
+{
   $sql = "SELECT
     IMAGEM_ID,
     IMAGEM_URL,
@@ -43,9 +50,6 @@ function buscarImagens($pdo, $produto_id){
 
   return $imagens;
 }
-
-$imgCount = 0; // Inicializa o contador de imagens
-
 
 //Trazer buscas feitas em produto pelo usuario
 if (isset($_GET['busca'])){
@@ -70,14 +74,13 @@ if (isset($_GET['busca'])){
     // Obtém todos os resultados da consulta como um array de arrays associativos
     $resultados_busca = $stmt_busca->fetchAll(PDO::FETCH_ASSOC);
   } catch (PDOException $erro) {
-    // Exibe a mensagem de erro caso ocorra uma exceção
-    echo "Erro " . $erro->getMessage();
+    echo "Erro " . $erro->getMessage(); // Exibe a mensagem de erro caso ocorra uma exceção
   }
 }
 ?>
 <?php require_once('../layouts/inicio.php'); ?>
 
-<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
+<nav class="navbar navbar-main px-0 mx-5 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
   <div class="container-fluid py-1 px-3">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
@@ -90,7 +93,7 @@ if (isset($_GET['busca'])){
       <div class="ms-md-auto pe-md-3 d-flex align-items-center">
         <form action="">
             <div class="input-group">
-              <input name="busca" value="<?php if(isset($_GET['busca'])) echo $_GET['busca']; ?>" class="form-control" placeholder="Buscar Produto..." type="text"> 
+              <input name="busca" class="form-control" placeholder="Buscar Produto..." type="text"> 
               <button type="submit" class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></button>
             </div>
           </form>
@@ -151,8 +154,6 @@ if (isset($_GET['busca'])){
 
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Preço</th>
 
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Preço com desconto</th>
-
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Imagem</th>
 
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
@@ -174,7 +175,7 @@ if (isset($_GET['busca'])){
                     <td class="align-middle text-center">
                       <?php echo $produto['PRODUTO_NOME']; ?>
                     </td>
-                      <td style="font-size: 0.8rem;" class="align-middle text-center">
+                      <td style="font-size: 0.7rem;" class="align-middle text-center">
                       <?php 
                         $texto = $produto['PRODUTO_DESC'];
                         $limiteCaracteres = 30;
@@ -184,7 +185,7 @@ if (isset($_GET['busca'])){
                         echo $texto;
                       ?>
                     </td>
-                    <td style="font-size: 0.8rem;" class="align-middle text-center">
+                    <td style="font-size: 0.7rem;" class="align-middle text-center">
                       <?php echo $produto['CATEGORIA_NOME']; ?>
                     </td>
                     <td class="align-middle text-center">
@@ -194,36 +195,13 @@ if (isset($_GET['busca'])){
                       <?php echo "R$" . $produto['PRODUTO_PRECO']; ?>
                     </td>
                     <td class="align-middle text-center">
-                      <?php echo "R$" . ($produto['PRODUTO_PRECO'] - $produto['PRODUTO_DESCONTO']); ?>
-                    </td>
-                    <td class="align-middle text-center">
                       <?php
                       $imagens = buscarImagens($pdo, $produto['PRODUTO_ID']);
-                      foreach ($imagens as $key => $imagem) {
-                        // Verifica se a imagem atual está vazia
-                        if (empty($imagem['IMAGEM_URL'])) {
-                          // Se for uma imagem vazia, verifique se a imagem anterior também era vazia
-                          if ($key > 0 && empty($imagens[$key - 1]['IMAGEM_URL'])) {
-                            continue; // Não exibe a imagem vazia entre duas imagens vazias
-                          }
-                        } else {
-                          // Exibe a imagem não vazia
+                        foreach ($imagens as $imagem) {
                           ?>
-                          <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="60" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'">
+                          <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="30" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'">
                           <?php
                         }
-                    
-                        // Incrementa o contador de imagens, apenas se a imagem atual não for vazia
-                        if (!empty($imagem['IMAGEM_URL'])) {
-                          $imgCount++;
-                        }
-                    
-                        // Se o contador for maior que 4, adiciona uma quebra de linha
-                        if ($imgCount > 4) {
-                          echo '<br>';
-                          $imgCount = 0; // Reinicia o contador
-                        }
-                      }
                       ?>
                     </td>
                     <td class="align-middle text-center">
