@@ -106,43 +106,45 @@ if (isset($_GET['busca'])){
                   <th class="text-secondary opacity-7"></th>
                 </tr>
               </thead>
-                  <tbody>
-                    <?php foreach ($administrador as $adms) { ?>
-                      <tr>
-                        <td>
-                          <?php echo $adms['ADM_ID']; ?>
-                        </td>
-                        <td>
-                          <?php echo $adms['ADM_NOME']; ?>
-                        </td>
-                        <td class="align-middle text-center text-sm">
-                          <?php echo $adms['ADM_EMAIL']; ?>
-                        </td>
-                        <td class="align-middle text-center">
-                          <?php
-                          if($adms['ADM_ATIVO'] == 0) {
-                            echo'<span class="statusUser badge badge-sm bg-gradient-secondary">Inativo</span>';
-                          }else{
-                            echo'<span class="statusUser badge badge-sm bg-gradient-success">Ativo</span>';
-                          };
-                          ?>
-                        </td>
-                        <td class="align-middle text-center">
-                          <a href="editar_admin.php?id=<?php echo $adms['ADM_ID']; ?>" class="btn badge badge-sm bg-gradient-primary" data-toggle="tooltip" data-original-title="Edit user">
-                            Edit
-                          </a>
-                        </td>
-                        <td class="align-middle text-center">
-                          <a href="deletar_admin.php?id=<?php echo $adms['ADM_ID']; ?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
-                            Delete
-                          </a>
-                        </td>
-                      </tr>
-                    <?php } ?>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+
+              <tbody>
+                  <?php if(isset($_GET['busca'])){
+                    $administrador = $resultado_busca;
+                } ?>
+                <?php foreach ($administrador as $adms) { ?>
+                  <tr>
+                    <td class="align-middle text-center">
+                      <?php echo $adms['ADM_ID']; ?>
+                    </td>
+                    <td class="align-middle text-center">
+                      <?php echo $adms['ADM_NOME']; ?>
+                    </td>
+                    <td class="align-middle text-center">
+                      <?php echo $adms['ADM_EMAIL']; ?>
+                    </td>
+                    <td class="align-middle text-center">
+                      <?php
+                      if ($adms['ADM_ATIVO'] == 0) {
+                        echo '<span class="statusUser badge badge-sm bg-gradient-secondary">Inativo</span>';
+                      } else {
+                        echo '<span class="statusUser badge badge-sm bg-gradient-success">Ativo</span>';
+                      };
+                      ?>
+                    </td>
+                    <td class="align-middle text-center">
+                      <a href="editar_admin.php?ADM_ID=<?php echo $adms['ADM_ID']; ?>" class="btn badge badge-sm bg-gradient-primary" data-toggle="tooltip" data-original-title="Edit user">
+                        Edit
+                      </a>
+                    </td>
+                    <td class="align-middle text-center">
+                      <a href="deletar_admin.php?ADM_ID=<?php echo $adms['ADM_ID']; ?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
+                        Delete
+                      </a>
+                    </td>
+                  </tr>
+                <?php } ?>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
