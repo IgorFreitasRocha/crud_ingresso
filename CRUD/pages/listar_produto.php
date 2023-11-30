@@ -19,6 +19,7 @@ try {
     FROM PRODUTO AS p
     LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
     LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+    WHERE p.PRODUTO_ATIVO = 1
   ");
   $stmt->execute();
   $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -123,8 +124,18 @@ if (isset($_GET['busca'])){
           <div>
             <h6 class="card-link">Produtos</h6>
           </div>
-          <a href="cadastrar_produto.php" class="card-link btn btn-danger btn-sm ms-auto">Cadastrar Produtos</a>
-        </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary active">Ativos</button>
+                <button type="button" class="btn btn-danger">Inativos</button>
+              </div>
+            </div>
+          </div>
+            <div> 
+              <a href="cadastrar_produto.php" class="card-link btn btn-danger btn-sm ms-auto">Cadastrar Produtos</a>
+            </div>
+          </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
             <table class="table align-items-center mb-0">
