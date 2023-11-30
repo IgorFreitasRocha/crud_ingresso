@@ -36,8 +36,6 @@ if (isset($_GET['busca'])){
       ADM_ATIVO 
       FROM ADMINISTRADOR
       WHERE ADM_NOME LIKE '%$pesquisa%'
-
-      ORDER BY ADM_ID ASC
     ");
     $stmt->execute();
     $resultado_busca = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -108,9 +106,6 @@ if (isset($_GET['busca'])){
                   <th class="text-secondary opacity-7"></th>
                 </tr>
               </thead>
-
-<<<<<<< HEAD
-<<<<<<< HEAD
                   <tbody>
                     <?php foreach ($administrador as $adms) { ?>
                       <tr>
@@ -121,7 +116,7 @@ if (isset($_GET['busca'])){
                           <?php echo $adms['ADM_NOME']; ?>
                         </td>
                         <td class="align-middle text-center text-sm">
-                          <?php echo $adms['ADM_SENHA']; ?>
+                          <?php echo $adms['ADM_EMAIL']; ?>
                         </td>
                         <td class="align-middle text-center">
                           <?php
@@ -148,51 +143,6 @@ if (isset($_GET['busca'])){
                 </table>
               </div>
             </div>
-=======
-=======
->>>>>>> 8dfd4bb304b491a044291292bc133921c591cf3f
-              <tbody>
-                  <?php if(isset($_GET['busca'])){
-                    $administrador = $resultado_busca;
-                } ?>
-                <?php foreach ($administrador as $adms) { ?>
-                  <tr>
-                    <td class="align-middle text-center">
-                      <?php echo $adms['ADM_ID']; ?>
-                    </td>
-                    <td class="align-middle text-center">
-                      <?php echo $adms['ADM_NOME']; ?>
-                    </td>
-                    <td class="align-middle text-center">
-                      <?php echo $adms['ADM_EMAIL']; ?>
-                    </td>
-                    <td class="align-middle text-center">
-                      <?php
-                      if ($adms['ADM_ATIVO'] == 0) {
-                        echo '<span class="statusUser badge badge-sm bg-gradient-secondary">Inativo</span>';
-                      } else {
-                        echo '<span class="statusUser badge badge-sm bg-gradient-success">Ativo</span>';
-                      };
-                      ?>
-                    </td>
-                    <td class="align-middle text-center">
-                      <a href="editar_admin.php?ADM_ID=<?php echo $adms['ADM_ID']; ?>" class="btn badge badge-sm bg-gradient-primary" data-toggle="tooltip" data-original-title="Edit user">
-                        Edit
-                      </a>
-                    </td>
-                    <td class="align-middle text-center">
-                      <a href="deletar_admin.php?ADM_ID=<?php echo $adms['ADM_ID']; ?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
-                        Delete
-                      </a>
-                    </td>
-                  </tr>
-                <?php } ?>
-              </tbody>
-            </table>
-<<<<<<< HEAD
->>>>>>> 4ca638aa955589355b15bc36bca0444ab2fad40f
-=======
->>>>>>> 8dfd4bb304b491a044291292bc133921c591cf3f
           </div>
         </div>
       </div>
@@ -200,15 +150,9 @@ if (isset($_GET['busca'])){
   </div>
 </div>
 </main>
-<<<<<<< HEAD
 <script>
   /* Ativar a class de ativo no menu de navegação */ 
   let navegaa = document.getElementById('nevega3');
-=======
-    <!--Ativar a class de ativo no menu de navegação-->
-    <script>
-      let navegaa = document.getElementById('nevega3');
->>>>>>> 8dfd4bb304b491a044291292bc133921c591cf3f
       navegaa.classList.add('active');
     </script>
     <?php require_once('../layouts/fim.php'); ?>
