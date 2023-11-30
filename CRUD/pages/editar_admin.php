@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="ADM_EMAIL" class="form-control-label">Usuario</label>
+                                            <label for="ADM_EMAIL" class="form-control-label">E-mail</label>
                                             <input class="form-control" type="text" name="ADM_EMAIL" id="ADM_EMAIL" value="<?php echo $adms['ADM_EMAIL']; ?>">
                                         </div>
                                     </div>

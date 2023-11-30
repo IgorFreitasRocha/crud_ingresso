@@ -217,8 +217,8 @@ function buscarEstoque($pdo, $PRODUTO_ID){
 
 function editarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD){
   try{
-    $stmt = $pdo->prepare("UPDATE PRODUTO_ESTOQUE 
-      SET PRODUTO_QTD = :PRODUTO_QTD 
+    $stmt = $pdo->prepare("UPDATE PRODUTO_ESTOQUE
+      SET PRODUTO_QTD = :PRODUTO_QTD
       WHERE PRODUTO_ID = :PRODUTO_ID
     ");
     $stmt->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);

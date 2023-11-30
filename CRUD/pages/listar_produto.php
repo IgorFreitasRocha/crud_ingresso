@@ -15,7 +15,6 @@ try {
     p.PRODUTO_NOME, 
     p.PRODUTO_DESC, 
     p.PRODUTO_PRECO,
-    p.PRODUTO_DESCONTO,
     p.CATEGORIA_ID,
     p.PRODUTO_ATIVO,
     c.CATEGORIA_NOME,
@@ -81,7 +80,7 @@ if (isset($_GET['busca'])){
 ?>
 <?php require_once('../layouts/inicio.php'); ?>
 
-<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
+<nav class="navbar navbar-main px-0 mx-5 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
   <div class="container-fluid py-1 px-3">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
@@ -145,8 +144,6 @@ if (isset($_GET['busca'])){
 
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Preço</th>
 
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Preço com desconto</th>
-
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Imagem</th>
 
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
@@ -168,7 +165,7 @@ if (isset($_GET['busca'])){
                     <td class="align-middle text-center">
                       <?php echo $produto['PRODUTO_NOME']; ?>
                     </td>
-                      <td style="font-size: 0.8rem;" class="align-middle text-center">
+                      <td style="font-size: 0.7rem;" class="align-middle text-center">
                       <?php 
                         $texto = $produto['PRODUTO_DESC'];
                         $limiteCaracteres = 30;
@@ -178,7 +175,7 @@ if (isset($_GET['busca'])){
                         echo $texto;
                       ?>
                     </td>
-                    <td style="font-size: 0.8rem;" class="align-middle text-center">
+                    <td style="font-size: 0.7rem;" class="align-middle text-center">
                       <?php echo $produto['CATEGORIA_NOME']; ?>
                     </td>
                     <td class="align-middle text-center">
@@ -188,14 +185,11 @@ if (isset($_GET['busca'])){
                       <?php echo "R$" . $produto['PRODUTO_PRECO']; ?>
                     </td>
                     <td class="align-middle text-center">
-                      <?php echo "R$" . ($produto['PRODUTO_PRECO'] - $produto['PRODUTO_DESCONTO']); ?>
-                    </td>
-                    <td class="align-middle text-center">
                       <?php
                       $imagens = buscarImagens($pdo, $produto['PRODUTO_ID']);
                         foreach ($imagens as $imagem) {
                           ?>
-                          <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="60" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'">
+                          <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="30" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'">
                           <?php
                         }
                       ?>
