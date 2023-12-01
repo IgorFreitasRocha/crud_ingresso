@@ -195,10 +195,16 @@ if (isset($_GET['busca'])){
                     <td class="align-middle text-center">
                       <?php
                       $imagens = buscarImagens($pdo, $produto['PRODUTO_ID']);
+                      $imgCount = 0; // Inicializa o contador de imagens
                         foreach ($imagens as $imagem) {
                           ?>
                           <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="30" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'">
                           <?php
+                            $imgCount++; // Incrementa o contador de imagens
+                            if ($imgCount > 4) {
+                              echo '<br>';
+                              $imgCount = 0; // Reinicia o contador
+                            }
                         }
                       ?>
                     </td>
