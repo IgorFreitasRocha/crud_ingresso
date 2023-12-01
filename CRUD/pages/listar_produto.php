@@ -22,9 +22,7 @@ try {
     FROM PRODUTO AS p
     LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
     LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
-
     WHERE p.PRODUTO_ATIVO = 1
-
     ORDER BY p.PRODUTO_ID DESC
   ");
   $stmt->execute();
@@ -51,7 +49,34 @@ function buscarImagens($pdo, $produto_id)
   return $imagens;
 }
 
-//Trazer buscas feitas em produto pelo usuario
+//Trazer apenas inativos 
+
+if (isset($_GET['inativo'])){
+  try {
+    $pesquisa = $_GET['inativo'];
+    $stmt_busca = $pdo->prepare("SELECT
+    p.PRODUTO_ID,
+    p.PRODUTO_NOME, 
+    p.PRODUTO_DESC, 
+    p.PRODUTO_PRECO,
+    p.PRODUTO_DESCONTO,
+    p.CATEGORIA_ID,
+    p.PRODUTO_ATIVO,
+    c.CATEGORIA_NOME,
+    pe.PRODUTO_QTD
+    FROM PRODUTO AS p
+    LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
+    LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+    WHERE p.PRODUTO_ATIVO = 0
+    ");
+    $stmt_busca->execute();
+    $resultado_inativo = $stmt_busca->fetchAll(PDO::FETCH_ASSOC);
+  } catch (PDOException $erro) {
+    echo "Erro " . $erro->getMessage(); 
+  }
+}
+
+//Trazer buscas feitas na barra de pesquisa
 if (isset($_GET['busca'])){
   try {
     $pesquisa = $_GET['busca'];
@@ -68,13 +93,12 @@ if (isset($_GET['busca'])){
     FROM PRODUTO AS p
     LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
     LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
-    WHERE p.PRODUTO_NOME LIKE '%$pesquisa%'");
-    // Executa a consulta preparada
+    WHERE p.PRODUTO_NOME LIKE '%$pesquisa%'
+    ");
     $stmt_busca->execute();
-    // Obtém todos os resultados da consulta como um array de arrays associativos
     $resultados_busca = $stmt_busca->fetchAll(PDO::FETCH_ASSOC);
   } catch (PDOException $erro) {
-    echo "Erro " . $erro->getMessage(); // Exibe a mensagem de erro caso ocorra uma exceção
+    echo "Erro " . $erro->getMessage();
   }
 }
 ?>
@@ -126,12 +150,16 @@ if (isset($_GET['busca'])){
             <h6 class="card-link">Produtos</h6>
           </div>
           <div class="row">
-            <div class="col-md-6">
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-primary active">Ativos</button>
-                <button type="button" class="btn btn-danger">Inativos</button>
+            <form action="" method="GET">
+              <div class="col-md-6">
+                <div class="btn-group" role="group">
+                  
+                    <button type="submit" class="btn btn-primary active" value="ativo">Ativos</button>
+                    <button type="submit" name="inativo" class="btn btn-danger" value="inativo">Inativos</button>
+                  
+                </div>
               </div>
-            </div>
+            </form>
           </div>
             <div> 
               <a href="cadastrar_produto.php" class="card-link btn btn-danger btn-sm ms-auto">Cadastrar Produtos</a>
@@ -158,7 +186,7 @@ if (isset($_GET['busca'])){
 
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Editar</th>
 
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Remover</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Inativar</th>
 
                   <th class="text-secondary opacity-7"></th>
                 </tr>
@@ -166,6 +194,9 @@ if (isset($_GET['busca'])){
               <tbody>
                 <?php if(isset($_GET['busca'])){
                   $produtos = $resultados_busca;
+                } ?>
+                <?php if(isset($_GET['inativo'])){
+                  $produtos = $resultado_inativo;
                 } ?>
                 <?php foreach ($produtos as $produto) {
                 ?>
@@ -224,7 +255,7 @@ if (isset($_GET['busca'])){
                     </td>
                     <td class="align-middle text-center">
                       <a href="deletar_produto.php?PRODUTO_ID=<?php echo $produto['PRODUTO_ID']; ?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
-                        Remover
+                        Inativar
                       </a>
                     </td>
                   </tr>
