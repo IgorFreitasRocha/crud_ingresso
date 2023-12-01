@@ -99,7 +99,6 @@ if (isset($_GET['busca'])){
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">ID</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Nome</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Email</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
@@ -113,7 +112,7 @@ if (isset($_GET['busca'])){
                 } ?>
                 <?php foreach ($administrador as $adms) { ?>
                   <tr>
-                    <td class="align-middle text-center">
+                    <td class="d-none">
                       <?php echo $adms['ADM_ID']; ?>
                     </td>
                     <td class="align-middle text-center">
@@ -155,6 +154,6 @@ if (isset($_GET['busca'])){
 <script>
   /* Ativar a class de ativo no menu de navegação */ 
   let navegaa = document.getElementById('nevega3');
-      navegaa.classList.add('active');
-    </script>
+  navegaa.classList.add('active');
+</script>
     <?php require_once('../layouts/fim.php'); ?>

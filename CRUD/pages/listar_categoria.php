@@ -17,6 +17,7 @@ try {
     CATEGORIA_DESC,
     CATEGORIA_ATIVO 
     FROM CATEGORIA
+    WHERE CATEGORIA_ATIVO = 1
 
     ORDER BY CATEGORIA_ID ASC
     ");
@@ -26,6 +27,26 @@ try {
   echo "Erro " . $erro->getMessage();
 }
 
+//Trazer apenas inativos 
+
+if (isset($_GET['inativo'])){
+  try {
+    $categorias = $_GET['inativo'];
+    $stmt = $pdo->prepare("SELECT 
+      CATEGORIA_ID,
+      CATEGORIA_NOME,
+      CATEGORIA_DESC,
+      CATEGORIA_ATIVO 
+      FROM CATEGORIA
+      WHERE CATEGORIA_ATIVO = 0
+      ORDER BY CATEGORIA_ID DESC
+      ");
+    $stmt->execute();
+    $categorias_inativo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  } catch (PDOException $erro) {
+    echo "Erro " . $erro->getMessage();
+  }
+}
 
 //Trazer buscas em categoria feitas pelo usuario
 if (isset($_GET['busca'])){
@@ -94,28 +115,39 @@ if (isset($_GET['busca'])){
           <div>
             <h6 class="card-link">Categoria</h6>
           </div>
-          <a href="cadastrar_categoria.php" class="card-link btn btn-danger btn-sm ms-auto">Cadastrar Categorias</a>
+          <form action="" method="GET">
+            <div class="col-md-6">
+              <div class="btn-group" role="group">
+                  <button type="submit" class="btn btn-primary btn-sm" onclick="ativarClass()" value="ativo">Ativos</button>
+                  <button type="submit" name="inativo" class="btn btn-danger btn-sm" onclick="ativarClass()" value="inativo">Inativos</button>
+              </div>
+            </div>
+          </form>
+            <div>
+              <a href="cadastrar_categoria.php" class="card-link btn btn-danger btn-sm ms-auto">Cadastrar Categorias</a>
+            </div>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">ID</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Nome</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Descrição</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
                   <th class="text-secondary opacity-7"></th>
                 </tr>
               </thead>
-
               <tbody>
                   <?php if(isset($_GET['busca'])){
                     $categorias = $resultado_busca;
                   } ?>
+                  <?php if(isset($_GET['inativo'])){
+                  $categorias = $categorias_inativo;
+                } ?>
                 <?php foreach ($categorias as $categoria) { ?>
                   <tr>
-                    <td class="align-middle text-center">
+                    <td class="d-none">
                       <?php echo $categoria['CATEGORIA_ID']; ?>
                     </td>
                     <td class="align-middle text-center">

@@ -16,29 +16,24 @@
     <div class="card-body">
       <img src="Logotipo_bravo.svg" class="card-img-top" alt="...">
       <h6 class="card-subtitle p-2 text-muted">Faça seu login</h6>
-
-      <form action="../CRUD/processa_login.php" class="validacao" novalidate method="post">
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" name="nome" id="nome" placeholder="name@example.com" required>
-          <label for="nome">Login</label>
-          <div class="invalid-feedback">Preencha com um login válido.</div>
-
-        </div>
-        <div class="form-floating">
-          <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" required>
-          <label for="senha">Senha</label>
-          <div class="invalid-feedback">Preencha com uma senha válida.</div>
-          <button type="submit" class="btn btn-primary btn-lg p-2 g-col-6">Entrar</button>
-        </div>
-        
-        <?php
-
-        if (isset($_GET['erro'])) {
-          echo '<p style = "color:red;" > Nome de usuario ou senha incorretos</p>';
-        }
-
-        ?>
-      </form>
+        <form action="../CRUD/processa_login.php" class="validacao" novalidate method="post">
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" name="nome" id="nome" placeholder="name@example.com" required>
+            <label for="nome">Login</label>
+            <div class="invalid-feedback">Preencha com um login válido.</div>
+          </div>
+          <div class="form-floating">
+            <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" required>
+            <label for="senha">Senha</label>
+            <div class="invalid-feedback">Preencha com uma senha válida.</div>
+            <button type="submit" class="btn btn-primary btn-lg p-2 g-col-6">Entrar</button>
+          </div>
+          <?php
+          if (isset($_GET['erro'])) {
+            echo '<p style = "color:red;" > Nome de usuario ou senha incorretos</p>';
+          }
+          ?>
+        </form>
     </div>
   </div>
   </div>
