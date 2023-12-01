@@ -93,7 +93,7 @@ if (isset($_GET['busca'])){
       <div class="ms-md-auto pe-md-3 d-flex align-items-center">
       <form action="">
           <div class="input-group">
-            <input name="busca" value="<?php if(isset($_GET['busca'])) echo $_GET['busca'] ;?>" class="form-control" placeholder="Buscar Categoria..." type="text"> 
+            <input name="busca" value="<?php if(isset($_GET['busca'])) echo $_GET['busca'] ;?>" class="form-control" placeholder="Buscar produtos..." type="text"> 
             <button type="submit" class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></button>
           </div>
         </form>

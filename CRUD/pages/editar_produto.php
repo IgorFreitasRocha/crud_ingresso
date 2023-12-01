@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   try {
     editarProduto($pdo, $PRODUTO_NOME, $PRODUTO_DESC, $PRODUTO_PRECO, $PRODUTO_DESCONTO, $CATEGORIA_ID, $PRODUTO_ATIVO, $PRODUTO_ID);
 
-    //GAMB ESTOQUE DOS COLEGAS NAO CADASTRAM :/
+    //GAMB ESTOQUE DOS COLEGAS QUE NAO CADASTROU :/
     $gamb_estoque = buscarEstoque($pdo, $PRODUTO_ID);
     if ($gamb_estoque != NULL) {
       editarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD);
