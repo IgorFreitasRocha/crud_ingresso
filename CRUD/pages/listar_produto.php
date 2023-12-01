@@ -153,10 +153,8 @@ if (isset($_GET['busca'])){
             <form action="" method="GET">
               <div class="col-md-6">
                 <div class="btn-group" role="group">
-                  
-                    <button type="submit" class="btn btn-primary active" value="ativo">Ativos</button>
-                    <button type="submit" name="inativo" class="btn btn-danger" value="inativo">Inativos</button>
-                  
+                  <button type="submit" class="btn btn-primary btn-sm" onclick="ativarClass()" value="ativo">Ativos</button>
+                  <button type="submit" name="inativo" class="btn btn-danger btn-sm" onclick="ativarClass()" value="inativo">Inativos</button>
                 </div>
               </div>
             </form>
@@ -229,7 +227,7 @@ if (isset($_GET['busca'])){
                       $imgCount = 0; // Inicializa o contador de imagens
                         foreach ($imagens as $imagem) {
                           ?>
-                          <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="30" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'">
+                          <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="40" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'">
                           <?php
                             $imgCount++; // Incrementa o contador de imagens
                             if ($imgCount > 4) {
@@ -268,5 +266,9 @@ if (isset($_GET['busca'])){
     </div>
   </div>
 </div>
-
+<script>
+  /* Ativar a class de ativo no menu de navegação */ 
+  let navegaa = document.getElementById('nevega2');
+  navegaa.classList.add('active');
+</script>
 <?php require_once('../layouts/fim.php'); ?>

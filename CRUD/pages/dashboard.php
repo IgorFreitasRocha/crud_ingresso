@@ -146,4 +146,9 @@ try {
     </div>
   </div>
 </div>
+<script>
+  /* Ativar a class de ativo no menu de navegação */ 
+  let navegaa = document.getElementById('nevega1');
+  navegaa.classList.add('active');
+</script>
 <?php require_once('../layouts/fim.php'); ?>
