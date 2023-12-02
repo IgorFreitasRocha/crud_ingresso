@@ -41,7 +41,7 @@ if (isset($_GET['ativo'])){
       ORDER BY CATEGORIA_ID DESC
       ");
     $stmt->execute();
-    $categorias_inativo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $categorias_ativo = $stmt->fetchAll(PDO::FETCH_ASSOC);
   } catch (PDOException $erro) {
     echo "Erro " . $erro->getMessage();
   }
