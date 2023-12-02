@@ -25,6 +25,48 @@ try {
 }
 
 
+//Trazer apenas ATIVOS 
+
+if (isset($_GET['ativo'])){
+  try {
+    $administrador = $_GET['ativo'];
+    $stmt = $pdo->prepare("SELECT 
+      ADM_ID,
+      ADM_NOME,
+      ADM_EMAIL,
+      ADM_ATIVO 
+      FROM ADMINISTRADOR
+      WHERE ADM_ATIVO = 1
+      ORDER BY ADM_ID DESC
+      ");
+    $stmt->execute();
+    $administrador_ativo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  } catch (PDOException $erro) {
+    echo "Erro " . $erro->getMessage();
+  }
+}
+
+//Trazer apenas INATIVOS 
+
+if (isset($_GET['inativo'])){
+  try {
+    $administrador = $_GET['inativo'];
+    $stmt = $pdo->prepare("SELECT 
+      ADM_ID,
+      ADM_NOME,
+      ADM_EMAIL,
+      ADM_ATIVO 
+      FROM ADMINISTRADOR
+      WHERE ADM_ATIVO = 0
+      ORDER BY ADM_ID DESC
+      ");
+    $stmt->execute();
+    $administrador_inativo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  } catch (PDOException $erro) {
+    echo "Erro " . $erro->getMessage();
+  }
+}
+
 //Trazer buscas em administrador feitas pelo usuario
 if (isset($_GET['busca'])){
   try {
@@ -92,14 +134,23 @@ if (isset($_GET['busca'])){
           <div>
             <h6 class="card-link">Administradores</h6>
           </div>
-          <a href="cadastrar_admin.php" class="card-link btn btn-danger btn-sm ms-auto">Cadastrar Admin</a>
+          <form action="" method="GET">
+            <div class="col-md-6">
+              <div class="btn-group" role="group">
+                  <button type="submit" name="ativo" class="btn btn-primary btn-sm" value="ativo">Ativos</button>
+                  <button type="submit" name="inativo" class="btn btn-danger btn-sm" value="inativo">Inativos</button>
+              </div>
+            </div>
+          </form>
+          <div>
+            <a href="cadastrar_admin.php" class="card-link btn btn-danger btn-sm ms-auto">Cadastrar Admin</a>
+          </div>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">ID</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Nome</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Email</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
@@ -110,10 +161,16 @@ if (isset($_GET['busca'])){
               <tbody>
                   <?php if(isset($_GET['busca'])){
                     $administrador = $resultado_busca;
-                } ?>
+                  } ?>
+                    <?php if(isset($_GET['ativo'])){
+                      $administrador = $administrador_ativo;
+                    } ?>
+                  <?php if(isset($_GET['inativo'])){
+                    $administrador = $administrador_inativo;
+                  } ?>
                 <?php foreach ($administrador as $adms) { ?>
                   <tr>
-                    <td class="align-middle text-center">
+                    <td class="d-none">
                       <?php echo $adms['ADM_ID']; ?>
                     </td>
                     <td class="align-middle text-center">
@@ -155,6 +212,6 @@ if (isset($_GET['busca'])){
 <script>
   /* Ativar a class de ativo no menu de navegação */ 
   let navegaa = document.getElementById('nevega3');
-      navegaa.classList.add('active');
-    </script>
+  navegaa.classList.add('active');
+</script>
     <?php require_once('../layouts/fim.php'); ?>

@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   if (isset($_GET['id'])) {
     $PRODUTO_ID = $_GET['id'];
 
-    try{
+    try {
       $produto = buscarProduto($pdo, $PRODUTO_ID);
 
       $imagens = buscarImagens($pdo, $PRODUTO_ID);
@@ -44,12 +44,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $PRODUTO_ID = $_POST['PRODUTO_ID'];
   $PRODUTO_QTD = $_POST['PRODUTO_QTD'];
   $imagens = $_POST['imagem_url'];
-  try{
+  try {
     editarProduto($pdo, $PRODUTO_NOME, $PRODUTO_DESC, $PRODUTO_PRECO, $PRODUTO_DESCONTO, $CATEGORIA_ID, $PRODUTO_ATIVO, $PRODUTO_ID);
 
-    editarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD);
+    //GAMB ESTOQUE DOS COLEGAS QUE NAO CADASTROU :/
+    $gamb_estoque = buscarEstoque($pdo, $PRODUTO_ID);
+    if ($gamb_estoque != NULL) {
+      editarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD);
+    } else {
+      adicionarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD);
+    }
 
-    editarImagem($pdo, $IMAGEM_ID, $IMAGEM_URL);
+    //IMAGEM - REMOVER
+    $imagens_banco = buscarImagens($pdo, $PRODUTO_ID);
+    $imagens_manter = array();
+
+    foreach ($imagens as $chave => $url) {
+      foreach ($imagens_banco as $indice => $imagem_banco) {
+        if ($chave == $imagem_banco['IMAGEM_ID']) {
+          $imagens_manter[] = $indice; // Armazena as chaves a serem removidas
+        }
+      }
+    }
+
+    // Remove as imagens que serao mantidas
+    foreach ($imagens_manter as $indice) {
+      unset($imagens_banco[$indice]);
+    }
+
+    // Imagens que nao foram separadas serao removidas
+    foreach ($imagens_banco as $indice => $imagem_banco) {
+      removerImagem($pdo, $imagem_banco['IMAGEM_ID']);
+    }
+
+    //IMAGEM - ADICIONAR OU EDITAR
+    foreach ($imagens as $chave => $valor) {
+      if (strpos($chave, 'novo_') === 0) {
+        // Esta é uma nova imagem sem ID definido
+        adicionarImagem($pdo, $PRODUTO_ID, $valor);
+      } else {
+        // Esta é uma imagem existente com ID
+        editarImagem($pdo, $chave, $valor);
+      }
+    }
 
     /*Parametro para mensagem de sucesso através de GET */
     header('Location: listar_produto.php?update=success');
@@ -59,7 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 }
 
-function buscarProduto($pdo, $PRODUTO_ID){
+function buscarProduto($pdo, $PRODUTO_ID)
+{
   try {
     $stmt_produto = $pdo->prepare(
       "SELECT
@@ -77,7 +115,8 @@ function buscarProduto($pdo, $PRODUTO_ID){
     LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
     LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
     WHERE p.PRODUTO_ID = :PRODUTO_ID
-    ");
+    "
+    );
 
     $stmt_produto->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
     $stmt_produto->execute();
@@ -87,11 +126,11 @@ function buscarProduto($pdo, $PRODUTO_ID){
   } catch (PDOException $erro) {
     echo "Erro: " . $erro->getMessage();
   }
-
 }
 
-function buscarImagens($pdo, $PRODUTO_ID){
-  try{
+function buscarImagens($pdo, $PRODUTO_ID)
+{
+  try {
     $stmt_imagem = $pdo->prepare("SELECT
       IMAGEM_ID,
       IMAGEM_URL,
@@ -110,8 +149,9 @@ function buscarImagens($pdo, $PRODUTO_ID){
   }
 }
 
-function editarProduto($pdo, $PRODUTO_NOME, $PRODUTO_DESC, $PRODUTO_PRECO, $PRODUTO_DESCONTO, $CATEGORIA_ID, $PRODUTO_ATIVO, $PRODUTO_ID){
-  try{
+function editarProduto($pdo, $PRODUTO_NOME, $PRODUTO_DESC, $PRODUTO_PRECO, $PRODUTO_DESCONTO, $CATEGORIA_ID, $PRODUTO_ATIVO, $PRODUTO_ID)
+{
+  try {
     $stmt_produto = $pdo->prepare("UPDATE PRODUTO
       SET PRODUTO_NOME = :PRODUTO_NOME,
           PRODUTO_DESC = :PRODUTO_DESC,
@@ -119,8 +159,7 @@ function editarProduto($pdo, $PRODUTO_NOME, $PRODUTO_DESC, $PRODUTO_PRECO, $PROD
           PRODUTO_DESCONTO = :PRODUTO_DESCONTO,
           CATEGORIA_ID = :CATEGORIA_ID,
           PRODUTO_ATIVO = :PRODUTO_ATIVO
-      WHERE PRODUTO_ID = :PRODUTO_ID
-      ");
+      WHERE PRODUTO_ID = :PRODUTO_ID");
     $stmt_produto->bindParam(':PRODUTO_NOME', $PRODUTO_NOME);
     $stmt_produto->bindParam(':PRODUTO_DESC', $PRODUTO_DESC);
     $stmt_produto->bindParam(':PRODUTO_PRECO', $PRODUTO_PRECO);
@@ -134,9 +173,10 @@ function editarProduto($pdo, $PRODUTO_NOME, $PRODUTO_DESC, $PRODUTO_PRECO, $PROD
   }
 }
 
-function editarImagem($pdo, $IMAGEM_ID, $IMAGEM_URL){
+function editarImagem($pdo, $IMAGEM_ID, $IMAGEM_URL)
+{
 
-  try{
+  try {
     $stmt_imagem = $pdo->prepare("UPDATE PRODUTO_IMAGEM 
       SET IMAGEM_URL = :IMAGEM_URL 
       WHERE IMAGEM_ID = :IMAGEM_ID
@@ -144,17 +184,17 @@ function editarImagem($pdo, $IMAGEM_ID, $IMAGEM_URL){
     $stmt_imagem->bindParam(':IMAGEM_ID', $IMAGEM_ID, PDO::PARAM_INT);
     $stmt_imagem->bindParam(':IMAGEM_URL', $IMAGEM_URL, PDO::PARAM_STR);
     $stmt_imagem->execute();
-    
   } catch (PDOException $erro) {
     echo "Erro: " . $erro->getMessage();
   }
 }
 
-function adicionarImagem($pdo, $PRODUTO_ID, $IMAGEM_URL){
+function adicionarImagem($pdo, $PRODUTO_ID, $IMAGEM_URL)
+{
 
-  try{
+  try {
     //ULTIMA ORDEM + 1
-    $stmt_ordem= $pdo->prepare("SELECT 
+    $stmt_ordem = $pdo->prepare("SELECT 
       COALESCE(
         (SELECT (IMAGEM_ORDEM + 1) 
         FROM PRODUTO_IMAGEM 
@@ -167,7 +207,7 @@ function adicionarImagem($pdo, $PRODUTO_ID, $IMAGEM_URL){
     $IMAGEM_ORDEM_SQL = $stmt_ordem->fetch(PDO::FETCH_ASSOC);
 
     $IMAGEM_ORDEM = $IMAGEM_ORDEM_SQL["IMAGEM_ORDEM"];
-    
+
     //ADICIONAR IMAGEM
     $stmt_imagem = $pdo->prepare("INSERT INTO PRODUTO_IMAGEM 
     (
@@ -183,32 +223,32 @@ function adicionarImagem($pdo, $PRODUTO_ID, $IMAGEM_URL){
     $stmt_imagem->bindParam(':IMAGEM_ORDEM', $IMAGEM_ORDEM, PDO::PARAM_INT);
     $stmt_imagem->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
     $stmt_imagem->execute();
-    
   } catch (PDOException $erro) {
     echo "Erro: " . $erro->getMessage();
   }
 }
 
-function removerImagem($pdo, $IMAGEM_ID){
+function removerImagem($pdo, $IMAGEM_ID)
+{
 
-  try{
+  try {
     $stmt_imagem = $pdo->prepare("UPDATE PRODUTO_IMAGEM 
       SET IMAGEM_ORDEM = -1, IMAGEM_URL = 'REMOVIDA' 
       WHERE IMAGEM_ID = :IMAGEM_ID
     ");
     $stmt_imagem->bindParam(':IMAGEM_ID', $IMAGEM_ID, PDO::PARAM_INT);
     $stmt_imagem->execute();
-    
   } catch (PDOException $erro) {
     echo "Erro: " . $erro->getMessage();
   }
 }
 
-function buscarEstoque($pdo, $PRODUTO_ID){
-  try{
+function buscarEstoque($pdo, $PRODUTO_ID)
+{
+  try {
     $stmt = $pdo->prepare("SELECT 
       COALESCE(
-        (SELECT PRODUTO_QTD FROM PRODUTO_ESTOQUE WHERE PRODUTO_ID = :PRODUTO_ID), 0
+        (SELECT MAX(PRODUTO_QTD) FROM PRODUTO_ESTOQUE WHERE PRODUTO_ID = :PRODUTO_ID), NULL
       ) AS PRODUTO_QTD");
     $stmt->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
     $stmt->execute();
@@ -220,8 +260,9 @@ function buscarEstoque($pdo, $PRODUTO_ID){
   }
 }
 
-function editarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD){
-  try{
+function editarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD)
+{
+  try {
     $stmt = $pdo->prepare("UPDATE PRODUTO_ESTOQUE 
       SET PRODUTO_QTD = :PRODUTO_QTD 
       WHERE PRODUTO_ID = :PRODUTO_ID
@@ -229,14 +270,14 @@ function editarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD){
     $stmt->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
     $stmt->bindParam(':PRODUTO_QTD', $PRODUTO_QTD, PDO::PARAM_INT);
     $stmt->execute();
-
   } catch (PDOException $erro) {
     echo "Erro: " . $erro->getMessage();
   }
 }
 
-function adicionarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD){
-  try{
+function adicionarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD)
+{
+  try {
     $stmt = $pdo->prepare("INSERT INTO PRODUTO_ESTOQUE 
     (
       PRODUTO_ID,
@@ -248,11 +289,9 @@ function adicionarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD){
     $stmt->bindParam(':PRODUTO_ID', $PRODUTO_ID, PDO::PARAM_INT);
     $stmt->bindParam(':PRODUTO_QTD', $PRODUTO_QTD, PDO::PARAM_INT);
     $stmt->execute();
-  
   } catch (PDOException $erro) {
     echo "Erro: " . $erro->getMessage();
   }
-
 }
 
 require_once('../layouts/inicio.php');
@@ -263,13 +302,13 @@ require_once('../layouts/inicio.php');
     <div class="row gx-4">
       <div class="col-auto">
         <div class="avatar avatar-xl position-relative">
-        <?php
+          <?php
           foreach ($imagens as $imagem) {
-            ?>
+          ?>
             <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="50" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'" class="w-100 border-radius-lg shadow-sm">
-            <?php
+          <?php
           }
-        ?>
+          ?>
         </div>
       </div>
       <div class="col-auto my-auto">
@@ -355,8 +394,8 @@ require_once('../layouts/inicio.php');
               <div class="col-md-12">
                 <div class="form-group">
                   <label for="IMAGEM_URL" class="form-control-label">URL da Imagem</label>
-                  
-                  <button class="btn ms-4 bm-0" type="button" id="" onclick="adicionarImagem()" >Adicionar</button>
+
+                  <button class="btn ms-4 bm-0" type="button" id="" onclick="adicionarImagem()">Adicionar</button>
                 </div>
               </div>
               <div class="col-md-12">
@@ -383,7 +422,7 @@ require_once('../layouts/inicio.php');
   </div>
 </div>
 <script>
-    /* Ativar a class de ativo no menu de navegação */
+  /* Ativar a class de ativo no menu de navegação */
   let navegaa = document.getElementById('nevega2');
   navegaa.classList.add('active');
 </script>
@@ -419,7 +458,7 @@ require_once('../layouts/inicio.php');
   }
 
   function removerInputImagem(eleMesmo) {
-    eleMesmo.parentNode.remove();   //parentNode é o pai <div> inputgroup 
+    eleMesmo.parentNode.remove(); //parentNode é o pai <div> inputgroup 
   }
 </script>
 
