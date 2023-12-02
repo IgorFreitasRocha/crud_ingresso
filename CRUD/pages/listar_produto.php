@@ -15,6 +15,7 @@ try {
     p.PRODUTO_NOME, 
     p.PRODUTO_DESC, 
     p.PRODUTO_PRECO,
+    p.PRODUTO_DESCONTO,
     p.CATEGORIA_ID,
     p.PRODUTO_ATIVO,
     c.CATEGORIA_NOME,
@@ -22,7 +23,6 @@ try {
     FROM PRODUTO AS p
     LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
     LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
-    WHERE p.PRODUTO_ATIVO = 1
     ORDER BY p.PRODUTO_ID DESC
   ");
   $stmt->execute();
@@ -49,7 +49,35 @@ function buscarImagens($pdo, $produto_id)
   return $imagens;
 }
 
-//Trazer apenas inativos 
+
+//Trazer apenas ATIVOS 
+
+if (isset($_GET['ativo'])){
+  try {
+    $pesquisa = $_GET['ativo'];
+    $stmt_busca = $pdo->prepare("SELECT
+    p.PRODUTO_ID,
+    p.PRODUTO_NOME, 
+    p.PRODUTO_DESC, 
+    p.PRODUTO_PRECO,
+    p.PRODUTO_DESCONTO,
+    p.CATEGORIA_ID,
+    p.PRODUTO_ATIVO,
+    c.CATEGORIA_NOME,
+    pe.PRODUTO_QTD
+    FROM PRODUTO AS p
+    LEFT JOIN CATEGORIA AS c ON c.CATEGORIA_ID = p.CATEGORIA_ID
+    LEFT JOIN PRODUTO_ESTOQUE as pe ON pe.PRODUTO_ID = p.PRODUTO_ID
+    WHERE p.PRODUTO_ATIVO = 1
+    ");
+    $stmt_busca->execute();
+    $resultado_ativo = $stmt_busca->fetchAll(PDO::FETCH_ASSOC);
+  } catch (PDOException $erro) {
+    echo "Erro " . $erro->getMessage(); 
+  }
+}
+
+//Trazer apenas INATIVOS 
 
 if (isset($_GET['inativo'])){
   try {
@@ -153,8 +181,8 @@ if (isset($_GET['busca'])){
             <form action="" method="GET">
               <div class="col-md-6">
                 <div class="btn-group" role="group">
-                  <button type="submit" class="btn btn-primary btn-sm" onclick="ativarClass()" value="ativo">Ativos</button>
-                  <button type="submit" name="inativo" class="btn btn-danger btn-sm" onclick="ativarClass()" value="inativo">Inativos</button>
+                  <button type="submit" name="ativo" class="btn btn-primary btn-sm" value="ativo">Ativos</button>
+                  <button type="submit" name="inativo" class="btn btn-danger btn-sm" value="inativo">Inativos</button>
                 </div>
               </div>
             </form>
@@ -178,6 +206,8 @@ if (isset($_GET['busca'])){
 
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Preço</th>
 
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Preço com desconto</th>
+
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Imagem</th>
 
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
@@ -192,6 +222,9 @@ if (isset($_GET['busca'])){
               <tbody>
                 <?php if(isset($_GET['busca'])){
                   $produtos = $resultados_busca;
+                } ?>
+                <?php if(isset($_GET['ativo'])){
+                  $produtos = $resultado_ativo;
                 } ?>
                 <?php if(isset($_GET['inativo'])){
                   $produtos = $resultado_inativo;
@@ -220,6 +253,9 @@ if (isset($_GET['busca'])){
                     </td>
                     <td class="align-middle text-center">
                       <?php echo "R$" . $produto['PRODUTO_PRECO']; ?>
+                    </td>
+                    <td class="align-middle text-center">
+                      <?php echo "R$" . $produto['PRODUTO_PRECO'] - $produto['PRODUTO_DESCONTO']; ?>
                     </td>
                     <td class="align-middle text-center">
                       <?php

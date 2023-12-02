@@ -17,7 +17,6 @@ try {
     CATEGORIA_DESC,
     CATEGORIA_ATIVO 
     FROM CATEGORIA
-    WHERE CATEGORIA_ATIVO = 1
 
     ORDER BY CATEGORIA_ID ASC
     ");
@@ -27,7 +26,28 @@ try {
   echo "Erro " . $erro->getMessage();
 }
 
-//Trazer apenas inativos 
+//Trazer apenas ATIVOS 
+
+if (isset($_GET['ativo'])){
+  try {
+    $categorias = $_GET['ativo'];
+    $stmt = $pdo->prepare("SELECT 
+      CATEGORIA_ID,
+      CATEGORIA_NOME,
+      CATEGORIA_DESC,
+      CATEGORIA_ATIVO 
+      FROM CATEGORIA
+      WHERE CATEGORIA_ATIVO = 1
+      ORDER BY CATEGORIA_ID DESC
+      ");
+    $stmt->execute();
+    $categorias_inativo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  } catch (PDOException $erro) {
+    echo "Erro " . $erro->getMessage();
+  }
+}
+
+//Trazer apenas INATIVOS 
 
 if (isset($_GET['inativo'])){
   try {
@@ -118,8 +138,8 @@ if (isset($_GET['busca'])){
           <form action="" method="GET">
             <div class="col-md-6">
               <div class="btn-group" role="group">
-                  <button type="submit" class="btn btn-primary btn-sm" onclick="ativarClass()" value="ativo">Ativos</button>
-                  <button type="submit" name="inativo" class="btn btn-danger btn-sm" onclick="ativarClass()" value="inativo">Inativos</button>
+                  <button type="submit" name="ativo" class="btn btn-primary btn-sm" value="ativo">Ativos</button>
+                  <button type="submit" name="inativo" class="btn btn-danger btn-sm" value="inativo">Inativos</button>
               </div>
             </div>
           </form>
@@ -142,9 +162,12 @@ if (isset($_GET['busca'])){
                   <?php if(isset($_GET['busca'])){
                     $categorias = $resultado_busca;
                   } ?>
+                  <?php if(isset($_GET['ativo'])){
+                  $categorias = $categorias_ativo;
+                  } ?>
                   <?php if(isset($_GET['inativo'])){
-                  $categorias = $categorias_inativo;
-                } ?>
+                    $categorias = $categorias_inativo;
+                  } ?>
                 <?php foreach ($categorias as $categoria) { ?>
                   <tr>
                     <td class="d-none">
