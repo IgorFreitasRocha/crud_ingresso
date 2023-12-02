@@ -102,7 +102,7 @@ if (isset($_GET['busca'])){
       <div class="ms-md-auto pe-md-3 d-flex align-items-center">
       <form action="">
           <div class="input-group">
-            <input name="busca" value="<?php if(isset($_GET['busca'])) echo $_GET['busca'] ;?>" class="form-control" placeholder="Buscar Categoria..." type="text"> 
+            <input name="busca" value="<?php if(isset($_GET['busca'])) echo $_GET['busca'] ;?>" class="form-control" placeholder="Buscar administrador..." type="text"> 
             <button type="submit" class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></button>
           </div>
         </form>
@@ -154,7 +154,8 @@ if (isset($_GET['busca'])){
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Nome</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Email</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Status</th>
-                  <th class="text-secondary opacity-7"></th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Editar</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle">Inativar</th>
                 </tr>
               </thead>
 
@@ -195,7 +196,7 @@ if (isset($_GET['busca'])){
                     </td>
                     <td class="align-middle text-center">
                       <a href="deletar_admin.php?ADM_ID=<?php echo $adms['ADM_ID']; ?>" class="btn badge badge-sm bg-gradient-danger" data-toggle="tooltip" data-original-title="Edit user">
-                        Delete
+                        Inativar
                       </a>
                     </td>
                   </tr>
