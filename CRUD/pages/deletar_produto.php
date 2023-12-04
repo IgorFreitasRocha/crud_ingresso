@@ -13,7 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['PRODUTO_ID'])) {
     $id = $_GET['PRODUTO_ID'];
     try { 
         // UPDATE produto SET PRODUTO_ATIVO = 0 WHERE PRODUTO_ID = :PRODUTO_ID
-        $stmt = $pdo->prepare("UPDATE PRODUTO SET PRODUTO_ATIVO	= 0 WHERE PRODUTO_ID = :PRODUTO_ID"); 
+        $stmt = $pdo->prepare("UPDATE
+         PRODUTO
+         SET PRODUTO_ATIVO	= 0
+         WHERE PRODUTO_ID = :PRODUTO_ID"); 
         $stmt->bindParam(':PRODUTO_ID', $id, PDO::PARAM_INT);
         $stmt->execute();
 
