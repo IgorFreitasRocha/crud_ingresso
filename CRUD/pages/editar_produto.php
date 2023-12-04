@@ -293,12 +293,11 @@ function adicionarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD)
     echo "Erro: " . $erro->getMessage();
   }
 }
-
-require_once('../layouts/inicio.php');
 ?>
 
-<div class="card shadow-lg mx-4 card-profile-bottom">
-  <div class="card-body p-3">
+<?php require_once('../layouts/inicio.php'); ?>
+<div class="card shadow-lg mx-4">
+  <div class="card-body p-3 mt-1">
     <div class="row gx-4">
       <div class="col-auto">
         <div class="avatar avatar-xl position-relative">
@@ -314,7 +313,7 @@ require_once('../layouts/inicio.php');
       <div class="col-auto my-auto">
         <div class="h-100">
           <h5 class="mb-1">
-            Nome do Produto
+          <?php echo $produto['PRODUTO_NOME'] ?>
           </h5>
         </div>
       </div>
