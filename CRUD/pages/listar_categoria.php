@@ -6,8 +6,13 @@ require_once('../conexao.php');
 //Varificação se o usuario está logado
 require_once('../valida_login.php');
 
+//Notificação de atualização dos dados da categoria
 if (isset($_GET['update']) && $_GET['update'] === 'success') {
   echo "<div id='messagee'>Categoria atualizada com sucesso!</div>";
+}
+//Notificação de inativação da categoria
+if (isset($_GET['update']) && $_GET['update'] === 'successdelete') {
+  echo "<div id='messagee'>Categoria inativada com sucesso!</div>";
 }
 
 try {
