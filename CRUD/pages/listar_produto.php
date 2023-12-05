@@ -241,7 +241,7 @@ if (isset($_GET['busca'])){
                       <td style="font-size: 0.7rem;" class="align-middle text-center">
                       <?php 
                         $texto = $produto['PRODUTO_DESC'];
-                        $limiteCaracteres = 30;
+                        $limiteCaracteres = 25;
                         if (strlen($texto) > $limiteCaracteres) {
                           $texto = substr($texto, 0, $limiteCaracteres) . "...";
                         }
