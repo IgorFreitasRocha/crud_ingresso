@@ -402,10 +402,9 @@ function adicionarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD)
                   <div id="containerImagens">
                     <?php foreach ($imagens as $imagem) { ?>
                       <div class="input-group mb-3">
-                        <input class="form-control" type="text" name="imagem_url[<?= $imagem['IMAGEM_ID'] ?>]" value="<?= $imagem['IMAGEM_URL'] ?>">
+                        <input class="form-control" type="text" placeholder="Maximo 500 caracteres" name="imagem_url[<?= $imagem['IMAGEM_ID'] ?>]" value="<?= $imagem['IMAGEM_URL'] ?>">
                         <button class="btn mb-0" type="button" id="remover" onclick="removerInputImagem(this)">Remover</button>
                       </div>
-
                     <?php } ?>
                   </div>
                 </div>
