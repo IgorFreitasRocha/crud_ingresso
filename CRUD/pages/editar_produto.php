@@ -411,7 +411,7 @@ function adicionarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD)
                 </div>
               </div>
 
-              <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Editar">
+              <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Atualizar">
             </form>
           </div>
           <hr class="horizontal dark">
