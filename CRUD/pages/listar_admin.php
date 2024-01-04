@@ -6,8 +6,13 @@ require_once('../conexao.php');
 //Varificação se o usuario está logado
 require_once('../valida_login.php');
 
+//Notificação de atualização do adm
 if (isset($_GET['update']) && $_GET['update'] === 'success') {
   echo "<div id='messagee'>Administrador atualizado com sucesso!</div>";
+}
+//Notificação de inativação do adm
+if (isset($_GET['update']) && $_GET['update'] === 'successdelete') {
+  echo "<div id='messagee'>Administrador inativado com sucesso!</div>";
 }
 
 try {

@@ -279,12 +279,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-
                                             <!-- UPDATE DE IMAGEM E SELEÇÃO POR LINK -->
                                             <label for="imagem_url" class="form-control-label">URL da Imagem</label>
-                                            <div id="containerImagens">
-                                                <input class="form-control" type="text" name="imagem_url[]" required id="imagem_url">
-                                            </div>
+                                                <div id="containerImagens">
+                                                    <input class="form-control" type="text" name="imagem_url[]" placeholder="Maximo 500 caracteres" required id="imagem_url">
+                                                    <p id="mensagem" style="display: none; color: red;">Preencha com um valor máximo de 500 caracteres.</p>
+                                                </div>
                                             <button type="button" class="btn btn-outline-secondary btn-sm" onclick="adicionarImagem()">Adicionar mais imagens</button>
                                         </div>
                                     </div>

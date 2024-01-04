@@ -5,8 +5,13 @@ require_once('../conexao.php');
 //Valida se o usuario está logado 
 require_once('../valida_login.php');
 
+//Notificação de atualização do produto
 if (isset($_GET['update']) && $_GET['update'] === 'success') {
   echo "<div id='messagee'>Produto atualizado com sucesso!</div>";
+}
+//Notificação de inativação do produto
+if (isset($_GET['update']) && $_GET['update'] === 'successdelete') {
+  echo "<div id='messagee'>Produto inativado com sucesso!</div>";
 }
 
 try {
@@ -258,7 +263,7 @@ if (isset($_GET['busca'])){
                       $imgCount = 0; // Inicializa o contador de imagens
                         foreach ($imagens as $imagem) {
                           ?>
-                          <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="40" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'">
+                          <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="60" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'">
                           <?php
                             $imgCount++; // Incrementa o contador de imagens
                             if ($imgCount > 4) {

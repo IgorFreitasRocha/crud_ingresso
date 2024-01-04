@@ -293,12 +293,11 @@ function adicionarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD)
     echo "Erro: " . $erro->getMessage();
   }
 }
-
-require_once('../layouts/inicio.php');
 ?>
 
-<div class="card shadow-lg mx-4 card-profile-bottom">
-  <div class="card-body p-3">
+<?php require_once('../layouts/inicio.php'); ?>
+<div class="card shadow-lg mx-4">
+  <div class="card-body p-3 mt-1">
     <div class="row gx-4">
       <div class="col-auto">
         <div class="avatar avatar-xl position-relative">
@@ -314,7 +313,7 @@ require_once('../layouts/inicio.php');
       <div class="col-auto my-auto">
         <div class="h-100">
           <h5 class="mb-1">
-            Nome do Produto
+          <?php echo $produto['PRODUTO_NOME'] ?>
           </h5>
         </div>
       </div>
@@ -403,16 +402,15 @@ require_once('../layouts/inicio.php');
                   <div id="containerImagens">
                     <?php foreach ($imagens as $imagem) { ?>
                       <div class="input-group mb-3">
-                        <input class="form-control" type="text" name="imagem_url[<?= $imagem['IMAGEM_ID'] ?>]" value="<?= $imagem['IMAGEM_URL'] ?>">
+                        <input class="form-control" type="text" placeholder="Maximo 500 caracteres" name="imagem_url[<?= $imagem['IMAGEM_ID'] ?>]" value="<?= $imagem['IMAGEM_URL'] ?>">
                         <button class="btn mb-0" type="button" id="remover" onclick="removerInputImagem(this)">Remover</button>
                       </div>
-
                     <?php } ?>
                   </div>
                 </div>
               </div>
 
-              <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Editar">
+              <input class="btn btn-danger btn-sm ms-auto" type="submit" value="Atualizar">
             </form>
           </div>
           <hr class="horizontal dark">
