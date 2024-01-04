@@ -296,30 +296,6 @@ function adicionarEstoque($pdo, $PRODUTO_ID, $PRODUTO_QTD)
 ?>
 
 <?php require_once('../layouts/inicio.php'); ?>
-<div class="card shadow-lg mx-4">
-  <div class="card-body p-3 mt-1">
-    <div class="row gx-4">
-      <div class="col-auto">
-        <div class="avatar avatar-xl position-relative">
-          <?php
-          foreach ($imagens as $imagem) {
-          ?>
-            <img src="<?php echo $imagem['IMAGEM_URL']; ?>" alt="<?php echo htmlspecialchars($produto['PRODUTO_NOME']); ?>" width="50" onerror="this.onerror=null;this.src='https://alumfer.com.br/assets/alumfer/imagens/not-available.png';this.alt='Img erro'" class="w-100 border-radius-lg shadow-sm">
-          <?php
-          }
-          ?>
-        </div>
-      </div>
-      <div class="col-auto my-auto">
-        <div class="h-100">
-          <h5 class="mb-1">
-          <?php echo $produto['PRODUTO_NOME'] ?>
-          </h5>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <div class="container-fluid py-4">
   <div class="row">
     <div class="col-md-8">

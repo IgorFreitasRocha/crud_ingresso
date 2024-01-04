@@ -238,7 +238,11 @@ if (isset($_GET['busca'])){
                       <td style="font-size: 0.7rem;" class="align-middle text-center">
                       <?php 
                         $texto = $produto['PRODUTO_DESC'];
+<<<<<<< HEAD
                         $limiteCaracteres = 50;
+=======
+                        $limiteCaracteres = 25;
+>>>>>>> 2ccefaa73446e6d6608e68883cabcfcf8e9f802a
                         if (strlen($texto) > $limiteCaracteres) {
                           $texto = substr($texto, 0, $limiteCaracteres) . "...";
                         }

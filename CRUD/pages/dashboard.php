@@ -87,7 +87,7 @@ try {
           <div class="row">
             <div class="col-8">
               <div class="numbers">
-                <p class="text-sm mb-0 text-uppercase font-weight-bold">Produtos cadastrados</p>
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Produtos</p>
                 <h5 class="font-weight-bolder">
                   <?php echo $contagem_produtos;?>
                 </h5>
@@ -108,7 +108,7 @@ try {
           <div class="row">
             <div class="col-8">
               <div class="numbers">
-                <p class="text-sm mb-0 text-uppercase font-weight-bold">Administradores cadastrados</p>
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Administradores</p>
                 <h5 class="font-weight-bolder">
                   <?php echo $contagem_adms; ?>
                 </h5>
@@ -129,7 +129,7 @@ try {
           <div class="row">
             <div class="col-8">
               <div class="numbers">
-                <p class="text-sm mb-0 text-uppercase font-weight-bold">Categorias cadastradas</p>
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Categorias</p>
                 <h5 class="font-weight-bolder">
                   <?php echo $contagem_ctgs; ?>
                 </h5>
